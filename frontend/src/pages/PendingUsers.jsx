@@ -67,6 +67,7 @@ const PendingUsers = () => {
                             <thead>
                                 <tr>
                                     <th>Alumno</th>
+                                    <th>RUT</th>
                                     <th>Email</th>
                                     <th>Teléfono</th>
                                     <th>Fecha</th>
@@ -77,6 +78,7 @@ const PendingUsers = () => {
                                 {pendingUsers.map((user) => (
                                     <tr key={user.id}>
                                         <td>{user.nombre}</td>
+                                        <td>{user.rut}</td>
                                         <td>{user.email}</td>
                                         <td>{user.numeroTelefonico}</td>
                                         <td>{new Date(user.created_at).toLocaleDateString()}</td>

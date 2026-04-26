@@ -9,7 +9,7 @@ import { sendApprovalEmail } from "../services/mail.services.js";
 export const preRegister = async (req, res) => {
     try {
         const userRepository = AppDataSource.getRepository(User);
-        const { nombre, email, numeroTelefonico } = req.body;
+        const { nombre, email, numeroTelefonico, rut } = req.body;
         const existingUser = await userRepository.findOneBy({ email });
         if (existingUser) {
             return res.status(400).json({ 
@@ -21,6 +21,7 @@ export const preRegister = async (req, res) => {
             nombre,
             email,
             numeroTelefonico,
+            rut,
             role: "alumno",
             isApproved: false 
         });
