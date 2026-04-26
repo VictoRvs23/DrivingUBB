@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Sidebar from '../components/Sidebar';
+import '../styles/PendingUsers.css';
 
 const PendingUsers = () => {
     const [pendingUsers, setPendingUsers] = useState([]);
@@ -54,52 +55,57 @@ const PendingUsers = () => {
         <div className="dashboard-layout">
             <Sidebar />
             <div className="main-content">
-                <header className="content-header">
-                    <h1>Solicitudes Pendientes</h1>
-                </header>
-                <div className="table-container">
+                <div className="pending-users-container">
+                    <header className="section-header">
+                        <h1>Solicitudes Pendientes</h1>
+                    </header>
                     {loading ? (
-                        <p>Cargando solicitudes...</p>
+                        <p className="loading-message">Cargando solicitudes...</p>
                     ) : pendingUsers.length === 0 ? (
-                        <p>No hay solicitudes pendientes</p>
+                        <p className="no-requests-message">No hay solicitudes pendientes</p>
                     ) : (
-                        <table className="custom-table">
-                            <thead>
-                                <tr>
-                                    <th>Alumno</th>
-                                    <th>RUT</th>
-                                    <th>Email</th>
-                                    <th>Teléfono</th>
-                                    <th>Fecha</th>
-                                    <th>Acción</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {pendingUsers.map((user) => (
-                                    <tr key={user.id}>
-                                        <td>{user.nombre}</td>
-                                        <td>{user.rut}</td>
-                                        <td>{user.email}</td>
-                                        <td>{user.numeroTelefonico}</td>
-                                        <td>{new Date(user.created_at).toLocaleDateString()}</td>
-                                        <td>
-                                            <button 
-                                                className="btn-approve"
-                                                onClick={() => handleApprove(user.id)}
-                                            >
-                                                Aprobar
-                                            </button>
-                                            <button 
-                                                className="btn-reject"
-                                                onClick={() => handleReject(user.id)}
-                                            >
-                                                Rechazar
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                        <div className="pending-list">
+                            {pendingUsers.map((user) => (
+                                <div key={user.id} className="user-card">
+                                    <div className="user-info">
+                                        <div className="user-name">{user.nombre}</div>
+                                        <div className="user-details">
+                                            <div className="detail-row">
+                                                <span className="detail-label">RUT:</span>
+                                                <span className="detail-value">{user.rut}</span>
+                                            </div>
+                                            <div className="detail-row">
+                                                <span className="detail-label">Email:</span>
+                                                <span className="detail-value">{user.email}</span>
+                                            </div>
+                                            <div className="detail-row">
+                                                <span className="detail-label">Teléfono:</span>
+                                                <span className="detail-value">{user.numeroTelefonico}</span>
+                                            </div>
+                                            <div className="detail-row">
+                                                <span className="detail-label">Fecha:</span>
+                                                <span className="detail-value">{new Date(user.created_at).toLocaleDateString()}</span>
+                                            </div>
+                                        </div>
+                                        <div className="user-date">Solicitud recibida el: {new Date(user.created_at).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                                    </div>
+                                    <div className="card-actions">
+                                        <button 
+                                            className="btn-approve"
+                                            onClick={() => handleApprove(user.id)}
+                                        >
+                                            ✓ Aprobar
+                                        </button>
+                                        <button 
+                                            className="btn-reject"
+                                            onClick={() => handleReject(user.id)}
+                                        >
+                                            ✕ Rechazar
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     )}
                 </div>
             </div>

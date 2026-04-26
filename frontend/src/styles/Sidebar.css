@@ -18,6 +18,11 @@
     flex-grow: 1;
 }
 
+.sidebar-footer {
+    padding: 0 20px 40px 20px;
+    text-align: center;
+}
+
 .nav-item {
     width: 100%;
     background: none;
@@ -45,12 +50,20 @@
 }
 
 .btn-logout {
-    margin: 20px;
-    padding: 12px;
+    width: 100%;
+    padding: 16px;
     background-color: #ff5c5c; 
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-logout:hover {
+    background-color: #e54545;
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(255, 92, 92, 0.3);
 }
