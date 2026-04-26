@@ -42,3 +42,12 @@
 }
 
 .status-message { color: green; margin-top: 15px; }
+
+
+/* PRUEBA CELULAR*/
+@media (max-width: 480px) {
+    .register-box {
+        padding: 20px;
+        width: 90%;
+    }
+}

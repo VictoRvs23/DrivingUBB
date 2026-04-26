@@ -92,3 +92,31 @@
 .btn-confirmar:hover {
     background-color: #25334d;
 }
+
+
+/* PRUEBA CELULAR */
+@media (max-width: 768px) {
+    .reservas-container {
+        padding: 15px;
+    }
+
+    .schedule-grid {
+        
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 10px;
+    }
+
+    .time-block {
+        padding: 15px 5px;
+        font-size: 1rem;
+    }
+
+    .date-selector {
+        max-width: 100%; 
+    }
+
+    .btn-confirmar {
+        width: 100%;
+        padding: 15px;
+    }
+}
