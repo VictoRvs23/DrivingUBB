@@ -50,8 +50,7 @@ export async function crearclase(req, res) {
             titulo_clase,
             fecha_hora,
             id_profesor,
-            enlace_videollamada,
-            estado_clase:"programada"
+            enlace_videollamada
         });
         //guardar la clase nueva en la base de datos
         await claseRepository.save(nuevaClase);
@@ -65,7 +64,7 @@ export async function actualizarclase(req, res) {
     //actualizar clase ya existente(solo admin/profe)
     try{
         const {id}=req.params;//pide id
-        const{titulo_clase,fecha_hora,id_profesor,enlace_videollamada,estado_clase}=req.body;//toma datos del body
+        const{titulo_clase,fecha_hora,id_profesor,enlace_videollamada}=req.body;//toma datos del body
         const claseRepository=AppDataSource.getRepository(ClaseTeorica);
         const clase =await claseRepository.findOneBy({id_clase: parseInt(id)});//busca clase por id
         //validar que existe
@@ -77,8 +76,6 @@ export async function actualizarclase(req, res) {
         if(fecha_hora) clase.fecha_hora=fecha_hora;
         if(id_profesor) clase.id_profesor=id_profesor;
         if(enlace_videollamada) clase.enlace_videollamada=enlace_videollamada;
-        if(estado_clase) clase.estado_clase=estado_clase;
-
         await claseRepository.save(clase);//guardar cambios
 
         // 200

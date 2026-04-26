@@ -1,5 +1,3 @@
-import{User}from"./user.entity.js";
-
 "use strict";
 import { EntitySchema } from "typeorm";
 
@@ -29,27 +27,6 @@ export const ClaseTeorica = new EntitySchema({
         type:"varchar",
         length:255,
         nullable:false,
-    },
-    estado_clase:{
-        type:"enum",
-        enum:["programada","en_curso","finalizada"],
-        default:"programada",
-    },
-    creado_en:{
-        type:"timestamp",
-        default: () => "CURRENT_TIMESTAMP",
-    },
-    actualizado_en:{
-        type:"timestamp",
-        default: () => "CURRENT_TIMESTAMP",
-        onUpdate: "CURRENT_TIMESTAMP",
-    },
-    relations:{
-        profesor:{
-            type:"many-to-one",
-            target:"User",
-            joinColumn:{ name:"id_profesor" },
-        }
     }
   },
 });
