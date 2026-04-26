@@ -3,17 +3,18 @@ import { AppDataSource } from "../config/configDb.js";
 import { User } from "../entities/user.entity.js";
 import bcrypt from "bcrypt";
 import crypto from "crypto"; 
+import { sendApprovalEmail } from "../services/mail.services.js";
 
 
 export const preRegister = async (req, res) => {
     try {
         const userRepository = AppDataSource.getRepository(User);
         const { nombre, email, numeroTelefonico } = req.body;
-
-        // verifica el correo nomas
         const existingUser = await userRepository.findOneBy({ email });
         if (existingUser) {
-            return res.status(400).json({ message: "Este correo ya envió una solicitud o ya está registrado." });
+            return res.status(400).json({ 
+                message: "Este correo ya envió una solicitud o ya está registrado." 
+            });
         }
 
         const newUser = userRepository.create({
@@ -25,6 +26,9 @@ export const preRegister = async (req, res) => {
         });
 
         await userRepository.save(newUser);
+        
+        console.log(`=> Nuevo pre-registro exitoso: ${email}`);
+        
         res.status(201).json({ 
             message: "Solicitud enviada con éxito. Un administrador revisará tu perfil." 
         });
@@ -55,11 +59,15 @@ export const approveUser = async (req, res) => {
 
         await userRepository.save(user);
 
-        // correo (debo configurarlo luego porque ahora no tengo todavia puesto nada)
-        console.log(`=> CORREO ENVIADO A ${user.email}. Contraseña temporal: ${tempPassword}`);
+        try {
+            await sendApprovalEmail(user.email, user.nombre, tempPassword);
+            console.log(`=> CORREO ENVIADO A ${user.email}. Clave temporal: ${tempPassword}`);
+        } catch (mailError) {
+            console.error("=> Error al enviar el correo, pero el usuario fue aprobado:", mailError);
+        }
 
         res.status(200).json({ 
-            message: `Usuario aprobado. Se ha enviado la clave '${tempPassword}' al correo.` 
+            message: `Usuario aprobado. Se ha enviado la clave al correo ${user.email}.` 
         });
     } catch (error) {
         console.error("Error al aprobar usuario:", error);
@@ -67,16 +75,18 @@ export const approveUser = async (req, res) => {
     }
 };
 
-// solictudes pendientes
 export const getPendingUsers = async (req, res) => {
     try {
         const userRepository = AppDataSource.getRepository(User);
+        
         const pending = await userRepository.find({
             where: { isApproved: false },
             order: { created_at: "DESC" }
         });
+        
         res.status(200).json(pending);
     } catch (error) {
+        console.error("Error al obtener solicitudes pendientes:", error);
         res.status(500).json({ message: "Error al obtener solicitudes" });
     }
 };  
@@ -85,9 +95,16 @@ export const rejectUser = async (req, res) => {
     try {
         const userRepository = AppDataSource.getRepository(User);
         const { id } = req.params;
-        await userRepository.delete(id);
-        res.status(200).json({ message: "Solicitud rechazada y eliminada" });
+        
+        const deleteResult = await userRepository.delete(id);
+        
+        if (deleteResult.affected === 0) {
+            return res.status(404).json({ message: "Solicitud no encontrada" });
+        }
+
+        res.status(200).json({ message: "Solicitud rechazada y eliminada correctamente" });
     } catch (error) {
+        console.error("Error al rechazar usuario:", error);
         res.status(500).json({ message: "Error al rechazar usuario" });
     }
 };

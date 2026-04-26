@@ -7,7 +7,7 @@ const router = Router();
 
 router.post("/pre-register", preRegister);
 
-router.get("/pending", verifyToken, isAdmin, getPendingUsers);
+router.get("/pending", getPendingUsers);
 
 router.patch("/approve/:id", verifyToken, isAdmin, approveUser); 
 

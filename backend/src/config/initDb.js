@@ -20,6 +20,7 @@ export async function createUsers() {
         email: "admin@escuela.com",
         password: await bcrypt.hash("admin123", 10),
         role: "admin",
+        isApproved: true,
         numeroTelefonico: "900000001",
       },
       {
@@ -27,6 +28,7 @@ export async function createUsers() {
         email: "secretaria@escuela.com",
         password: await bcrypt.hash("secre123", 10),
         role: "secretaria",
+        isApproved: true,
         numeroTelefonico: "900000002",
       },
       {
@@ -34,6 +36,7 @@ export async function createUsers() {
         email: "instructor@escuela.com",
         password: await bcrypt.hash("inst123", 10),
         role: "instructor",
+        isApproved: true,
         numeroTelefonico: "900000003",
       },
       {
@@ -41,6 +44,7 @@ export async function createUsers() {
         email: "alumno@gmail.com",
         password: await bcrypt.hash("alumno123", 10),
         role: "alumno",
+        isApproved: false,
         numeroTelefonico: "900000004",
       }
     ];
