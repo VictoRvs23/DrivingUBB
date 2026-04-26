@@ -39,3 +39,5 @@ export const sendApprovalEmail = async (email, nombre, tempPassword) => {
     console.error("=> Error al enviar el correo:", error);
   }
 };
+
+// QUIZAS DEBA BORRAR ESTE ARCHIVO YA QUE SOLO SE USA EN EL BACKEND POR AHORA, PERO LO DEJO POR SI QUIERO USARLO EN EL FUTURO PARA ENVIAR OTROS CORREOS DESDE EL FRONTEND
