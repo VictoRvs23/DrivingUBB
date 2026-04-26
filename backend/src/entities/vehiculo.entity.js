@@ -11,30 +11,29 @@ export const Vehiculo = new EntitySchema({
     },
     patente: {
       type: "varchar",
-      length: 10,
+      length: 6,
       unique: true,
     },
-    marca: {
-      type: "varchar",
-      length: 50,
-    },
-    modelo: {
-      type: "varchar",
-      length: 50,
-    },
     numeroMovil: {
-    type: "int",
-    unique: true,
-    nullable: false,
-    },
-    año: {
       type: "int",
+      unique: true,
+      nullable: false,
     },
     estado: {
       type: "varchar",
       length: 30,
       default: "Disponible",
       nullable: false,
+    },
+    permiso_circulacion: { 
+      type: "varchar",
+      length: 50,
+      nullable: true, 
+    },
+    revision_tecnica: {
+      type: "varchar",
+      length: 50,
+      nullable: true,
     },
     created_at: {
       type: "timestamp",
