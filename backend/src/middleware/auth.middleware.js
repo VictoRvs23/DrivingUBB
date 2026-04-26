@@ -8,15 +8,13 @@ export function verifyToken(req, res, next) {
         const authHeader = req.headers["authorization"];
         
         if (!authHeader) {
-            return res.status(401).json({ message: "No se proporcionó un token de acceso" });
+            return res.status(401).json({ message: "No se entrego un token de acceso" });
         }
-
         
         const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : authHeader;
         
         
         const decoded = jwt.verify(token, JWT_SECRET);
-
         
         req.user = {
             id: decoded.id,
@@ -34,10 +32,8 @@ export function verifyToken(req, res, next) {
         });
     }
 }
-
 export function isAdmin(req, res, next) {
     const rolesAutorizados = ["admin", "secretaria"];
-
     if (req.user && rolesAutorizados.includes(req.user.role)) {
         return next();
     } else {
@@ -47,3 +43,4 @@ export function isAdmin(req, res, next) {
         });
     }
 }
+

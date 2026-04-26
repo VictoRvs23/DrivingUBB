@@ -1,0 +1,14 @@
+
+/* Aqui podemos modificar el color general de todo, por si es que se debe cambiar o algo asi */
+:root {
+  --primary-dark: #1a2639; /* Azul */
+  --white: #ffffff;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+  background-color: var(--primary-dark); 
+}
