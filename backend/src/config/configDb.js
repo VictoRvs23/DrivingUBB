@@ -2,7 +2,7 @@
 import { DataSource } from "typeorm";
 import { DATABASE, DB_USERNAME, HOST, DB_PASSWORD, DB_PORT } from "./configEnv.js";
 import { User } from "../entities/user.entity.js";
-import { Vehiculo } from "../entities/vehiculos.entity.js";
+import { Vehiculo } from "../entities/vehiculo.entity.js";
 import { ClasePractica } from "../entities/clasesPracticas.entity.js";
 import { Instructor } from "../entities/instructor.entity.js";
 

@@ -9,8 +9,6 @@ export const preRegister = async (req, res) => {
     try {
         const userRepository = AppDataSource.getRepository(User);
         const { nombre, email, numeroTelefonico } = req.body;
-
-        // verifica el correo nomas
         const existingUser = await userRepository.findOneBy({ email });
         if (existingUser) {
             return res.status(400).json({ message: "Este correo ya envió una solicitud o ya está registrado." });
@@ -55,7 +53,6 @@ export const approveUser = async (req, res) => {
 
         await userRepository.save(user);
 
-        // correo (debo configurarlo luego porque ahora no tengo todavia puesto nada)
         console.log(`=> CORREO ENVIADO A ${user.email}. Contraseña temporal: ${tempPassword}`);
 
         res.status(200).json({ 
@@ -67,7 +64,6 @@ export const approveUser = async (req, res) => {
     }
 };
 
-// solictudes pendientes
 export const getPendingUsers = async (req, res) => {
     try {
         const userRepository = AppDataSource.getRepository(User);

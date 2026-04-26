@@ -29,6 +29,12 @@ export function verifyToken(req, res, next) {
         });
     }
 }
+export function isAlumno(req, res, next) {
+    if (req.user && req.user.role === "alumno") {
+        return next();
+    }
+    return res.status(403).json({ message: "Se requiere rol de alumno" });
+}
 
 export function isAdmin(req, res, next) {
     const rolesAutorizados = ["admin", "secretaria"];

@@ -13,13 +13,22 @@ export const Vehiculo = new EntitySchema({
       type: "varchar",
       length: 10,
       unique: true,
-      nullable: false,
+    },
+    marca: {
+      type: "varchar",
+      length: 50,
+    },
+    modelo: {
+      type: "varchar",
+      length: 50,
     },
     numeroMovil: {
+    type: "int",
+    unique: true,
+    nullable: false,
+    },
+    año: {
       type: "int",
-      length: 5,
-      unique: true,
-      nullable: false,
     },
     estado: {
       type: "varchar",

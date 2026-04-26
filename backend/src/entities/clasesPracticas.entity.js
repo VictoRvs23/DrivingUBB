@@ -45,12 +45,12 @@ export const ClasePractica = new EntitySchema({
     },
   },
   relations: {
-    alumno: {
-      target: "User",
-      type: "many-to-one",
-      joinColumn: { name: "alumno_id" },
-      onDelete: "CASCADE",
-    },
+    user: {
+    target: "User",
+    type: "many-to-one",
+    joinColumn: { name: "userId" },
+    onDelete: "CASCADE",
+  },
     instructor: {
       target: "User",
       type: "many-to-one",
