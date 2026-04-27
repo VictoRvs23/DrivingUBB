@@ -5,6 +5,8 @@ import { User } from "../entities/user.entity.js";
 import { Vehiculo } from "../entities/vehiculo.entity.js";
 import { ClasePractica } from "../entities/clasesPracticas.entity.js";
 import { Instructor } from "../entities/instructor.entity.js";
+import { Reserva } from "../entities/reservas.entity.js";
+import { createUsers } from "./initDb.js";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -14,6 +16,7 @@ export const AppDataSource = new DataSource({
   password: `${DB_PASSWORD}`,
   database: `${DATABASE}`,
   entities: [User, Vehiculo, ClasePractica, Instructor], 
+  entities: [User, Reserva],
   synchronize: true,
   logging: false,
 });
@@ -22,6 +25,9 @@ export async function connectDB() {
   try {
     await AppDataSource.initialize();
     console.log("=> Conexión a BD exitosa");
+
+    await createUsers();
+
   } catch (error) {
     console.error("=> Error al conectar a BD:", error);
     throw error;
