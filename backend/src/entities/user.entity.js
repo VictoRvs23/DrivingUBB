@@ -15,6 +15,12 @@ export const User = new EntitySchema({
       length: 100,
       nullable: false,
     },
+    run: {
+      type: "varchar",
+      length: 12,
+      unique: true,
+      nullable: false,
+    },
     email: {
       type: "varchar",
       length: 255,
