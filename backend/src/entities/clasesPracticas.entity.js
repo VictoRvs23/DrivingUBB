@@ -44,18 +44,24 @@ export const ClasePractica = new EntitySchema({
       default: () => "CURRENT_TIMESTAMP",
     },
   },
-  relations: {
-    user: {
-    target: "User",
-    type: "many-to-one",
-    joinColumn: { name: "userId" },
-    onDelete: "CASCADE",
-  },
-    instructor: {
-      target: "User",
-      type: "many-to-one",
-      joinColumn: { name: "instructor_id" },
-      onDelete: "SET NULL",
+    relations: {
+      user: {
+        target: "User",
+        type: "many-to-one",
+        joinColumn: { name: "userId" },
+        onDelete: "CASCADE",
+    },
+      instructor: {
+        target: "User",
+        type: "many-to-one",
+        joinColumn: { name: "instructor_id" },
+        onDelete: "SET NULL",
+    },
+      vehiculo: {
+        target: "Vehiculo",
+        type: "many-to-one",
+        joinColumn: { name: "vehiculo_id" },
+        onDelete: "SET NULL",
     },
   },
 });
