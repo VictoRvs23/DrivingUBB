@@ -16,9 +16,7 @@ export async function subidaArchivo(req, res) {
     if (!archivoPath) {
       return handleErrorClient(res, 400, "Archivo no subido");
     }
-    // Construye la URL completa para acceder al archivo subido
     const baseUrl = `http://${HOST}:${PORT}/api/src/upload/`;
-    // Obtiene el nombre del archivo y lo añade a la URL base
     archivoPath = baseUrl + path.basename(archivoPath);
 
     const [newArchivo, error] = await subidaArchivoService({ nombre, archivoPath });
@@ -33,7 +31,6 @@ export async function subidaArchivo(req, res) {
 
 export async function getArchivos(req, res) {
   try {
-    // Llama al service para obtener todos los archivos desde la base de datos
     const [archivos, error] = await getArchivosService();
     if (error) return handleErrorClient(res, 404, error);
 

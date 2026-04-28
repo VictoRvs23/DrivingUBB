@@ -1,19 +1,29 @@
 "use strict";
+import path from "path";
 import { AppDataSource } from "../config/configDb.js";
 import { ReporteError } from "../entities/error.entity.js";
+import { HOST, PORT } from "../config/configEnv.js";
 
 const errorRepo = AppDataSource.getRepository(ReporteError);
 
 export const createError = async (req, res) => {
     try {
+        let adjunto_foto = null;
+
+        if (req.file) {
+            const baseUrl = `http://${HOST}:${PORT}/api/src/upload/`;
+            adjunto_foto = baseUrl + path.basename(req.file.path);
+        }
+
         const nuevoError = errorRepo.create({ 
             ...req.body, 
+            adjunto_foto, 
             usuario: { id: req.user.id } 
         });
         await errorRepo.save(nuevoError);
         res.status(201).json({ message: "Reporte de error enviado con éxito", data: nuevoError });
     } catch (error) { 
-        res.status(500).json({ message: "Error al crear el reporte de error", error: error.message }); 
+        res.status(500).json({ message: "Error al crear el reporte", error: error.message }); 
     }
 };
 

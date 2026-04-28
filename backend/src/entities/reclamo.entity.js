@@ -26,7 +26,7 @@ export const Reclamo = new EntitySchema({
     evidencia_foto: {
       type: "varchar",
       length: 255,
-      nullable: false, // Es obligatorio según tus requerimientos
+      nullable: true, 
     },
     respuesta_admin: {
       type: "text",

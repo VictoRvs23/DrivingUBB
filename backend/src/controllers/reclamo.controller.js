@@ -1,4 +1,6 @@
 "use strict";
+import path from "path";
+import { HOST, PORT } from "../config/configEnv.js";
 import { AppDataSource } from "../config/configDb.js";
 import { Reclamo } from "../entities/reclamo.entity.js";
 
@@ -6,8 +8,16 @@ const reclamoRepo = AppDataSource.getRepository(Reclamo);
 
 export const createReclamo = async (req, res) => {
     try {
+
+        let evidencia_foto = null;
+
+        if (req.file) {
+            const baseUrl = `http://${HOST}:${PORT}/api/src/upload/`;
+            evidencia_foto = baseUrl + path.basename(req.file.path);
+        }
         const nuevoReclamo = reclamoRepo.create({ 
             ...req.body, 
+            evidencia_foto, 
             usuario: { id: req.user.id } 
         });
         await reclamoRepo.save(nuevoReclamo);

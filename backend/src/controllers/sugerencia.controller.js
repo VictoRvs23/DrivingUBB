@@ -1,4 +1,6 @@
 "use strict";
+import path from "path";
+import { HOST, PORT } from "../config/configEnv.js";
 import { AppDataSource } from "../config/configDb.js";
 import { Sugerencia } from "../entities/sugerencia.entity.js";
 
@@ -6,8 +8,16 @@ const sugerenciaRepo = AppDataSource.getRepository(Sugerencia);
 
 export const createSugerencia = async (req, res) => {
     try {
+        let adjunto_idea = null;
+
+        if (req.file) {
+            const baseUrl = `http://${HOST}:${PORT}/api/src/upload/`;
+            adjunto_idea = baseUrl + path.basename(req.file.path);
+        }
+
         const nuevaSugerencia = sugerenciaRepo.create({ 
             ...req.body, 
+            adjunto_idea, 
             usuario: { id: req.user.id } 
         });
         await sugerenciaRepo.save(nuevaSugerencia);

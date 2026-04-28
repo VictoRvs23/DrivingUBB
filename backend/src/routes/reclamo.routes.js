@@ -6,10 +6,11 @@ import {
 import { verifyToken, isAdmin } from "../middleware/auth.middleware.js";
 import { validateBody } from "../middleware/validateBody.js";
 import { reclamoValidation, respuestaValidation } from "../validations/soporte.validation.js";
+import { uploadImage, handleImageSizeLimit } from "../middleware/uploadImage.middleware.js";
 
 const router = Router();
 
-router.post("/", verifyToken, validateBody(reclamoValidation), createReclamo);
+router.post("/", verifyToken, uploadImage.single("evidencia_foto"), handleImageSizeLimit, validateBody(reclamoValidation), createReclamo);
 router.get("/mis-reclamos", verifyToken, getMisReclamos);
 
 router.get("/admin/todos", verifyToken, isAdmin, getAllReclamos);

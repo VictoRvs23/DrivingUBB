@@ -1,15 +1,14 @@
 "use strict";
 import { Router } from "express";
-import { 
-    createError, getMisErrores, getAllErrores, responderError, deleteError 
-} from "../controllers/error.controller.js";
+import { createError, getMisErrores, getAllErrores, responderError, deleteError } from "../controllers/error.controller.js";
 import { verifyToken, isAdmin } from "../middleware/auth.middleware.js";
 import { validateBody } from "../middleware/validateBody.js";
 import { errorValidation, respuestaValidation } from "../validations/soporte.validation.js";
+import { uploadImage, handleImageSizeLimit } from "../middleware/uploadImage.middleware.js";
 
 const router = Router();
 
-router.post("/", verifyToken, validateBody(errorValidation), createError);
+router.post("/", verifyToken, uploadImage.single("adjunto_foto"), handleImageSizeLimit, validateBody(errorValidation), createError);
 router.get("/mis-errores", verifyToken, getMisErrores);
 
 router.get("/admin/todos", verifyToken, isAdmin, getAllErrores);

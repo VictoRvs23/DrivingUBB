@@ -20,7 +20,7 @@ export const reclamoValidation = Joi.object({
     motivo: Joi.string().valid(...motivos).required(),
     fecha_incidente: Joi.date().required(),
     detalles: Joi.string().required(),
-    evidencia_foto: Joi.string().required() // Obligatorio
+    evidencia_foto: Joi.string().optional()
 });
 
 export const sugerenciaValidation = Joi.object({
