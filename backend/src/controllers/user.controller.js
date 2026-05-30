@@ -10,7 +10,7 @@ export const preRegister = async (req, res) => {
         const userRepository = AppDataSource.getRepository(User);
         const { nombre, email, numeroTelefonico } = req.body;
 
-        // verifica el correo nomas
+        // verifica el correo 
         const existingUser = await userRepository.findOneBy({ email });
         if (existingUser) {
             return res.status(400).json({ message: "Este correo ya envió una solicitud o ya está registrado." });
