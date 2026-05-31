@@ -1,28 +1,42 @@
 "use strict";
 import { EntitySchema } from "typeorm";
 
-export const Sugerencia = new EntitySchema({
-  name: "Sugerencia",
-  tableName: "sugerencias",
+export const Soporte = new EntitySchema({
+  name: "Soporte",
+  tableName: "soportes",
   columns: {
     id: {
       primary: true,
       type: "int",
       generated: "increment",
     },
-    categoria: {
+    tipo: {
       type: "varchar",
       length: 50,
+      nullable: false, // Solo aceptará: 'Duda', 'Error', 'Reclamo', 'Sugerencia'
+    },
+    titulo: {
+      type: "varchar",
+      length: 150,
       nullable: false,
     },
-    descripcion_idea: {
+    descripcion: {
       type: "text",
       nullable: false,
     },
-    adjunto_idea: {
+    imagen_adjunta: {
       type: "varchar",
       length: 255,
       nullable: true,
+    },
+    respuesta_admin: {
+      type: "text",
+      nullable: true,
+    },
+    estado: {
+      type: "varchar",
+      length: 50,
+      default: "sin respuesta", // Estados: sin respuesta, respondido, eliminado
     },
     created_at: {
       type: "timestamp",
