@@ -23,12 +23,32 @@ export const obtenerEvaluacionPorIdRequest = async (id) => {
     return await axios.get(`${API_URL}/${id}`, {
         headers: { Authorization: `Bearer ${token}`, },
     });
-}
+};
 
 export const registrarFaltaRequest = async (id, faltaData) => {
     const token = localStorage.getItem('token');
     return await axios.post(`${API_URL}/${id}/falta`, faltaData, {
         headers: { Authorization: `Bearer ${token}`, },
     });
-}
+};
 
+export const finalizarEvaluacionRequest = async (id, evaluacionData) => {
+    const token = localStorage.getItem('token');
+    return await axios.put(`${API_URL}/${id}/finalizar`, evaluacionData, {
+        headers: { Authorization: `Bearer ${token}`, },
+    });
+};
+
+export const actualizarEvaluacionRequest = async (id, evaluacionData) => {
+    const token = localStorage.getItem('token');
+    return await axios.put(`${API_URL}/${id}`, evaluacionData, {
+        headers: { Authorization: `Bearer ${token}`, },
+    });
+};
+
+export const eliminarEvaluacionRequest = async (id) => {
+    const token = localStorage.getItem('token');
+    return await axios.delete(`${API_URL}/${id}`, {
+        headers: { Authorization: `Bearer ${token}`, },
+    });
+};
