@@ -18,3 +18,17 @@ export const obtenerEvaluacionesRequest = async () => {
     });
 };
 
+export const obtenerEvaluacionPorIdRequest = async (id) => {
+    const token = localStorage.getItem('token');
+    return await axios.get(`${API_URL}/${id}`, {
+        headers: { Authorization: `Bearer ${token}`, },
+    });
+}
+
+export const registrarFaltaRequest = async (id, faltaData) => {
+    const token = localStorage.getItem('token');
+    return await axios.post(`${API_URL}/${id}/falta`, faltaData, {
+        headers: { Authorization: `Bearer ${token}`, },
+    });
+}
+
