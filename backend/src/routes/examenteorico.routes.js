@@ -3,7 +3,9 @@ import{
     obtenerPreguntas,
     generarExamenAleatorio,
     guardarRespuestas,
-    finalizarExamen
+    finalizarExamen,
+    obtenerExamenPorId,
+    obtenerResultado
 }from "../controllers/examenteorico.controller.js";
 
 const examenTeoricoRoutes=Router();
@@ -19,5 +21,11 @@ examenTeoricoRoutes.put("/:id/respuestas",guardarRespuestas);
 
 //put finalizar examen
 examenTeoricoRoutes.put("/:id/finalizar",finalizarExamen);
+
+//get- obtener examen por id
+examenTeoricoRoutes.get("/:id",obtenerExamenPorId);
+
+//get- obtener resultado del examen
+examenTeoricoRoutes.get("/:id/resultado",obtenerResultado);
 
 export default examenTeoricoRoutes;
