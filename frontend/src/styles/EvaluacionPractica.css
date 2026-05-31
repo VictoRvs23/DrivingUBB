@@ -268,8 +268,59 @@ button:disabled {
     color: #e74c3c;
 }
 
-/*faltas*/
+/*faltas detalle*/
+.faltas-detalle {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #3498db;
+}
 
+.faltas-detalle h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+}
+
+.faltas-detalle ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.faltas-detalle li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    background-color: white;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    color: #34495e;
+}
+
+.faltas-detalle li.critica {
+    border-left: 4px solid #e74c3c;
+    background-color: #fff5f5;
+}
+
+.faltas-detalle li.critica:hover {
+    background-color: #ffe8e8;
+    transform: translateX(5px);
+}
+
+.faltas-detalle li.normal {
+    border-left: 4px solid #27ae60;
+    background-color: #f0fdf4;
+}
+
+.faltas-detalle li.normal:hover {
+    background-color: #dffce7;
+    transform: translateX(5px);
+}
 
 .stat-box {
     background: linear-gradient(135deg, #f8f9fa 0%, #ecf0f1 100%);
