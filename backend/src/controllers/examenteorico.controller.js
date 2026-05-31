@@ -80,3 +80,27 @@ export async function generarExamenAleatorio(req,res){
     }
 }
 
+//funcion 4:guardar respuestas del estudiante
+export async function guardarRespuestas(req,res){
+    try{
+        const {id}=req.params;
+        const {respuestas}=req.body;
+
+        const examenRepository=AppDataSource.getRepository(ExamenTeorico);
+        const examen=await examenRepository.findOneBy({id_examen:parseInt(id)});
+        
+        if(!examen){
+            return res.status(404).json({message:"Examen no encontrado"});
+        }
+
+        //guardar respuestas
+        examen.respuestas_estudiante=respuestas;
+        await examenRepository.save(examen);
+
+        res.status(200).json({message:"Respuestas guardadas",id_examen:examen.id_examen});
+    }catch(error){
+        res.status(500).json({message:"Error al guardar las respuestas"});
+    }
+    
+}
+
