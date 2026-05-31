@@ -362,7 +362,18 @@ button:disabled {
     margin: 0;
 }
 
+/*nueva evaluacion*/
+.btn-nueva-evaluacion {
+    background-color: #9b59b6;
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1rem;
+}
 
+.btn-nueva-evaluacion:hover {
+    background-color: #8e44ad;
+    box-shadow: 0 6px 15px rgba(155, 89, 182, 0.3);
+}
 
 .stat-box {
     background: linear-gradient(135deg, #f8f9fa 0%, #ecf0f1 100%);
