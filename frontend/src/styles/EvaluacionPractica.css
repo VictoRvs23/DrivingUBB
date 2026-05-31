@@ -193,6 +193,43 @@ button:disabled {
     box-shadow: 0 6px 15px rgba(155, 89, 182, 0.3);
 }
 
+/*resultados*/
+.resultado-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #ecf0f1;
+}
+
+.evaluacion-id {
+    font-size: 1.3rem;
+    color: #2c3e50;
+    font-weight: 600;
+    margin: 0;
+}
+
+.estado {
+    font-size: 1.5rem;
+    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin: 0;
+}
+
+.estado.aprobado {
+    background-color: #d4edda;
+    color: #155724;
+    border: 2px solid #27ae60;
+}
+
+.estado.reprobado {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 2px solid #e74c3c;
+}
+
 /* Animaciones */
 @keyframes fadeIn {
     from {
