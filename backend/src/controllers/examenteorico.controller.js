@@ -35,7 +35,7 @@ export async function generarExamenAleatorio(req,res){
 
         //preguntas al azar
         const preguntasAleatorias=[];
-        const IndicesUsados=new Set();
+        const indicesUsados=new Set();
 
         while (preguntasAleatorias.length<cantidad_preguntas){
             const indice=Math.floor(Math.random()*todasLasPreguntas.length);
@@ -102,5 +102,73 @@ export async function guardarRespuestas(req,res){
         res.status(500).json({message:"Error al guardar las respuestas"});
     }
     
+}
+
+//funcion 5:finalizar examen y corregir automaticamente
+export async function finalizarExamen(req,res){
+    try{
+        const {id}=req.params;
+
+        const examenRepository=AppDataSource.getRepository(ExamenTeorico);
+        const preguntaRepository=AppDataSource.getRepository(Pregunta);
+
+        const examen=await examenRepository.findOneBy({id_examen:parseInt(id)});
+
+        if(!examen){
+            return res.status(404).json({message:"Examen no encontrado"});
+        }
+
+        //obtener todas las preguntas para verificar respuestas
+        const todasLasPreguntas=await preguntaRepository.find();
+
+        //contar respuestas correctas
+        let respuestasCorrectas=0;
+        const retroalimentacion=[];
+
+        examen.respuestas_estudiante.forEach(respuesta=>{
+            const pregunta=todasLasPreguntas.find(p=>p.id_pregunta===respuesta.id_pregunta);
+            if(pregunta){
+                const esCorrecta=respuesta.respuesta_dada===pregunta.respuesta_correcta;
+
+                if(esCorrecta){
+                    respuestasCorrectas++;
+                }else{
+                    retroalimentacion.push({
+                        id_pregunta:pregunta.id_pregunta,
+                        texto:pregunta.texto_pregunta,
+                        respuesta_correcta:pregunta.respuesta_correcta,
+                        respuesta_dada:respuesta.respuesta_dada,
+                    });
+                }
+            }
+        });
+
+        //calcular puntaje (respuestas correctas/total*100)
+        const puntaje=Math.round((respuestasCorrectas/examen.respuestas_estudiante.length)*100);
+    
+        //actualizar examen
+        examen.puntaje_obtenido=puntaje;
+        examen.estado="finalizado";
+        examen.fecha_finalizacion=new Date();
+        examen.retroalimentacion=JSON.stringify({
+            respuestas_correctas:respuestasCorrectas,
+            total_respuestas:examen.respuestas_estudiante.length,
+            porcentaje:puntaje,
+            preguntas_incorrectas:retroalimentacion,
+            aprobo:puntaje>=60
+        });
+
+        await examenRepository.save(examen);
+
+        res.status(200).json({
+            id_examen:examen.id_examen,
+            puntaje_obtenido:puntaje,
+            estado:"finalizado",
+            aprobo:puntaje>=60,
+            retroalimentacion:JSON.parse(examen.retroalimentacion)
+        });
+    }catch(error){
+        res.status(500).json({message:"Error al finalizar el examen"});
+    }
 }
 
