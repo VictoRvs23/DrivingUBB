@@ -81,7 +81,7 @@ const handleFinalizarEvaluacion=async(e)=>{
     setError('');
 
     try{
-        const response = await finalizarEvaluacionRequest(evaluacionId, {
+        await finalizarEvaluacionRequest(evaluacionId, {
             puntaje_obtenido: faltaCritica ? 0 : 100 - (faltas.length * 5),
             observaciones: `Evaluación completada. Faltas registradas: ${faltas.length}`
         });
@@ -215,5 +215,6 @@ const handleFinalizarEvaluacion=async(e)=>{
         )}
     </div>
 );
+};
 
 export default EvaluacionPractica;
