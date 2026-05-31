@@ -11,3 +11,10 @@ export const crearEvaluacionRequest = async (evaluacionData) => {
     });
 };
 
+export const obtenerEvaluacionesRequest = async () => {
+    const token = localStorage.getItem('token');
+    return await axios.get(API_URL, {
+        headers: { Authorization: `Bearer ${token}`, },
+    });
+};
+
