@@ -172,3 +172,45 @@ export async function finalizarExamen(req,res){
     }
 }
 
+//obtener examen por id
+export async function obtenerExamenPorId(req,res){
+    try{
+        const {id}=req.params;
+        const examenRepository=AppDataSource.getRepository(ExamenTeorico);
+        const examen=await examenRepository.findOneBy({id_examen:parseInt(id)});
+        if(!examen){
+            return res.status(404).json({message:"Examen no encontrado"});
+        }
+        res.status(200).json(examen);
+    }catch(error){
+        res.status(500).json({message:"Error al obtener el examen"});
+    }
+}
+
+//obtener resultados de un estudiante
+export async function obtenerResultado(req,res){
+    try{
+        const{id}=req.params;
+        const examenRepository=AppDataSource.getRepository(ExamenTeorico);
+        const examen=await examenRepository.findOneBy({id_examen: parseInt(id)});
+        
+        if(!examen){
+            return res.status(404).json({message:"Examen no encontrado"});
+        }
+
+        if(examen.estado!=="finalizado"){
+            return res.status(400).json({message:"El examen aún no ha finalizado"});
+        }
+
+        res.status(200).json({
+            id_examen:examen.id_examen,
+            puntaje_obtenido:examen.puntaje_obtenido,
+            estado:examen.estado,
+            retroalimentacion:examen.retroalimentacion,
+            fecha_finalizacion:examen.fecha_finalizacion
+        });
+    }catch(error){
+        res.status(500).json({message:"Error al obtener el resultado"});
+    }
+}
+
