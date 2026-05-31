@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { VscGitPullRequestNewChanges } from "react-icons/vsc";
 import { AiOutlineHome, AiOutlineUser, AiOutlineCheckCircle, AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
-import { MdEvaluate } from "react-icons/md";
+import { MdAssignment } from "react-icons/md";
 import '../styles/Sidebar.css';
 
 const Sidebar = () => {
@@ -16,7 +16,7 @@ const Sidebar = () => {
         { name: 'Inicio', icon: <AiOutlineHome />, path: '/home' },
         { name: 'Perfil', icon: <AiOutlineUser />, path: '/profile' },
         { name: 'Reservas', icon: <AiOutlineCheckCircle />, path: '/reservas' },
-        { name: 'Evaluación Práctica', icon: <MdEvaluate />, path: '/evaluacionpractica' },
+        { name: 'Evaluación Práctica', icon: <MdAssignment />, path: '/evaluacionpractica' },
         // luego debo agregar mas opciones
     ];
 
