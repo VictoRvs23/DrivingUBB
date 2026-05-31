@@ -340,6 +340,30 @@ button:disabled {
     padding: 20px;
 }
 
+/*observaciones/retroalimentacion*/
+.observaciones-box {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f0f8ff 0%, #e8f4f8 100%);
+    border-radius: 8px;
+    border-left: 4px solid #3498db;
+}
+
+.observaciones-box h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.observaciones-box p {
+    color: #34495e;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+
+
 .stat-box {
     background: linear-gradient(135deg, #f8f9fa 0%, #ecf0f1 100%);
     padding: 25px;
