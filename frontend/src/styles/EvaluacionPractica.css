@@ -1,0 +1,244 @@
+/* Contenedor principal */
+.evaluacion-practica-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+}
+
+.evaluacion-practica-container h1 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 2.5rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Mensajes de error y advertencia */
+.error-message {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    animation: slideDown 0.3s ease-out;
+}
+
+.warning-message {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    color: #856404;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    animation: slideDown 0.3s ease-out;
+}
+
+/* Formularios */
+.evaluacion-form,
+.evaluacion-faltas,
+.evaluacion-resultados {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.4s ease-in;
+}
+
+.evaluacion-form h2,
+.evaluacion-faltas h2,
+.evaluacion-resultados h2 {
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+    border-bottom: 3px solid #3498db;
+    padding-bottom: 10px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #34495e;
+    font-size: 1rem;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #ecf0f1;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    background-color: #f8fbff;
+}
+
+.form-group input::placeholder {
+    color: #95a5a6;
+}
+
+/* Botones */
+button {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    display: inline-block;
+}
+
+button:hover:not(:disabled) {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(52, 152, 219, 0.3);
+}
+
+button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+button:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.btn-finalizar {
+    background-color: #27ae60;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.btn-finalizar:hover:not(:disabled) {
+    background-color: #229954;
+    box-shadow: 0 6px 15px rgba(39, 174, 96, 0.3);
+}
+
+/* Lista de faltas */
+.faltas-list {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #e74c3c;
+}
+
+.faltas-list h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+}
+
+.faltas-list li {
+    list-style: none;
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    background-color: white;
+    border-radius: 6px;
+    border-left: 3px solid #e74c3c;
+    color: #34495e;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.faltas-list li:hover {
+    background-color: #fff5f5;
+    transform: translateX(5px);
+}
+
+/* Resultados */
+.evaluacion-resultados {
+    text-align: center;
+}
+
+.evaluacion-resultados p {
+    color: #34495e;
+    font-size: 1.1rem;
+    margin: 15px 0;
+    font-weight: 500;
+}
+
+.evaluacion-resultados button {
+    background-color: #9b59b6;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.evaluacion-resultados button:hover {
+    background-color: #8e44ad;
+    box-shadow: 0 6px 15px rgba(155, 89, 182, 0.3);
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .evaluacion-practica-container {
+        padding: 20px 10px;
+    }
+
+    .evaluacion-practica-container h1 {
+        font-size: 1.8rem;
+        margin-bottom: 30px;
+    }
+
+    .evaluacion-form,
+    .evaluacion-faltas,
+    .evaluacion-resultados {
+        padding: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+    }
+}

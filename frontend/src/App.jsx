@@ -5,7 +5,8 @@ import LoginPage from './pages/LoginPage.jsx';
 import PreRegisterPage from './pages/PreRegisterPage.jsx'; 
 import Home from './pages/Home.jsx'; 
 import PendingUsers from './pages/PendingUsers.jsx'; 
-import Reservas from './pages/Reservas.jsx'; 
+import Reservas from './pages/Reservas.jsx';
+import EvaluacionPractica from './pages/EvaluacionPractica.jsx'; 
 
 function App() {
   const { user, loading } = useAuth(); 
@@ -39,6 +40,11 @@ function App() {
         <Route 
           path="/admin/pending" 
           element={user?.role === 'secretaria' ? <PendingUsers /> : <Navigate to="/login" replace />} 
+        />
+
+        <Route 
+          path="/evaluacionpractica" 
+          element={user ? <EvaluacionPractica /> : <Navigate to="/login" replace />} 
         />
 
         {/* Esto es por si la ruta no existe, te manda al pre-inscripción */}
