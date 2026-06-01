@@ -19,13 +19,13 @@ export const obtenerPreguntasRequest = async () => {
 };
 
 //generar examen aleatorio
-export const generarExamenAleatorioRequest = async (tiempo_limite_segundos = 3600) => {
-    return api.post('/examenteorico', { tiempo_limite_segundos });
+export const generarExamenAleatorioRequest = async (id_estudiante, tiempo_limite_segundos = 3600) => {
+    return api.post('/examenteorico', { id_estudiante, tiempo_limite_segundos });
 };
 
 export const guardarRespuestasRequest = async (id_examen, respuestas_array) => {
     return api.put(`/examenteorico/${id_examen}/respuestas`, {
-        respuestas_dada: respuestas_array
+        respuestas: respuestas_array
     });
 };
 

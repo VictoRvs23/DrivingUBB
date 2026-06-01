@@ -17,6 +17,7 @@ const ExamenTeorico = () => {
     const [error, setError] = useState('');
     const [resultado, setResultado] = useState(null);
     const [tiempoLimite] = useState(3600);
+    const [idEstudiante,setIdEstudiante] = useState('');
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
     // Timer countdown
@@ -35,22 +36,30 @@ const ExamenTeorico = () => {
         }
     }, [step, timer]);
 
-    const handleIniciarExamen = async () => {
-        setLoading(true);
-        setError('');
+const handleIniciarExamen = async () => {
+    if (!idEstudiante) {
+        setError('Debes ingresar tu ID de estudiante');
+        return;
+    }
 
-        try {
-            const response = await generarExamenAleatorioRequest(tiempoLimite);
-            setExamenId(response.data.id_examen);
-            setPreguntas(response.data.preguntas);
-            setTimer(tiempoLimite);
-            setStep(2);
-        } catch (err) {
-            setError('Error al iniciar el examen: ' + (err.response?.data?.message || err.message));
-        } finally {
-            setLoading(false);
-        }
-    };
+    setLoading(true);
+    setError('');
+
+    try {
+        const response = await generarExamenAleatorioRequest(
+            parseInt(idEstudiante),  // ← Convierte a número
+            tiempoLimite
+        );
+        setExamenId(response.data.id_examen);
+        setPreguntas(response.data.preguntas);
+        setTimer(tiempoLimite);
+        setStep(2);
+    } catch (err) {
+        setError('Error al iniciar el examen: ' + (err.response?.data?.message || err.message));
+    } finally {
+        setLoading(false);
+    }
+};
 
     const handleSeleccionarRespuesta = (id_pregunta, respuesta_dada) => {
         setRespuestas({
@@ -106,22 +115,38 @@ const ExamenTeorico = () => {
             {error && <div className="error-message">{error}</div>}
 
             {step === 1 && (
-                <div className="examen-inicio">
-                    <h2>Iniciar Examen Teórico</h2>
-                    <div className="info-box">
-                        <p><strong>Tiempo límite:</strong> 1 hora (3600 segundos)</p>
-                        <p><strong>Instrucciones:</strong></p>
-                        <ul>
-                            <li>Responde todas las preguntas</li>
-                            <li>El examen se auto-finalizará cuando se acabe el tiempo</li>
-                            <li>No puedes volver a entrar una vez finalizado</li>
-                        </ul>
-                    </div>
-                    <button onClick={handleIniciarExamen} disabled={loading} className="btn-iniciar">
-                        {loading ? 'Iniciando...' : 'Iniciar Examen'}
-                    </button>
-                </div>
-            )}
+    <div className="examen-inicio">
+        <h2>Iniciar Examen Teórico</h2>
+        
+        <form onSubmit={(e) => { e.preventDefault(); handleIniciarExamen(); }}>
+            <div className="form-group">
+                <label>ID Estudiante</label>
+                <input
+                    type="number"
+                    value={idEstudiante}
+                    onChange={(e) => setIdEstudiante(e.target.value)}
+                    required
+                    placeholder="Ej: 1"
+                    min="1"
+                />
+            </div>
+
+            <div className="info-box">
+                <p><strong>Tiempo límite:</strong> 1 hora (3600 segundos)</p>
+                <p><strong>Instrucciones:</strong></p>
+                <ul>
+                    <li>Responde todas las preguntas</li>
+                    <li>El examen se auto-finalizará cuando se acabe el tiempo</li>
+                    <li>No puedes volver a entrar una vez finalizado</li>
+                </ul>
+            </div>
+            
+            <button type="submit" disabled={loading} className="btn-iniciar">
+                {loading ? 'Iniciando...' : 'Iniciar Examen'}
+            </button>
+        </form>
+    </div>
+)}
 
             {step === 2 && preguntas.length > 0 && (
                 <div className="examen-responder">
