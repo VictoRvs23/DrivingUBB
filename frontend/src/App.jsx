@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import LoginPage from './pages/LoginPage.jsx'; 
@@ -7,6 +6,7 @@ import Home from './pages/Home.jsx';
 import PendingUsers from './pages/PendingUsers.jsx'; 
 import Reservas from './pages/Reservas.jsx';
 import EvaluacionPractica from './pages/EvaluacionPractica.jsx'; 
+import ExamenTeorico from './pages/ExamenTeorico.jsx';
 
 function App() {
   const { user, loading } = useAuth(); 
@@ -45,6 +45,11 @@ function App() {
         <Route 
           path="/evaluacionpractica" 
           element={user ? <EvaluacionPractica /> : <Navigate to="/login" replace />} 
+        />
+
+        <Route
+          path="/examenteorico"
+          element={user ? <ExamenTeorico /> : <Navigate to="/login" replace />}
         />
 
         {/* Esto es por si la ruta no existe, te manda al pre-inscripción */}

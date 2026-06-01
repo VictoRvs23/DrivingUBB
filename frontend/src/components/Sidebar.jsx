@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { VscGitPullRequestNewChanges } from "react-icons/vsc";
 import { AiOutlineHome, AiOutlineUser, AiOutlineCheckCircle, AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
-import { MdAssignment } from "react-icons/md";
+import { MdAssignment, MdQuiz } from 'react-icons/md';
 import '../styles/Sidebar.css';
 
 const Sidebar = () => {
@@ -17,7 +17,7 @@ const Sidebar = () => {
         { name: 'Perfil', icon: <AiOutlineUser />, path: '/profile' },
         { name: 'Reservas', icon: <AiOutlineCheckCircle />, path: '/reservas' },
         { name: 'Evaluación Práctica', icon: <MdAssignment />, path: '/evaluacionpractica' },
-        // luego debo agregar mas opciones
+        { name: 'Examen Teórico', icon: <MdQuiz />, path: '/examenteorico' }
     ];
 
     if (user?.role === 'secretaria') {
