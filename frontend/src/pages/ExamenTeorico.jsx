@@ -132,7 +132,7 @@ const handleIniciarExamen = async () => {
             </div>
 
             <div className="info-box">
-                <p><strong>Tiempo límite:</strong> 1 hora (3600 segundos)</p>
+                <p><strong>Tiempo límite:</strong> 1 hora</p>
                 <p><strong>Instrucciones:</strong></p>
                 <ul>
                     <li>Responde todas las preguntas</li>
@@ -160,25 +160,25 @@ const handleIniciarExamen = async () => {
                     </div>
 
                     {preguntas[currentQuestionIndex] && (
-                        <div className="pregunta-card">
-                            <h3>{preguntas[currentQuestionIndex].texto_pregunta}</h3>
+    <div className="pregunta-card">
+        <h3>{preguntas[currentQuestionIndex].texto_pregunta}</h3>
 
-                            <div className="opciones">
-                                {preguntas[currentQuestionIndex].opciones?.map((opcion, idx) => (
-                                    <label key={idx} className="opcion">
-                                        <input
-                                            type="radio"
-                                            name={`pregunta_${preguntas[currentQuestionIndex].id_pregunta}`}
-                                            value={opcion}
-                                            checked={respuestas[preguntas[currentQuestionIndex].id_pregunta] === opcion}
-                                            onChange={() => handleSeleccionarRespuesta(preguntas[currentQuestionIndex].id_pregunta, opcion)}
-                                        />
-                                        <span className="opcion-text">{opcion}</span>
-                                    </label>
-                                ))}
-                            </div>
-                        </div>
-                    )}
+        <div className="opciones">
+            {['opcion_a', 'opcion_b', 'opcion_c', 'opcion_d'].map((clave, idx) => (
+                <label key={idx} className="opcion">
+                    <input
+                        type="radio"
+                        name={`pregunta_${preguntas[currentQuestionIndex].id_pregunta}`}
+                        value={preguntas[currentQuestionIndex][clave]}
+                        checked={respuestas[preguntas[currentQuestionIndex].id_pregunta] === preguntas[currentQuestionIndex][clave]}
+                        onChange={() => handleSeleccionarRespuesta(preguntas[currentQuestionIndex].id_pregunta, preguntas[currentQuestionIndex][clave])}
+                    />
+                    <span className="opcion-text">{preguntas[currentQuestionIndex][clave]}</span>
+                </label>
+            ))}
+        </div>
+    </div>
+)}
 
                     <div className="navegacion-preguntas">
                         <button 
