@@ -1,0 +1,65 @@
+.dashboard-layout {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f4f7f6;
+}
+
+.main-content {
+    flex-grow: 1;
+    margin-left: 250px; /* Igual que el del sidebar */
+    padding: 20px 40px;
+}
+
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-icon {
+    font-size: 2rem;
+    color: #1a2639;
+}
+
+.content-header h1 {
+    font-size: 2.5rem;
+    color: #1a2639;
+    margin: 0;
+}
+
+.notification-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.welcome-card {
+    background-color: white;
+    padding: 20px 30px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.status-badge {
+    background-color: #e3f2fd;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    color: #1976d2;
+}
+
+.status-badge span {
+    text-decoration: underline;
+}

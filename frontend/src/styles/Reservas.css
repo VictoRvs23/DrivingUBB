@@ -1,0 +1,94 @@
+.reservas-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    margin-top: 20px;
+}
+
+.date-selector {
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 300px;
+}
+
+.date-selector input {
+    padding: 12px;
+    border: 2px solid #e1e4e8;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.date-selector input:focus {
+    border-color: #1a2639;
+}
+
+.schedule-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.time-block {
+    background-color: #f8f9fa;
+    border: 2px solid #e1e4e8;
+    border-radius: 10px;
+    padding: 20px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1a2639;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+/* el hover sirve para como una transicion asi que tenemos que usarlo para que quede esteticamente mas bonito */
+.time-block:hover:not(:disabled) {
+    background-color: #1a2639;
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(26, 38, 57, 0.2);
+    border-color: #1a2639;
+}
+
+.time-block.selected {
+    background-color: #1a2639;
+    color: white;
+    border-color: #1a2639;
+}
+
+.time-block:disabled {
+    background-color: #e9ecef;
+    color: #adb5bd;
+    cursor: not-allowed;
+    border-color: #dee2e6;
+}
+
+.status-text {
+    font-size: 0.8rem;
+    font-weight: 400;
+}
+
+.btn-confirmar {
+    margin-top: 30px;
+    padding: 15px 40px;
+    background-color: #1a2639;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-confirmar:hover {
+    background-color: #25334d;
+}

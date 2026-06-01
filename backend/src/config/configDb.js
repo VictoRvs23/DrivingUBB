@@ -3,7 +3,11 @@ import { DataSource } from "typeorm";
 import { DATABASE, DB_USERNAME, HOST, DB_PASSWORD, DB_PORT } from "./configEnv.js";
 import { User } from "../entities/user.entity.js";
 import { Soporte } from "../entities/soporte.entity.js";
-
+import { Vehiculo } from "../entities/vehiculo.entity.js";
+import { ClasePractica } from "../entities/clasesPracticas.entity.js";
+import { Instructor } from "../entities/instructor.entity.js";
+import { Reserva } from "../entities/reservas.entity.js";
+import { createUsers } from "./initDb.js";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -12,7 +16,7 @@ export const AppDataSource = new DataSource({
   username: `${DB_USERNAME}`,
   password: `${DB_PASSWORD}`,
   database: `${DATABASE}`,
-  entities: [User, Soporte],
+  entities: [User, Vehiculo, ClasePractica, Instructor,Reserva, Soporte], 
   synchronize: true,
   logging: false,
 });
@@ -21,6 +25,8 @@ export async function connectDB() {
   try {
     await AppDataSource.initialize();
     console.log("=> Conexión a BD exitosa");
+
+    await createUsers();
 
   } catch (error) {
     console.error("=> Error al conectar a BD:", error);

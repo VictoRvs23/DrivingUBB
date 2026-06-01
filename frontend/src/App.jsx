@@ -5,6 +5,10 @@ import LoginPage from './pages/LoginPage.jsx';
 import PreRegisterPage from './pages/PreRegisterPage.jsx'; 
 import Home from './pages/Home.jsx'; 
 import PendingUsers from './pages/PendingUsers.jsx'; 
+import Reservas from './pages/Reservas.jsx'; 
+import Vehiculos from './pages/Vehiculos.jsx';
+import Users from './pages/User.jsx';
+import ClasesPracticas from './pages/ClasesPracticas.jsx';
 
 function App() {
   const { user, loading } = useAuth(); 
@@ -14,7 +18,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Pagina de pre-inscripciin */}
+        {/* Pagina de pre-inscripcion */}
         <Route path="/" element={<PreRegisterPage />} />
 
         {/* Login */}
@@ -29,11 +33,48 @@ function App() {
           element={user ? <Home /> : <Navigate to="/login" replace />} 
         />
 
+        {/* Reservas */}
+        <Route 
+          path="/reservas" 
+          element={user ? <Reservas /> : <Navigate to="/login" replace />} 
+        />
+
+        {/* Vehiculos: Solo Admin y Secretaria */}
+        <Route 
+          path="/vehiculos" 
+          element={
+            user && (user.role === 'admin' || user.role === 'secretaria') 
+              ? <Vehiculos /> 
+              : <Navigate to="/home" replace />
+          } 
+        />
+
+        {/* Usuarios: Solo Admin y Secretaria */}
+        <Route 
+          path="/users" 
+          element={
+            user && (user.role === 'admin' || user.role === 'secretaria') 
+              ? <Users /> 
+              : <Navigate to="/home" replace />
+          } 
+        />
+
+        {/* Usuarios: Solo Alumno y Instructor */}
+        <Route 
+          path="/clases-practicas" 
+          element={
+            user && (user.role === 'alumno' || user.role === 'instructor') 
+              ? <ClasesPracticas /> 
+              : <Navigate to="/home" replace />
+          } 
+        />
+
         <Route 
           path="/admin/pending" 
           element={user?.role === 'secretaria' ? <PendingUsers /> : <Navigate to="/login" replace />} 
         />
 
+        {/* Esto es por si la ruta no existe, te manda al pre-inscripción */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
