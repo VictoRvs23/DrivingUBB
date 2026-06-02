@@ -6,6 +6,9 @@ import PreRegisterPage from './pages/PreRegisterPage.jsx';
 import Home from './pages/Home.jsx'; 
 import PendingUsers from './pages/PendingUsers.jsx'; 
 import Reservas from './pages/Reservas.jsx'; 
+import Vehiculos from './pages/Vehiculos.jsx';
+import Users from './pages/User.jsx';
+import ClasesPracticas from './pages/ClasesPracticas.jsx';
 
 function App() {
   const { user, loading } = useAuth(); 
@@ -34,6 +37,36 @@ function App() {
         <Route 
           path="/reservas" 
           element={user ? <Reservas /> : <Navigate to="/login" replace />} 
+        />
+
+        {/* Vehiculos: Solo Admin y Secretaria */}
+        <Route 
+          path="/vehiculos" 
+          element={
+            user && (user.role === 'admin' || user.role === 'secretaria') 
+              ? <Vehiculos /> 
+              : <Navigate to="/home" replace />
+          } 
+        />
+
+        {/* Usuarios: Solo Admin y Secretaria */}
+        <Route 
+          path="/users" 
+          element={
+            user && (user.role === 'admin' || user.role === 'secretaria') 
+              ? <Users /> 
+              : <Navigate to="/home" replace />
+          } 
+        />
+
+        {/* Usuarios: Solo Alumno y Instructor */}
+        <Route 
+          path="/clases-practicas" 
+          element={
+            user && (user.role === 'alumno' || user.role === 'instructor') 
+              ? <ClasesPracticas /> 
+              : <Navigate to="/home" replace />
+          } 
         />
 
         <Route 

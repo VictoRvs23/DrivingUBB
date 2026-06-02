@@ -21,7 +21,7 @@ export const vehiculoBodySchema = Joi.object({
     }),
     
   estado: Joi.string()
-    .valid("Disponible", "Mantención", "En Ruta")
+    .valid("Disponible", "Mantencion", "En Ruta")
     .default("Disponible")
     .messages({
       "any.only": "El estado debe ser estrictamente 'Disponible', 'Mantención' o 'En Ruta'."

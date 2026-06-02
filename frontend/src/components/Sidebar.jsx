@@ -2,7 +2,8 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { VscGitPullRequestNewChanges } from "react-icons/vsc";
-import { AiOutlineHome, AiOutlineUser, AiOutlineCheckCircle } from "react-icons/ai";
+import { AiOutlineHome, AiOutlineUser, AiOutlineCheckCircle, AiOutlineCar, AiOutlineTeam} from "react-icons/ai";
+import { PiSteeringWheel } from "react-icons/pi";
 import '../styles/Sidebar.css';
 
 const Sidebar = () => {
@@ -16,11 +17,29 @@ const Sidebar = () => {
         { name: 'Reservas', icon: <AiOutlineCheckCircle />, path: '/reservas' },
     ];
 
-    if (user?.role === 'secretaria') {
+    if (user?.role !== 'secretaria') {
+        menuItems.push({ 
+            name: 'C. Prácticas', 
+            icon: <PiSteeringWheel />,
+            path: '/clases-practicas' 
+        });
+    }
+
+    if (user?.role === 'secretaria' || user?.role === 'admin') {
         menuItems.push({ 
             name: 'Solicitudes', 
             icon: <VscGitPullRequestNewChanges />,
             path: '/admin/pending' 
+        });
+        menuItems.push({ 
+            name: 'Vehículos', 
+            icon: <AiOutlineCar />,
+            path: '/vehiculos' 
+        });
+        menuItems.push({ 
+            name: 'Usuarios', 
+            icon: <AiOutlineTeam />,
+            path: '/users' 
         });
     }
 

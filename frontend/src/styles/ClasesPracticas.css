@@ -1,0 +1,138 @@
+.cp-page-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 50px;
+}
+
+.cp-header {
+    text-align: center;
+    margin-bottom: 40px;
+    color: #f1f5f9;
+}
+
+.cp-main-icon {
+    font-size: 3.5rem;
+    color: #f1f5f9;
+}
+
+.cp-header h1 {
+    font-size: 2.8rem;
+    font-weight: 500;
+    margin-top: 10px;
+    letter-spacing: 0.5px;
+}
+
+.cp-white-container {
+    background-color: #ffffff;
+    border-radius: 25px;
+    padding: 40px 50px;
+    width: 100%;
+    max-width: 1100px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.cp-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 2px solid #1e293b;
+    border-radius: 20px;
+    padding: 18px 30px;
+    background-color: #ffffff;
+    transition: transform 0.2s ease;
+}
+
+.cp-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.cp-card-left {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.cp-icon-container {
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+}
+
+.cp-class-info h3 {
+    margin: 0;
+    color: #1e293b;
+    font-size: 1.2rem;
+    font-weight: 400;
+}
+
+.cp-class-info h3 strong {
+    font-weight: 700;
+}
+
+.cp-class-info p {
+    margin: 5px 0 0 0;
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+.cp-card-right {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.cp-person-info p {
+    margin: 0;
+    color: #1e293b;
+    font-size: 1.05rem;
+}
+
+.cp-person-info p strong {
+    font-weight: 700;
+}
+
+.cp-grade-badge {
+    background-color: #1e293b;
+    color: #ffffff;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 1rem;
+    min-width: 220px;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+
+.grade-pass {
+    color: #10b981;
+}
+
+.grade-fail {
+    color: #ef4444;
+}
+
+.grade-pending {
+    color: #f59e0b;
+}
+
+.cp-edit-btn {
+    background: transparent;
+    border: none;
+    color: #1e293b;
+    cursor: pointer;
+    padding: 5px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cp-edit-btn:hover {
+    transform: scale(1.15);
+    color: #3b82f6;
+}
