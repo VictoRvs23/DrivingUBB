@@ -5,65 +5,83 @@ export const User = new EntitySchema({
   name: "User",
   tableName: "users",
   columns: {
-    id: {
+    id: { 
       primary: true,
       type: "int",
-      generated: "increment",
+      generated: "increment"
     },
-    nombre: {
+    nombre: { 
       type: "varchar",
       length: 100,
-      nullable: false,
+      nullable: false
     },
-    run: {
+    run: { 
       type: "varchar",
       length: 12,
       unique: true,
-      nullable: false,
+      nullable: false
     },
-    email: {
+    email: { 
       type: "varchar",
       length: 255,
       unique: true,
-      nullable: false,
+      nullable: false
     },
-    password: {
+    password: { 
       type: "varchar",
       length: 255,
-      nullable: true, 
+      nullable: true
     },
-    role: {
+    role: { 
       type: "varchar",
       length: 50,
       nullable: false,
-      default: "alumno",
+      default: "alumno"
     },
-    isApproved: {
-      type: "boolean",
-      default: false, 
-    },
-    numeroTelefonico: {
-      type: "varchar",
-      length: 15,
-      nullable: true,
-    },
-    rut: {
+    estado: {
       type: "varchar",
       length: 20,
-      nullable: true,
+      default: "Inactivo", 
+    },
+    numeroTelefonico: { 
+      type: "varchar",
+      length: 15,
+      nullable: true 
+    },
+    rut: { 
+      type: "varchar",
+      length: 20,
+      nullable: true 
     },
     userImage: {
       type: "varchar",
       length: 255,
-      nullable: true,
+      nullable: true
     },
-    created_at: {
+    created_at: { 
       type: "timestamp",
-      createDate: true,
+      createDate: true
     },
-    updated_at: {
+    updated_at:{ 
       type: "timestamp",
-      updateDate: true,
+      updateDate: true
     },
   },
+  relations: {
+    reservas: {
+      target: "Reserva",
+      type: "one-to-many",
+      inverseSide: "user",
+    },
+    clases_tomadas: {
+      target: "ClasePractica",
+      type: "one-to-many",
+      inverseSide: "user",
+    },
+    clases_enseñadas: {
+      target: "ClasePractica",
+      type: "one-to-many",
+      inverseSide: "instructor",
+    }
+  }
 });
