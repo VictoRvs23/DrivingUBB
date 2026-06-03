@@ -85,10 +85,22 @@ const handleIniciarExamen = async () => {
         setError('');
 
         try {
-            const respuestasArray = preguntas.map(p => ({
-                id_pregunta: p.id_pregunta,
-                respuesta_dada: respuestas[p.id_pregunta] || null
-            }));
+            const respuestasArray=preguntas.map(p=>{
+                const respuestaTexto=respuestas[p.id_pregunta];
+                let respuestaLetra=null;
+
+                //convertir texto a letra
+                if(respuestaTexto===p.opcion_a)respuestaLetra='A';
+                else if (respuestaTexto===p.opcion_b)respuestaLetra='B';
+                else if (respuestaTexto===p.opcion_c)respuestaLetra='C';
+                else if (respuestaTexto===p.opcion_d)respuestaLetra='D';
+
+                return{
+                    id_pregunta: p.id_pregunta,
+                    respuesta_dada:respuestaLetra
+                }
+            })
+
 
             await guardarRespuestasRequest(examenId, respuestasArray);
             await finalizarExamenRequest(examenId);
