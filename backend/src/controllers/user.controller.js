@@ -115,6 +115,16 @@ export const createUser = async (req, res) => {
     try {
         const userRepository = AppDataSource.getRepository(User);
         const { nombre, run, email, password, role, numeroTelefonico } = req.body;
+        const existingUser = await userRepository.findOne({
+            where: [
+                { email: email },
+                { run: run }
+            ]
+        });
+
+        if (existingUser) {
+            return res.status(400).json({ message: "El usuario ya existe." });
+        }
 
         const hashedPw = await bcrypt.hash(password, 10);
         const newUser = userRepository.create({
