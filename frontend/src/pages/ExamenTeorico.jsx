@@ -106,6 +106,7 @@ const handleIniciarExamen = async () => {
             await finalizarExamenRequest(examenId);
 
             const resultResponse = await obtenerResultadoRequest(examenId);
+            console.log('DATA DEL SERVIDOR:',resultResponse.data);
             setResultado(resultResponse.data);
             setStep(3);
         } catch (err) {
@@ -241,15 +242,15 @@ const handleIniciarExamen = async () => {
                             <span className="stat-value">{resultado.respuestas_incorrectas || 0}</span>
                         </div>
                     </div>
-                    
-{resultado.retroalimentacion && Array.isArray(resultado.retroalimentacion) && resultado.retroalimentacion.length > 0 && (
+
+{resultado.preguntas_incorrectas && resultado.preguntas_incorrectas.length > 0 && (
     <div className="retroalimentacion">
-        <h3>Preguntas con Error</h3>
-        {resultado.retroalimentacion.map((pregunta, idx) => (
-            <div key={idx} style={{ marginBottom: '15px', padding: '10px', backgroundColor: '#f5f5f5', borderRadius: '5px' }}>
-                <p><strong>Pregunta {idx + 1}:</strong> {pregunta.texto}</p>
-                <p><strong>Tu respuesta:</strong> {pregunta.respuesta_dada || 'No respondida'}</p>
-                <p><strong>Respuesta correcta:</strong> {pregunta.respuesta_correcta}</p>
+        <h3>Detalle de Respuestas Incorrectas ({resultado.respuestas_incorrectas})</h3>
+        {resultado.preguntas_incorrectas.map((pregunta, idx) => (
+            <div key={idx} style={{ marginBottom: '15px', padding: '10px', backgroundColor: '#fff3cd', borderRadius: '5px' }}>
+                <p><strong>Pregunta:</strong> {pregunta.texto}</p>
+                <p><strong>Tu respuesta:</strong> <span style={{color: '#dc3545'}}>{pregunta.respuesta_dada}</span></p>
+                <p><strong>Respuesta correcta:</strong> <span style={{color: '#28a745'}}>{pregunta.respuesta_correcta}</span></p>
             </div>
         ))}
     </div>
