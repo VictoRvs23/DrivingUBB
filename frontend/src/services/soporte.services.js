@@ -30,11 +30,13 @@ export const createSoporteRequest = async (formData) => {
 };
 
 /**
- * Obtiene los tickets del usuario autenticado (getMisSoportes del backend).
+ * Obtiene los tickets del usuario autenticado.
+ * @param {string|null} tipo - Filtro opcional: 'Duda' | 'Error' | 'Reclamo' | 'Sugerencia' | null
  */
-export const getMisSoportesRequest = async () => {
+export const getMisSoportesRequest = async (tipo = null) => {
     try {
-        const res = await API.get('/soporte/mis-soportes');
+        const params = tipo ? { tipo } : {};
+        const res = await API.get('/soporte/mis-soportes', { params });
         return res.data;
     } catch (err) {
         throw err.response?.data || { message: 'Error al obtener tus soportes' };
@@ -43,10 +45,12 @@ export const getMisSoportesRequest = async () => {
 
 /**
  * Obtiene todos los tickets (solo admin/secretaria).
+ * @param {string|null} tipo - Filtro opcional: 'Duda' | 'Error' | 'Reclamo' | 'Sugerencia' | null
  */
-export const getAllSoportesRequest = async () => {
+export const getAllSoportesRequest = async (tipo = null) => {
     try {
-        const res = await API.get('/soporte');
+        const params = tipo ? { tipo } : {};
+        const res = await API.get('/soporte/admin/todos', { params });
         return res.data;
     } catch (err) {
         throw err.response?.data || { message: 'Error al obtener todos los soportes' };
@@ -54,13 +58,13 @@ export const getAllSoportesRequest = async () => {
 };
 
 /**
- * Envía una respuesta de admin a un ticket.
+ * Envía una respuesta de admin a un ticket. PATCH /soporte/:id/responder
  * @param {number|string} id
  * @param {string} respuesta_admin
  */
 export const responderSoporteRequest = async (id, respuesta_admin) => {
     try {
-        const res = await API.patch(`/soporte/${id}/responder`, { respuesta_admin });
+        const res = await API.patch(`/soporte/admin/responder/${id}`, { respuesta_admin });
         return res.data;
     } catch (err) {
         throw err.response?.data || { message: 'Error al responder el soporte' };
@@ -68,7 +72,7 @@ export const responderSoporteRequest = async (id, respuesta_admin) => {
 };
 
 /**
- * Soft-delete de un ticket (cambia estado a "eliminado").
+ * Soft-delete de un ticket (cambia estado a "eliminado"). DELETE /soporte/:id
  * @param {number|string} id
  */
 export const deleteSoporteRequest = async (id) => {

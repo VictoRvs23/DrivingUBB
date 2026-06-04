@@ -28,13 +28,17 @@ export const createSoporte = async (req, res) => {
 };
 
 export const getMisSoportes = async (req, res) => {
-    const [soportes, error] = await getMisSoportesService(req.user.id);
+    const { tipo } = req.query; // Capturamos "?tipo=Duda" si existe
+    
+    const [soportes, error] = await getMisSoportesService(req.user.id, tipo);
     if (error) return res.status(500).json({ message: error });
     res.status(200).json(soportes);
 };
 
 export const getAllSoportes = async (req, res) => {
-    const [soportes, error] = await getAllSoportesService();
+    const { tipo } = req.query; // Capturamos "?tipo=Reclamo" si existe
+    
+    const [soportes, error] = await getAllSoportesService(tipo);
     if (error) return res.status(500).json({ message: error });
     res.status(200).json(soportes);
 };

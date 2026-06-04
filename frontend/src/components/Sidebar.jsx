@@ -38,6 +38,11 @@ const Sidebar = () => {
             icon: <VscGitPullRequestNewChanges />,
             path: '/admin/pending' 
         });
+        menuItems.push({
+                    name: 'G. Soportes',         // ← NUEVO
+                    icon: <MdOutlineSupportAgent style={{ opacity: 0.75 }} />,
+                    path: '/admin/soportes'
+        });
         menuItems.push({ 
             name: 'Vehículos', 
             icon: <AiOutlineCar />,

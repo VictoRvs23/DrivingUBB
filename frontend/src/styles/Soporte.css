@@ -590,3 +590,139 @@
         flex-direction: column;
     }
 }
+
+/* ── Barra de filtro por tipo ── */
+.filtro-tipo-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+}
+
+.filtro-tipo-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background-color: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    color: #94a3b8;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filtro-tipo-btn:hover {
+    background-color: #25334d;
+    color: #f1f5f9;
+    border-color: #94a3b8;
+}
+
+.filtro-tipo-btn--activo {
+    background-color: #1a2639;
+    color: #ffffff;
+    border-color: #ffffff;
+    font-weight: 700;
+}
+
+/* ── Resumen rápido (AdminSoportes) ── */
+.admin-soporte-resumen {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+}
+
+.resumen-chip {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.84rem;
+    font-weight: 500;
+    border: 1px solid;
+}
+
+.resumen-chip--total {
+    background-color: rgba(148, 163, 184, 0.1);
+    color: #94a3b8;
+    border-color: #334155;
+}
+
+.resumen-chip--pendiente {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+    border-color: rgba(245, 158, 11, 0.4);
+}
+
+.resumen-chip--respondido {
+    background-color: rgba(71, 128, 73, 0.15);
+    color: #4ade80;
+    border-color: rgba(71, 128, 73, 0.5);
+}
+
+.resumen-chip--eliminado {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.35);
+}
+
+/* ── Celdas de tabla admin ── */
+.admin-tipo-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #f1f5f9;
+    font-size: 0.88rem;
+}
+
+.admin-titulo-cell {
+    color: #f1f5f9;
+    font-size: 0.9rem;
+}
+
+.admin-usuario-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.admin-usuario-cell strong {
+    color: #f1f5f9;
+    font-size: 0.9rem;
+}
+
+.admin-usuario-cell span {
+    color: #94a3b8;
+    font-size: 0.8rem;
+}
+
+/* Fila de ticket eliminado — ligeramente atenuada */
+.fila-eliminada {
+    opacity: 0.55;
+}
+
+.fila-eliminada:hover {
+    opacity: 0.75;
+}
+
+/* ── Textarea de respuesta admin ── */
+.admin-respuesta-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    background-color: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    color: #f1f5f9;
+    font-size: 0.95rem;
+    font-family: inherit;
+    resize: vertical;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.admin-respuesta-textarea:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}

@@ -17,11 +17,20 @@ export const createSoporteService = async (data, userId, imageUrl) => {
     }
 };
 
-export const getMisSoportesService = async (userId) => {
+export const getMisSoportesService = async (userId, tipo) => {
     try {
         const soporteRepo = AppDataSource.getRepository(Soporte);
+        
+        // Creamos la condición base (siempre filtra por el usuario logueado)
+        const whereClause = { usuario: { id: userId } };
+        
+        // Si nos pasan un tipo válido, lo agregamos al filtro
+        if (tipo) {
+            whereClause.tipo = tipo;
+        }
+
         const soportes = await soporteRepo.find({
-            where: { usuario: { id: userId } },
+            where: whereClause,
             order: { created_at: "DESC" }
         });
         return [soportes, null];
@@ -30,10 +39,20 @@ export const getMisSoportesService = async (userId) => {
     }
 };
 
-export const getAllSoportesService = async () => {
+export const getAllSoportesService = async (tipo) => {
     try {
         const soporteRepo = AppDataSource.getRepository(Soporte);
+        
+        // Filtro vacío por defecto (trae todos)
+        const whereClause = {};
+        
+        // Si nos pasan el tipo, filtramos por eso
+        if (tipo) {
+            whereClause.tipo = tipo;
+        }
+
         const soportes = await soporteRepo.find({
+            where: whereClause,
             relations: ["usuario"],
             order: { created_at: "DESC" },
             select: { usuario: { id: true, nombre: true, email: true } }
@@ -42,7 +61,7 @@ export const getAllSoportesService = async () => {
     } catch (error) {
         return [null, "Error al obtener todos los soportes"];
     }
-};
+};;
 
 export const responderSoporteService = async (id, respuesta_admin) => {
     try {
