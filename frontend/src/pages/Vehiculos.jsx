@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { AiOutlineEdit, AiOutlineDelete, AiOutlineClose, AiOutlineCar } from "react-icons/ai";
+import { FiSliders } from "react-icons/fi";
+import Swal from 'sweetalert2'; 
 import { getVehiculosRequest, deleteVehiculoRequest, updateVehiculoRequest, createVehiculoRequest } from '../services/vehiculo.services';
 import Sidebar from '../components/Sidebar';
 import '../styles/Vehiculos.css'; 
@@ -9,6 +11,9 @@ const Vehiculos = () => {
     const [error, setError] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
+    const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+    const [activeFilterEstado, setActiveFilterEstado] = useState("");
+    const [tempFilterEstado, setTempFilterEstado] = useState("");
     
     const initialFormState = {
         patente: "",
@@ -19,33 +24,24 @@ const Vehiculos = () => {
     };
     
     const [selectedVehiculo, setSelectedVehiculo] = useState(initialFormState);
+    
     const formatDateForInput = (dateValue) => {
         if (!dateValue) return "";
-        
         const dateString = String(dateValue);
-
-        if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
-            return dateString;
-        }
-
-        if (dateString.includes('T')) {
-            return dateString.split('T')[0]; 
-        }
-
+        if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) return dateString;
+        if (dateString.includes('T')) return dateString.split('T')[0]; 
         if (dateString.includes('-')) {
             const parts = dateString.split('-');
             if (parts.length === 3 && parts[0].length === 2) {
                 return `${parts[2]}-${parts[1]}-${parts[0]}`; 
             }
         }
-
         if (dateString.includes('/')) {
             const parts = dateString.split('/');
             if (parts.length === 3) {
                 return `${parts[2]}-${parts[1]}-${parts[0]}`; 
             }
         }
-
         return "";
     };
 
@@ -64,17 +60,44 @@ const Vehiculos = () => {
     }, []);
 
     const handleDelete = async (id, patente) => {
-        const confirmar = window.confirm(`¿Estás seguro de eliminar el vehículo con patente ${patente}?`);
-        if (confirmar) {
-            try {
-                await deleteVehiculoRequest(id);
-                setVehiculos(vehiculos.filter(v => v.id !== id));
-                alert("Vehículo eliminado con éxito.");
-            } catch (error) {
-                console.error("Error al eliminar:", error);
-                alert("No se pudo eliminar el vehículo.");
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: `Vas a eliminar el vehículo con patente ${patente}. Esta acción no se puede deshacer.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444', 
+            cancelButtonColor: '#334155', 
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+            background: '#1e293b', 
+            color: '#f1f5f9' 
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    await deleteVehiculoRequest(id);
+                    setVehiculos(vehiculos.filter(v => v.id !== id));
+                    
+                    Swal.fire({
+                        title: "Eliminado",
+                        text: "Vehículo eliminado con éxito.",
+                        icon: "success",
+                        background: '#1e293b',
+                        color: '#f1f5f9',
+                        confirmButtonColor: '#8b5cf6'
+                    });
+                } catch (error) {
+                    console.error("Error al eliminar:", error);
+                    Swal.fire({
+                        title: "Error",
+                        text: "No se pudo eliminar el vehículo.",
+                        icon: "error",
+                        background: '#1e293b',
+                        color: '#f1f5f9',
+                        confirmButtonColor: '#8b5cf6'
+                    });
+                }
             }
-        }
+        });
     };
 
     const handleOpenAddModal = () => {
@@ -118,11 +141,27 @@ const Vehiculos = () => {
             if (isEditing) {
                 await updateVehiculoRequest(selectedVehiculo.id, payload);
                 setVehiculos(vehiculos.map(v => v.id === selectedVehiculo.id ? { ...payload, id: selectedVehiculo.id } : v));
-                alert("Vehículo actualizado con éxito.");
+                
+                Swal.fire({
+                    title: "Éxito",
+                    text: "Vehículo actualizado con éxito.",
+                    icon: "success",
+                    background: '#1e293b',
+                    color: '#f1f5f9',
+                    confirmButtonColor: '#8b5cf6'
+                });
             } else {
                 const response = await createVehiculoRequest(payload);
                 setVehiculos([...vehiculos, response.data]);
-                alert("Vehículo creado con éxito.");
+                
+                Swal.fire({
+                    title: "Éxito",
+                    text: "Vehículo creado con éxito.",
+                    icon: "success",
+                    background: '#1e293b',
+                    color: '#f1f5f9',
+                    confirmButtonColor: '#8b5cf6'
+                });
             }
             
             handleCloseModal();
@@ -130,12 +169,51 @@ const Vehiculos = () => {
             
         } catch (error) {
             console.error("DETALLE DEL ERROR DEL BACKEND:", error.response?.data);
-            const backendMessage = error.response?.data?.message || "Revisa la consola para ver qué campo falló.";
-            alert(`Error 400: ${backendMessage}`);
+            const backendMessage = error.response?.data?.message || "Revisa la consola para más detalles.";
+            
+            if (error.response?.data?.errors) {
+                Swal.fire({
+                    title: "Error de validación", 
+                    text: error.response.data.errors.join('\n'), 
+                    icon: "error",
+                    background: '#1e293b',
+                    color: '#f1f5f9',
+                    confirmButtonColor: '#8b5cf6'
+                });
+            } else {
+                Swal.fire({
+                    title: "Error", 
+                    text: backendMessage, 
+                    icon: "error",
+                    background: '#1e293b',
+                    color: '#f1f5f9',
+                    confirmButtonColor: '#8b5cf6'
+                });
+            }
         }
     };
 
-    const vehiculosOrdenados = [...vehiculos].sort((a, b) => a.numeroMovil - b.numeroMovil);
+    const handleOpenFilterModal = () => {
+        setTempFilterEstado(activeFilterEstado);
+        setIsFilterModalOpen(true);
+    };
+
+    const handleFilterSubmit = (e) => {
+        e.preventDefault();
+        setActiveFilterEstado(tempFilterEstado);
+        setIsFilterModalOpen(false);
+    };
+
+    const handleClearFilters = () => {
+        setActiveFilterEstado("");
+        setTempFilterEstado("");
+        setIsFilterModalOpen(false);
+    };
+
+    const filteredVehiculos = vehiculos.filter(v => {
+        return activeFilterEstado === "" || v.estado === activeFilterEstado;
+    });
+    const vehiculosOrdenados = [...filteredVehiculos].sort((a, b) => a.numeroMovil - b.numeroMovil);
 
     return (
         <div className="main-container">
@@ -144,13 +222,24 @@ const Vehiculos = () => {
             <div className="vehiculos-page">
                 <div className="vehiculos-header">
                     <h1><AiOutlineCar className="title-icon"/> Gestión de Vehículos</h1>
-                    <button 
-                        className="btn-add" 
-                        onClick={handleOpenAddModal}
-                        title="Registrar Nuevo Vehículo"
-                    >
-                        +
-                    </button>
+
+                    <div className="header-actions">
+                        <button 
+                            className="btn-filter" 
+                            onClick={handleOpenFilterModal}
+                            title="Filtrar Vehículos"
+                        >
+                            <FiSliders />
+                        </button>
+                        
+                        <button 
+                            className="btn-add" 
+                            onClick={handleOpenAddModal}
+                            title="Registrar Nuevo Vehículo"
+                        >
+                            +
+                        </button>
+                    </div>
                 </div>
                 
                 {error && <p className="error-msg">{error}</p>}
@@ -201,7 +290,7 @@ const Vehiculos = () => {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="6" className="text-center">No hay vehículos registrados.</td>
+                                    <td colSpan="6" className="text-center">No se encontraron vehículos con esos filtros.</td>
                                 </tr>
                             )}
                         </tbody>
@@ -252,6 +341,38 @@ const Vehiculos = () => {
                             <div className="modal-actions">
                                 <button type="button" className="btn-cancel" onClick={handleCloseModal}>Cancelar</button>
                                 <button type="submit" className="btn-save">{isEditing ? "Guardar Cambios" : "Crear Vehículo"}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+            {isFilterModalOpen && (
+                <div className="modal-overlay">
+                    <div className="modal-content" style={{ maxWidth: '400px' }}>
+                        <div className="modal-header">
+                            <h2>Filtrar Vehículos</h2>
+                            <button className="btn-close-modal" onClick={() => setIsFilterModalOpen(false)}>
+                                <AiOutlineClose />
+                            </button>
+                        </div>
+                        
+                        <form onSubmit={handleFilterSubmit} className="modal-form">
+                            <div className="form-group">
+                                <label>Filtrar por Estado:</label>
+                                <select 
+                                    value={tempFilterEstado} 
+                                    onChange={(e) => setTempFilterEstado(e.target.value)}
+                                >
+                                    <option value="">Todos los Estados</option>
+                                    <option value="Disponible">Disponible</option>
+                                    <option value="Mantencion">Mantencion</option>
+                                    <option value="En Ruta">En Ruta</option>
+                                </select>
+                            </div>
+                            
+                            <div className="modal-actions">
+                                <button type="button" className="btn-cancel" onClick={handleClearFilters}>Limpiar Filtro</button>
+                                <button type="submit" className="btn-save">Aplicar Filtro</button>
                             </div>
                         </form>
                     </div>
