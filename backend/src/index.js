@@ -12,7 +12,7 @@ const app = express();
 
 const allowedOrigins = [FRONTEND_URL || "http://localhost:5173"];
 app.use(cors({ 
-  origin: allowedOrigins,
+  origin: true,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], 
   allowedHeaders: ['Content-Type', 'Authorization']

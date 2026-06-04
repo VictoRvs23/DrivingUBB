@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { AiOutlineEdit, AiOutlineDelete, AiOutlineClose, AiOutlineUser } from "react-icons/ai";
+import { FiSliders } from "react-icons/fi"; 
+import Swal from 'sweetalert2'; 
 import { getUsersRequest, deleteUserRequest, updateUserRequest, createUserRequest } from '../services/user.services';
 import Sidebar from '../components/Sidebar';
 import '../styles/User.css'; 
@@ -9,14 +11,17 @@ const User = () => {
     const [error, setError] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-    
+    const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+    const [activeFilters, setActiveFilters] = useState({ role: "", estado: "" });
+    const [tempFilters, setTempFilters] = useState({ role: "", estado: "" });
+
     const initialFormState = {
         nombre: "",
         run: "",
         email: "",
         numeroTelefonico: "",
         role: "alumno",
-        isApproved: "true",
+        estado: "Activo",
         password: "" 
     };
     
@@ -35,45 +40,27 @@ const User = () => {
     useEffect(() => {
         fetchUsers();
     }, []);
-
     const handleDelete = async (id, nombre) => {
-        const confirmar = window.confirm(`¿Estás seguro de eliminar al usuario ${nombre}? Esta acción no se puede deshacer.`);
-        if (confirmar) {
-            try {
-                await deleteUserRequest(id);
-                setUsers(users.filter(u => u.id !== id));
-                alert("Usuario eliminado con éxito.");
-            } catch (error) {
-                console.error("Error al eliminar:", error);
-                alert("No se pudo eliminar el usuario.");
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: `Vas a eliminar al usuario ${nombre}. Esta acción no se puede deshacer.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#1a2639',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    await deleteUserRequest(id);
+                    setUsers(users.filter(u => u.id !== id));
+                    Swal.fire("Eliminado", "Usuario eliminado con éxito.", "success");
+                } catch (error) {
+                    console.error("Error al eliminar:", error);
+                    Swal.fire("Error", "No se pudo eliminar el usuario.", "error");
+                }
             }
-        }
-    };
-
-    const handleOpenAddModal = () => {
-        setSelectedUser(initialFormState); 
-        setIsEditing(false); 
-        setIsModalOpen(true);
-    };
-
-    const handleOpenEditModal = (user) => {
-        setSelectedUser({
-            ...user,
-            isApproved: user.isApproved ? "true" : "false",
-            password: ""
-        });
-        setIsEditing(true); 
-        setIsModalOpen(true); 
-    };
-
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-    };
-
-    const handleFormChange = (e) => {
-        setSelectedUser({
-            ...selectedUser,
-            [e.target.name]: e.target.value
         });
     };
 
@@ -86,55 +73,106 @@ const User = () => {
                 email: selectedUser.email,
                 numeroTelefonico: String(selectedUser.numeroTelefonico),
                 role: selectedUser.role,
-                isApproved: selectedUser.isApproved === "true"
+                estado: selectedUser.estado 
             };
 
             if (isEditing) {
                 await updateUserRequest(selectedUser.id, payload);
-                alert("Usuario actualizado con éxito.");
+                Swal.fire("Éxito", "Usuario actualizado con éxito.", "success");
             } else {
                 payload.password = selectedUser.password;
                 await createUserRequest(payload);
-                alert("Usuario creado con éxito.");
+                Swal.fire("Éxito", "Usuario creado con éxito.", "success");
             }
             
-            handleCloseModal();
+            setIsModalOpen(false);
             fetchUsers(); 
             
         } catch (error) {
             console.error("DETALLE DEL ERROR:", error.response?.data);
             const backendMessage = error.response?.data?.message || "Revisa la consola para más detalles.";
-            
             if (error.response?.data?.errors) {
-                alert(`Error de validación: \n- ${error.response.data.errors.join('\n- ')}`);
+                Swal.fire("Error de validación", error.response.data.errors.join('\n'), "error");
             } else {
-                alert(`Error: ${backendMessage}`);
+                Swal.fire("Error", backendMessage, "error");
             }
         }
     };
 
-    const sortedUsers = [...users].sort((a, b) => a.nombre.localeCompare(b.nombre));
+    const handleFormChange = (e) => setSelectedUser({ ...selectedUser, [e.target.name]: e.target.value });
+    
+    const handleOpenAddModal = () => {
+        setSelectedUser(initialFormState); 
+        setIsEditing(false); 
+        setIsModalOpen(true);
+    };
+
+    const handleOpenEditModal = (user) => {
+        setSelectedUser({ ...user, estado: user.estado || "Inactivo", password: "" });
+        setIsEditing(true); 
+        setIsModalOpen(true); 
+    };
+    const handleOpenFilterModal = () => {
+        setTempFilters(activeFilters);
+        setIsFilterModalOpen(true);
+    };
+
+    const handleFilterSubmit = (e) => {
+        e.preventDefault();
+        setActiveFilters(tempFilters);
+        setIsFilterModalOpen(false);
+    };
+
+    const handleClearFilters = () => {
+        const emptyFilters = { role: "", estado: "" };
+        setActiveFilters(emptyFilters);
+        setTempFilters(emptyFilters);
+        setIsFilterModalOpen(false);
+    };
+    const filteredUsers = users.filter(user => {
+        const matchRole = activeFilters.role === "" || user.role === activeFilters.role;
+        const matchEstado = activeFilters.estado === "" || user.estado === activeFilters.estado;
+        return matchRole && matchEstado;
+    });
+    const rolePriority = { admin: 1, secretaria: 2, instructor: 3, alumno: 4 };
+    const displayUsers = [...filteredUsers].sort((a, b) => {
+        const prioridadA = rolePriority[a.role?.toLowerCase()] || 5;
+        const prioridadB = rolePriority[b.role?.toLowerCase()] || 5;
+        if (prioridadA !== prioridadB) return prioridadA - prioridadB;
+        return a.nombre.localeCompare(b.nombre);
+    });
 
     return (
         <div className="main-container">
             <Sidebar />
 
-            <div className="vehiculos-page">
-                <div className="vehiculos-header">
+            <div className="users-page">
+                <div className="users-header">
                     <h1><AiOutlineUser className="title-icon"/> Gestión de Usuarios</h1>
-                    <button 
-                        className="btn-add" 
-                        onClick={handleOpenAddModal}
-                        title="Registrar Nuevo Usuario"
-                    >
-                        +
-                    </button>
+                    
+                    <div className="header-actions">
+                        <button 
+                            className="btn-filter" 
+                            onClick={handleOpenFilterModal}
+                            title="Filtrar Usuarios"
+                        >
+                            <FiSliders />
+                        </button>
+
+                        <button 
+                            className="btn-add" 
+                            onClick={handleOpenAddModal}
+                            title="Registrar Nuevo Usuario"
+                        >
+                            +
+                        </button>
+                    </div>
                 </div>
                 
                 {error && <p className="error-msg">{error}</p>}
 
                 <div className="table-container">
-                    <table className="vehiculos-table">
+                    <table className="users-table">
                         <thead>
                             <tr>
                                 <th>Nombre</th>
@@ -147,8 +185,8 @@ const User = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {sortedUsers.length > 0 ? (
-                                sortedUsers.map((user) => (
+                            {displayUsers.length > 0 ? (
+                                displayUsers.map((user) => (
                                     <tr key={user.id}>
                                         <td><strong>{user.nombre}</strong></td>
                                         <td>{user.run}</td>
@@ -160,8 +198,8 @@ const User = () => {
                                             </span>
                                         </td>
                                         <td>
-                                            <span className={`estado-badge ${user.isApproved ? 'disponible' : 'mantencion'}`}>
-                                                {user.isApproved ? 'Aprobado' : 'Pendiente'}
+                                            <span className={`estado-badge ${(user.estado || 'inactivo').toLowerCase()}`}>
+                                                {user.estado || 'Inactivo'}
                                             </span>
                                         </td>
                                         <td className="acciones-celda">
@@ -185,20 +223,19 @@ const User = () => {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="7" className="text-center">No hay usuarios registrados.</td>
+                                    <td colSpan="7" className="text-center">No se encontraron usuarios con esos filtros.</td>
                                 </tr>
                             )}
                         </tbody>
                     </table>
                 </div>
             </div>
-            
             {isModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal-content">
                         <div className="modal-header">
                             <h2>{isEditing ? `Editar Usuario: ${selectedUser.nombre}` : "Registrar Nuevo Usuario"}</h2>
-                            <button className="btn-close-modal" onClick={handleCloseModal}>
+                            <button className="btn-close-modal" onClick={() => setIsModalOpen(false)}>
                                 <AiOutlineClose />
                             </button>
                         </div>
@@ -221,15 +258,7 @@ const User = () => {
 
                             <div className="form-group">
                                 <label>Teléfono (Debe empezar con 9):</label>
-                                <input 
-                                    type="text" 
-                                    name="numeroTelefonico" 
-                                    value={selectedUser.numeroTelefonico} 
-                                    onChange={handleFormChange} 
-                                    required 
-                                    maxLength="9"
-                                    placeholder="912345678"
-                                />
+                                <input type="text" name="numeroTelefonico" value={selectedUser.numeroTelefonico} onChange={handleFormChange} required maxLength="9" placeholder="912345678" />
                             </div>
 
                             {!isEditing && (
@@ -251,15 +280,64 @@ const User = () => {
                             
                             <div className="form-group">
                                 <label>Estado del Acceso:</label>
-                                <select name="isApproved" value={selectedUser.isApproved} onChange={handleFormChange} required>
-                                    <option value="true">Aprobado / Activo</option>
-                                    <option value="false">Pendiente / Suspendido</option>
+                                <select name="estado" value={selectedUser.estado} onChange={handleFormChange} required>
+                                    <option value="Activo">Activo</option>
+                                    <option value="Inactivo">Inactivo</option>
+                                    <option value="Aprobado">Aprobado</option>
+                                    <option value="Reprobado">Reprobado</option>
                                 </select>
                             </div>
                             
                             <div className="modal-actions">
-                                <button type="button" className="btn-cancel" onClick={handleCloseModal}>Cancelar</button>
+                                <button type="button" className="btn-cancel" onClick={() => setIsModalOpen(false)}>Cancelar</button>
                                 <button type="submit" className="btn-save">{isEditing ? "Guardar Cambios" : "Crear Usuario"}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+            {isFilterModalOpen && (
+                <div className="modal-overlay">
+                    <div className="modal-content" style={{ maxWidth: '400px' }}>
+                        <div className="modal-header">
+                            <h2>Filtrar Usuarios</h2>
+                            <button className="btn-close-modal" onClick={() => setIsFilterModalOpen(false)}>
+                                <AiOutlineClose />
+                            </button>
+                        </div>
+                        
+                        <form onSubmit={handleFilterSubmit} className="modal-form">
+                            <div className="form-group">
+                                <label>Filtrar por Rol:</label>
+                                <select 
+                                    value={tempFilters.role} 
+                                    onChange={(e) => setTempFilters({ ...tempFilters, role: e.target.value })}
+                                >
+                                    <option value="">Todos los Roles</option>
+                                    <option value="alumno">Alumno</option>
+                                    <option value="instructor">Instructor</option>
+                                    <option value="secretaria">Secretaria</option>
+                                    <option value="admin">Administrador</option>
+                                </select>
+                            </div>
+                            
+                            <div className="form-group">
+                                <label>Filtrar por Estado:</label>
+                                <select 
+                                    value={tempFilters.estado} 
+                                    onChange={(e) => setTempFilters({ ...tempFilters, estado: e.target.value })}
+                                >
+                                    <option value="">Todos los Estados</option>
+                                    <option value="Activo">Activo</option>
+                                    <option value="Inactivo">Inactivo</option>
+                                    <option value="Aprobado">Aprobado</option>
+                                    <option value="Reprobado">Reprobado</option>
+                                </select>
+                            </div>
+                            
+                            <div className="modal-actions">
+                                <button type="button" className="btn-cancel" onClick={handleClearFilters}>Limpiar Filtros</button>
+                                <button type="submit" className="btn-save">Aplicar Filtro</button>
                             </div>
                         </form>
                     </div>

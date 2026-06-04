@@ -20,7 +20,7 @@ export async function createUsers() {
         run: "00000000-0",
         password: await bcrypt.hash("admin123", 10),
         role: "admin",
-        isApproved: true,
+        estado: "Activo",
         numeroTelefonico: "900000001",
       },
       {
@@ -29,7 +29,7 @@ export async function createUsers() {
         run: "11111111-1",
         password: await bcrypt.hash("secre123", 10),
         role: "secretaria",
-        isApproved: true,
+        estado: "Activo",
         numeroTelefonico: "900000002",
       },
       {
@@ -38,7 +38,7 @@ export async function createUsers() {
         run: "22222222-2",
         password: await bcrypt.hash("inst123", 10),
         role: "instructor",
-        isApproved: true,
+        estado: "Activo",
         numeroTelefonico: "900000003",
       },
       {
@@ -47,7 +47,7 @@ export async function createUsers() {
         run: "33333333-3",
         password: await bcrypt.hash("alumno123", 10),
         role: "alumno",
-        isApproved: true,
+        estado: "Activo",
         numeroTelefonico: "900000004",
       }
     ];
