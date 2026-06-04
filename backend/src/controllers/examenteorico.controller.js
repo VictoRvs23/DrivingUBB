@@ -136,7 +136,7 @@ export async function finalizarExamen(req,res){
                     retroalimentacion.push({
                         id_pregunta:pregunta.id_pregunta,
                         texto:pregunta.texto_pregunta,
-                        respuestas_correcta:pregunta.respuesta_correcta,
+                        respuesta_correcta:pregunta.respuesta_correcta,
                         respuesta_dada:respuesta.respuesta_dada,
                     });
                 }
@@ -144,15 +144,7 @@ export async function finalizarExamen(req,res){
         });
 
         //calcular puntaje (respuestas correctas/total*100)
-        const mapaOpciones={
-            A:pregunta.opcion_a,
-            B:pregunta.opcion_b,
-            C:pregunta.opcion_c,
-            D:pregunta.opcion_d
-        };
-
-        const respuestaTexto=mapaOpciones[respuesta.respuesta_dada];
-        const esCorrecta=respuestaTexto===pregunta.respuesta_correcta;
+        const puntaje=Math.round((respuestasCorrectas/examen.respuestas_estudiante.length)*100);
         //actualizar examen
         examen.puntaje_obtenido=puntaje;
         examen.estado="finalizado";
@@ -217,9 +209,10 @@ export async function obtenerResultado(req,res){
             id_examen: examen.id_examen,
             puntaje: examen.puntaje_obtenido,
             estado:examen.estado,
-            respuestas_correctas:retroalimentacionParsed.respuesta_correcta||0,
-            respuestas_incorrectas:retroalimentacionParsed.total_respuestas-(retroalimentacionParsed.respuesta_correcta||0),
-            retroalimentacion:retroalimentacionParsed.preguntas_incorrectas||[],
+            respuestas_correctas:retroalimentacionParsed.respuestas_correctas||0,
+            respuestas_incorrectas:retroalimentacionParsed.total_respuestas-(retroalimentacionParsed.respuestas_correctas||0),
+            preguntas_incorrectas: retroalimentacionParsed.preguntas_incorrectas||[],
+            total_respuestas:retroalimentacionParsed.total_respuestas||0,
             fecha_finalizacion:examen.fecha_finalizacion
         });
 
