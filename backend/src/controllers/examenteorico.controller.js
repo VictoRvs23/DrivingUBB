@@ -136,7 +136,7 @@ export async function finalizarExamen(req,res){
                     retroalimentacion.push({
                         id_pregunta:pregunta.id_pregunta,
                         texto:pregunta.texto_pregunta,
-                        respuesta_correcta:pregunta.respuesta_correcta,
+                        respuestas_correcta:pregunta.respuesta_correcta,
                         respuesta_dada:respuesta.respuesta_dada,
                     });
                 }
@@ -144,8 +144,15 @@ export async function finalizarExamen(req,res){
         });
 
         //calcular puntaje (respuestas correctas/total*100)
-        const puntaje=Math.round((respuestasCorrectas/examen.respuestas_estudiante.length)*100);
-    
+        const mapaOpciones={
+            A:pregunta.opcion_a,
+            B:pregunta.opcion_b,
+            C:pregunta.opcion_c,
+            D:pregunta.opcion_d
+        };
+
+        const respuestaTexto=mapaOpciones[respuesta.respuesta_dada];
+        const esCorrecta=respuestaTexto===pregunta.respuesta_correcta;
         //actualizar examen
         examen.puntaje_obtenido=puntaje;
         examen.estado="finalizado";
@@ -202,13 +209,20 @@ export async function obtenerResultado(req,res){
             return res.status(400).json({message:"El examen aún no ha finalizado"});
         }
 
+        const retroalimentacionParsed= examen.retroalimentacion
+        ? JSON.parse(examen.retroalimentacion)
+        :{};
+        //devuelve datos guardados al frontend 
         res.status(200).json({
-            id_examen:examen.id_examen,
-            puntaje_obtenido:examen.puntaje_obtenido,
+            id_examen: examen.id_examen,
+            puntaje: examen.puntaje_obtenido,
             estado:examen.estado,
-            retroalimentacion:examen.retroalimentacion,
+            respuestas_correctas:retroalimentacionParsed.respuesta_correcta||0,
+            respuestas_incorrectas:retroalimentacionParsed.total_respuestas-(retroalimentacionParsed.respuesta_correcta||0),
+            retroalimentacion:retroalimentacionParsed.preguntas_incorrectas||[],
             fecha_finalizacion:examen.fecha_finalizacion
         });
+
     }catch(error){
         res.status(500).json({message:"Error al obtener el resultado"});
     }

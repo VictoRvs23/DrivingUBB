@@ -99,7 +99,7 @@ const handleIniciarExamen = async () => {
                     id_pregunta: p.id_pregunta,
                     respuesta_dada:respuestaLetra
                 }
-            })
+            });
 
 
             await guardarRespuestasRequest(examenId, respuestasArray);
@@ -241,13 +241,19 @@ const handleIniciarExamen = async () => {
                             <span className="stat-value">{resultado.respuestas_incorrectas || 0}</span>
                         </div>
                     </div>
-
-                    {resultado.retroalimentacion && (
-                        <div className="retroalimentacion">
-                            <h3>Retroalimentación</h3>
-                            <p>{resultado.retroalimentacion}</p>
-                        </div>
-                    )}
+                    
+{resultado.retroalimentacion && Array.isArray(resultado.retroalimentacion) && resultado.retroalimentacion.length > 0 && (
+    <div className="retroalimentacion">
+        <h3>Preguntas con Error</h3>
+        {resultado.retroalimentacion.map((pregunta, idx) => (
+            <div key={idx} style={{ marginBottom: '15px', padding: '10px', backgroundColor: '#f5f5f5', borderRadius: '5px' }}>
+                <p><strong>Pregunta {idx + 1}:</strong> {pregunta.texto}</p>
+                <p><strong>Tu respuesta:</strong> {pregunta.respuesta_dada || 'No respondida'}</p>
+                <p><strong>Respuesta correcta:</strong> {pregunta.respuesta_correcta}</p>
+            </div>
+        ))}
+    </div>
+)}
 
                     <button 
                         onClick={() => {
