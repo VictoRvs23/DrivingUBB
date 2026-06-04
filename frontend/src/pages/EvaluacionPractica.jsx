@@ -26,12 +26,23 @@ const [puntajeObtenido, setPuntajeObtenido] = useState(null);
 const [observaciones,setObservaciones]=useState('');
 
 const tiposFaltas = [
-    { nombre: 'No ceder paso', critica: false },
-    { nombre: 'No respetar semáforo', critica: true },
-    { nombre: 'Exceso de velocidad', critica: false },
-    { nombre: 'Manejo peligroso', critica: true },
-    { nombre: 'Mala posición de manos', critica: false },
-    { nombre: 'No usar cinturón', critica: true }
+    //faltas criticas
+    {nombre: 'No respetar semáforo', critica: true, peso: 30},
+    {nombre: 'Manejo peligroso', critica: true, peso: 25},
+    {nombre: 'No usar cinturon', critica: true, peso: 20},
+
+    //faltas graves
+    { nombre: 'No ceder paso', critica: false, peso: 20 },
+    { nombre: 'Exceso de velocidad', critica: false, peso: 15 },
+    { nombre: 'No usar espejo', critica: false, peso: 12 },
+    { nombre: 'Cambio de carril sin señalizar', critica: false, peso: 15 },
+
+    //faltas leves
+    { nombre: 'Mala posición de manos', critica: false, peso: 5 },
+    { nombre: 'Velocidad insuficiente', critica: false, peso: 8 },
+    { nombre: 'Mala posición de asiento', critica: false, peso: 3 },
+    { nombre: 'Falta de concentración', critica: false, peso: 6 },
+    { nombre: 'No apagar intermitente', critica: false, peso: 2 }
 ];
 
 const handleCrearEvaluacion=async(e)=>{
@@ -80,27 +91,43 @@ const handleRegistrarFalta=async(e)=>{
 const handleFinalizarEvaluacion=async(e)=>{
     e.preventDefault();
 
-    //validacion de 1 falta
-    if(faltas.length===0){
-        setError('Debe registrar al menos una falta antes de finalizar');
-        return;
-    }
-
     setLoading(true);
     setError('');
 
-    //calculo de puntaje obtenido
+    //calculo de puntaje obtenido con pesos
     try{
-        const puntaje=faltaCritica ? 0:100-(faltas.length*5);
-        const estadoFinal=puntaje>=60 ? 'Aprobado' : 'Reprobado';
-        const obs=faltaCritica
-         ? `Evaluación reprobada por falta crítica. Total faltas: ${faltas.length}`
-         : `Evaluación completada. Total faltas: ${faltas.length}. Puntaje: ${puntaje}`;
+        // Calcular puntaje restando pesos de faltas
+        let puntajeCalculado = 100;
+        let tieneFaltaCritica = false;
+        
+        faltas.forEach(falta => {
+            const faltaConfig = tiposFaltas.find(f => f.nombre === falta.nombre_falta);
+            if(faltaConfig) {
+                puntajeCalculado -= faltaConfig.peso;
+            }
+            if(falta.es_critica) {
+                tieneFaltaCritica = true;
+            }
+        });
 
-         await finalizarEvaluacionRequest(evaluacionId, {puntaje_obtenido: puntaje, observaciones: obs});
+        // Asegurar que el puntaje no sea negativo
+        puntajeCalculado = Math.max(0, puntajeCalculado);
+        
+        const estadoFinal = puntajeCalculado >= 60 ? 'Aprobado' : 'Reprobado';
+        
+        let obs = '';
+        if(faltas.length === 0) {
+            obs = 'Evaluación perfecta. Sin faltas registradas. Puntaje: 100';
+        } else if(tieneFaltaCritica) {
+            obs = `Evaluación reprobada por falta crítica. Total faltas: ${faltas.length}. Puntaje: ${puntajeCalculado}`;
+        } else {
+            obs = `Evaluación completada. Total faltas: ${faltas.length}. Puntaje: ${puntajeCalculado}`;
+        }
+
+         await finalizarEvaluacionRequest(evaluacionId, {puntaje_obtenido: puntajeCalculado, observaciones: obs});
 
          //guardar en estado
-         setPuntajeObtenido(puntaje);
+         setPuntajeObtenido(puntajeCalculado);
          setObservaciones(obs);
          setStep(3); //mostrar resultados
      }catch (err){
@@ -190,7 +217,7 @@ const handleFinalizarEvaluacion=async(e)=>{
                         </select>
                     </div>
 
-                    <button type="submit" disabled={loading || faltaCritica}>
+                    <button type="submit" disabled={loading}>
                         {loading ? 'Registrando...' : 'Registrar Falta'}
                     </button>
                 </form>
