@@ -407,6 +407,35 @@ button:disabled {
     }
 }
 
+/* Score Badge para Resultados */
+.score-badge-eval {
+    padding: 40px 60px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    min-width: 300px;
+    margin: 0 auto 30px;
+}
+
+.score-value-eval {
+    display: block;
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.score-label-eval {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.score-badge-eval .score-value-eval {
+    color: inherit;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .evaluacion-practica-container {

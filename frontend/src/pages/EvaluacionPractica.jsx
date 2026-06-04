@@ -22,6 +22,8 @@ const EvaluacionPractica = () => {
 });
 const [faltas, setFaltas] = useState([]);
 const [faltaCritica, setFaltaCritica] = useState(false);
+const [puntajeObtenido, setPuntajeObtenido] = useState(null);
+const [observaciones,setObservaciones]=useState('');
 
 const tiposFaltas = [
     { nombre: 'No ceder paso', critica: false },
@@ -77,18 +79,33 @@ const handleRegistrarFalta=async(e)=>{
 
 const handleFinalizarEvaluacion=async(e)=>{
     e.preventDefault();
+
+    //validacion de 1 falta
+    if(faltas.length===0){
+        setError('Debe registrar al menos una falta antes de finalizar');
+        return;
+    }
+
     setLoading(true);
     setError('');
 
+    //calculo de puntaje obtenido
     try{
-        await finalizarEvaluacionRequest(evaluacionId, {
-            puntaje_obtenido: faltaCritica ? 0 : 100 - (faltas.length * 5),
-            observaciones: `Evaluación completada. Faltas registradas: ${faltas.length}`
-        });
-        setStep(3); //finalizado
-    }catch(err){
+        const puntaje=faltaCritica ? 0:100-(faltas.length*5);
+        const estadoFinal=puntaje>=60 ? 'Aprobado' : 'Reprobado';
+        const obs=faltaCritica
+         ? `Evaluación reprobada por falta crítica. Total faltas: ${faltas.length}`
+         : `Evaluación completada. Total faltas: ${faltas.length}. Puntaje: ${puntaje}`;
+
+         await finalizarEvaluacionRequest(evaluacionId, {puntaje_obtenido: puntaje, observaciones: obs});
+
+         //guardar en estado
+         setPuntajeObtenido(puntaje);
+         setObservaciones(obs);
+         setStep(3); //mostrar resultados
+     }catch (err){
         setError('Error al finalizar la evaluación: '+(err.response?.data?.message || err.message));
-    }finally{
+     }finally{
         setLoading(false);
     }
 };
@@ -196,23 +213,78 @@ const handleFinalizarEvaluacion=async(e)=>{
         )}
 
         {step === 3 && (
-            <div className="evaluacion-resultados">
-                <h2>Resultados de Evaluacion</h2>
-                <p>Evaluacion #{evaluacionId} finalizada</p>
-                <p>Total de faltas: {faltas.length}</p>
-                <p>Faltas criticas: {faltas.filter(f => f.es_critica).length}</p>
+    <div className="evaluacion-resultados">
+        <h2>Resultados de Evaluación</h2>
+        
+        <div className="resultado-header">
+    <div className="score-badge-eval" style={{
+        background: puntajeObtenido >= 60 
+            ? 'linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%)' 
+            : 'linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%)',
+        border: puntajeObtenido >= 60 ? '3px solid #27ae60' : '3px solid #e74c3c'
+    }}>
+        <span className="score-value-eval">{puntajeObtenido}%</span>
+        <span className="score-label-eval">
+            {puntajeObtenido >= 60 ? 'APROBADO' : 'REPROBADO'}
+        </span>
+    </div>
+</div>
 
-                <button onClick={() => {
-                    setStep(1);
-                    setEvaluacionId(null);
-                    setEvaluacionData({ id_estudiante: '', id_instructor: '', fecha_evaluacion: '' });
-                    setFaltas([]);
-                    setFaltaCritica(false);
-                }}>
-                    Nueva Evaluacion
-                </button>
+        <div className="resultado-stats">
+            <div className="stat-box">
+                <span className="stat-label">Puntaje Obtenido</span>
+                <span className={`stat-value ${puntajeObtenido >= 60 ? 'green' : 'red'}`}>
+                    {puntajeObtenido}/100
+                </span>
             </div>
-        )}
+            <div className="stat-box">
+                <span className="stat-label">Total Faltas</span>
+                <span className="stat-value">{faltas.length}</span>
+            </div>
+            <div className="stat-box">
+                <span className="stat-label">Faltas Críticas</span>
+                <span className="stat-value" style={{color: faltas.filter(f => f.es_critica).length > 0 ? '#e74c3c' : '#27ae60'}}>
+                    {faltas.filter(f => f.es_critica).length}
+                </span>
+            </div>
+        </div>
+
+        <div className="faltas-detalle">
+            <h3>Detalle de Faltas Registradas</h3>
+            {faltas.length > 0 ? (
+                <ul>
+                    {faltas.map((falta, idx) => (
+                        <li key={idx} className={falta.es_critica ? 'critica' : 'normal'}>
+                            <span className="falta-nombre">{falta.nombre_falta}</span>
+                            <span className="falta-tipo">
+                                {falta.es_critica ? '⚠️ Crítica' : '✓ Normal'}
+                            </span>
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p className="no-faltas">Sin faltas registradas</p>
+            )}
+        </div>
+
+        <div className="observaciones-box">
+            <h3>Observaciones</h3>
+            <p>{observaciones}</p>
+        </div>
+
+        <button onClick={() => {
+            setStep(1);
+            setEvaluacionId(null);
+            setEvaluacionData({ id_estudiante: '', id_instructor: '', fecha_evaluacion: '' });
+            setFaltas([]);
+            setFaltaCritica(false);
+            setPuntajeObtenido(null);
+            setObservaciones('');
+        }} className="btn-nueva-evaluacion">
+            Nueva Evaluación
+        </button>
+    </div>
+)}
     </div>
 );
 };
