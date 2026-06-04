@@ -4,7 +4,8 @@ import { useAuth } from './context/AuthContext';
 import LoginPage from './pages/LoginPage.jsx'; 
 import PreRegisterPage from './pages/PreRegisterPage.jsx'; 
 import Home from './pages/Home.jsx'; 
-import PendingUsers from './pages/PendingUsers.jsx'; 
+import PendingUsers from './pages/PendingUsers.jsx';
+import Profile from './components/Profile'; 
 import Reservas from './pages/Reservas.jsx'; 
 import Vehiculos from './pages/Vehiculos.jsx';
 import Users from './pages/User.jsx';
@@ -31,6 +32,12 @@ function App() {
         <Route 
           path="/home" 
           element={user ? <Home /> : <Navigate to="/login" replace />} 
+        />
+
+        {/* Perfil de usuario */}
+        <Route 
+          path="/profile" 
+          element={user ? <Profile /> : <Navigate to="/login" replace />} 
         />
 
         {/* Reservas */}

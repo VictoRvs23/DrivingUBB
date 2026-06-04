@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { VscGitPullRequestNewChanges } from "react-icons/vsc";
 import { AiOutlineHome, AiOutlineUser, AiOutlineCheckCircle, AiOutlineCar, AiOutlineTeam} from "react-icons/ai";
 import { PiSteeringWheel } from "react-icons/pi";
+import { TbLogout2 } from "react-icons/tb";
 import '../styles/Sidebar.css';
 
 const Sidebar = () => {
@@ -17,7 +18,7 @@ const Sidebar = () => {
         { name: 'Reservas', icon: <AiOutlineCheckCircle />, path: '/reservas' },
     ];
 
-    if (user?.role !== 'secretaria') {
+    if (user?.role !== 'secretaria' && user?.role !== 'admin') {
         menuItems.push({ 
             name: 'C. Prácticas', 
             icon: <PiSteeringWheel />,
@@ -64,7 +65,7 @@ const Sidebar = () => {
 
             <div className="sidebar-footer">
                 <button className="btn-logout" onClick={() => { logout(); navigate('/login'); }}>
-                    Cerrar Sesión
+                    <TbLogout2 className="logout-icon" /> Cerrar Sesión
                 </button>
             </div>
         </div>

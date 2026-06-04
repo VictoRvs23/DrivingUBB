@@ -1,7 +1,7 @@
 .sidebar {
     width: 250px;
     height: 100vh;
-    background-color: #1a2639; /* Azul oscuro */
+    background-color: #1a2639;
     color: white;
     display: flex;
     flex-direction: column;
@@ -60,10 +60,18 @@
     font-weight: bold;
     font-size: 1rem;
     transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
 }
 
 .btn-logout:hover {
     background-color: #e54545;
     transform: scale(1.02);
     box-shadow: 0 4px 12px rgba(255, 92, 92, 0.3);
+}
+
+.logout-icon {
+    font-size: 1.3rem; 
 }
