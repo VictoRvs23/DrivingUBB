@@ -9,6 +9,7 @@ import Reservas from './pages/Reservas.jsx';
 import Vehiculos from './pages/Vehiculos.jsx';
 import Users from './pages/User.jsx';
 import ClasesPracticas from './pages/ClasesPracticas.jsx';
+import Soporte from './pages/Soporte.jsx';
 
 function App() {
   const { user, loading } = useAuth(); 
@@ -37,6 +38,12 @@ function App() {
         <Route 
           path="/reservas" 
           element={user ? <Reservas /> : <Navigate to="/login" replace />} 
+        />
+
+        {/* Soporte — accesible para cualquier usuario autenticado */}
+        <Route 
+          path="/soporte" 
+          element={user ? <Soporte /> : <Navigate to="/login" replace />} 
         />
 
         {/* Vehiculos: Solo Admin y Secretaria */}
