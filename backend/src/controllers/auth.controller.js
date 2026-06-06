@@ -36,6 +36,7 @@ export async function login(req, res) {
       message: "Inicio de sesión exitoso",
       token,
       user: { 
+        id: user.id,
         nombre: user.nombre, 
         role: user.role,
         email: user.email 
