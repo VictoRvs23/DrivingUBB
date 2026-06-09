@@ -53,7 +53,6 @@ const Profile = () => {
         e.preventDefault();
         try {
             const payload = {
-                ...currentUser,
                 nombre: formData.nombre,
                 numeroTelefonico: formData.numeroTelefonico,
                 direccion: formData.direccion
@@ -69,6 +68,14 @@ const Profile = () => {
                 color: '#f1f5f9',
                 confirmButtonColor: '#8b5cf6'
             }).then(() => {
+                const storedUser = JSON.parse(localStorage.getItem('user'));
+                if (storedUser) {
+                    storedUser.direccion = formData.direccion;
+                    storedUser.numeroTelefonico = formData.numeroTelefonico;
+                    storedUser.nombre = formData.nombre;
+                    localStorage.setItem('user', JSON.stringify(storedUser));
+                }
+                
                 window.location.reload();
             });
             
@@ -135,7 +142,7 @@ const Profile = () => {
                                     <div className="detail-group">
                                         <label>Número Telefónico</label>
                                         <p className="detail-value">
-                                            {currentUser.numeroTelefonico ? `+56 ${currentUser.numeroTelefonico}` : "No registrado"}
+                                            {currentUser.numeroTelefonico ? ` ${currentUser.numeroTelefonico}` : "No registrado"}
                                         </p>
                                     </div>
                                 </div>
@@ -173,7 +180,7 @@ const Profile = () => {
                             </div>
                             
                             <div className="form-group">
-                                <label>Teléfono (Ej: 912345678):</label>
+                                <label>Teléfono (Ej: +56912345678):</label>
                                 <input 
                                     type="text" 
                                     name="numeroTelefonico" 
