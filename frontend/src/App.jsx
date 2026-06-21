@@ -10,6 +10,8 @@ import Reservas from './pages/Reservas.jsx';
 import Vehiculos from './pages/Vehiculos.jsx';
 import Users from './pages/User.jsx';
 import ClasesPracticas from './pages/ClasesPracticas.jsx';
+import Soporte from './pages/Soporte.jsx';
+import AdminSoportes from './pages/AdminSoportes.jsx';
 
 function App() {
   const { user, loading } = useAuth(); 
@@ -44,6 +46,22 @@ function App() {
         <Route 
           path="/reservas" 
           element={user ? <Reservas /> : <Navigate to="/login" replace />} 
+        />
+
+        {/* Soporte — accesible para cualquier usuario autenticado */}
+        <Route 
+          path="/soporte" 
+          element={user ? <Soporte /> : <Navigate to="/login" replace />} 
+        />
+
+        {/* Gestión de soportes — solo admin y secretaria */}
+        <Route 
+          path="/admin/soportes" 
+          element={
+            user && (user.role === 'admin' || user.role === 'secretaria')
+              ? <AdminSoportes />
+              : <Navigate to="/home" replace />
+          } 
         />
 
         {/* Vehiculos: Solo Admin y Secretaria */}

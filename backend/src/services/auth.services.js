@@ -12,8 +12,8 @@ export const loginService = async ({ email, password }) => {
         throw { status: 404, message: "Usuario no encontrado" };
     }
 
-    if (user.isApproved === false) {
-        throw { status: 403, message: "Tu solicitud de ingreso aún no ha sido aprobada" };
+    if (user.estado === "Inactivo" || user.estado === "Reprobado") {
+        throw { status: 403, message: "Tu solicitud de ingreso aún no ha sido aprobada o fue rechazada" };
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
