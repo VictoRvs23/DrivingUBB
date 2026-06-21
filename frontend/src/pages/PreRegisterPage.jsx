@@ -4,7 +4,8 @@ import { preRegisterRequest } from '../services/user.services.js';
 import '../styles/Register.css';
 
 const PreRegisterPage = () => {
-    const [formData, setFormData] = useState({ nombre: '', email: '', numeroTelefonico: '', rut: '' });
+
+    const [formData, setFormData] = useState({ nombre: '', email: '', numeroTelefonico: '', run: '' });
     const [mensaje, setMensaje] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -13,12 +14,17 @@ const PreRegisterPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        setMensaje('');
         try {
             await preRegisterRequest(formData);
             setMensaje('¡Solicitud enviada con éxito! DrivingUBB revisará tus datos.');
-            setFormData({ nombre: '', numeroTelefonico: '', email: '', rut: '' });
+            setFormData({ nombre: '', numeroTelefonico: '', email: '', run: '' });
         } catch (error) {
-            setMensaje(error.response?.data?.message || 'Error al enviar la solicitud');
+            
+            const errorBackend = error.response?.data?.errors 
+                ? error.response.data.errors.join(", ") 
+                : (error.response?.data?.message || 'Error al enviar la solicitud');
+            setMensaje(`Error: ${errorBackend}`);
         } finally {
             setLoading(false);
         }
@@ -34,19 +40,20 @@ const PreRegisterPage = () => {
                 <form onSubmit={handleSubmit}>
                     <div className="input-group">
                         <label>Nombre Completo</label>
-                        <input type="text" name="nombre" value={formData.nombre} onChange={handleChange} required />
+                        <input type="text" name="nombre" placeholder="Juan Pérez" value={formData.nombre} onChange={handleChange} required />
                     </div>
                     <div className="input-group">
-                        <label>RUT</label>
-                        <input type="text" name="rut" placeholder="12.345.678-9" value={formData.rut} onChange={handleChange} required />
+                        <label>RUN / RUT</label>
+                        
+                        <input type="text" name="run" placeholder="12.345.678-9" value={formData.run} onChange={handleChange} required />
                     </div>
                     <div className="input-group">
                         <label>Número Telefónico</label>
-                        <input type="text" name="numeroTelefonico" placeholder="+56912345678" value={formData.numeroTelefonico} onChange={handleChange} required />
+                        <input type="text" name="numeroTelefonico" placeholder="912345678" value={formData.numeroTelefonico} onChange={handleChange} required />
                     </div>
                     <div className="input-group">
                         <label>Correo Electrónico</label>
-                        <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+                        <input type="email" name="email" placeholder="ejemplo@correo.com" value={formData.email} onChange={handleChange} required />
                     </div>
                     <button type="submit" className="btn-register" disabled={loading}>
                         {loading ? 'Enviando...' : 'Enviar Solicitud'}
@@ -55,8 +62,9 @@ const PreRegisterPage = () => {
 
                 {mensaje && (
                     <p className="status-message" style={{
-                        color: mensaje.includes('Error') ? 'red' : 'green', 
-                        marginTop: '10px'
+                        color: mensaje.includes('Error') ? '#ef4444' : '#22c55e', 
+                        marginTop: '15px',
+                        fontWeight: 'bold'
                     }}>
                         {mensaje}
                     </p>

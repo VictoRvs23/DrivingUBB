@@ -2,7 +2,16 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { VscGitPullRequestNewChanges } from "react-icons/vsc";
-import { AiOutlineHome, AiOutlineUser, AiOutlineCheckCircle, AiOutlineCar, AiOutlineTeam} from "react-icons/ai";
+import { 
+    AiOutlineHome, 
+    AiOutlineUser, 
+    AiOutlineCheckCircle, 
+    AiOutlineCar, 
+    AiOutlineTeam, 
+    AiOutlineMenu, 
+    AiOutlineClose,       
+    AiOutlineUsergroupAdd 
+} from "react-icons/ai";
 import { PiSteeringWheel } from "react-icons/pi";
 import '../styles/Sidebar.css';
 
@@ -16,7 +25,6 @@ const Sidebar = () => {
         { name: 'Inicio', icon: <AiOutlineHome />, path: '/home' },
         { name: 'Perfil', icon: <AiOutlineUser />, path: '/profile' },
         { name: 'Reservas', icon: <AiOutlineCheckCircle />, path: '/reservas' },
-        // luego debo agregar mas opciones
     ];
 
     if (user?.role !== 'secretaria') {
@@ -28,6 +36,13 @@ const Sidebar = () => {
     }
 
     if (user?.role === 'secretaria' || user?.role === 'admin') {
+        // Modulo solo permite a rol secretaria y admin
+        menuItems.push({ 
+            name: 'Asignaciones', 
+            icon: <AiOutlineUsergroupAdd />,
+            path: '/asignaciones' 
+        });
+        
         menuItems.push({ 
             name: 'Solicitudes', 
             icon: <VscGitPullRequestNewChanges />,
@@ -49,12 +64,12 @@ const Sidebar = () => {
 
     return (
         <>
-            {/* un boton para oculatr o mostrar la sidebar */}
+            {/* Botón para ocultar o mostrar la sidebar */}
             <button className="mobile-nav-toggle" onClick={toggleMenu}>
                 {isOpen ? <AiOutlineClose /> : <AiOutlineMenu />}
             </button>
 
-            {/* cosas para el celular, solo es una prueba */}
+            {/* Fondo oscuro en celular, aver si funciona */}
             {isOpen && <div className="sidebar-overlay" onClick={toggleMenu}></div>}
 
             <div className={`sidebar ${isOpen ? 'open' : ''}`}>

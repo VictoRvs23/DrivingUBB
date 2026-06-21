@@ -9,6 +9,7 @@ import Reservas from './pages/Reservas.jsx';
 import Vehiculos from './pages/Vehiculos.jsx';
 import Users from './pages/User.jsx';
 import ClasesPracticas from './pages/ClasesPracticas.jsx';
+import AsignacionPage from './pages/AsignacionPage.jsx'; 
 
 function App() {
   const { user, loading } = useAuth(); 
@@ -49,7 +50,7 @@ function App() {
           } 
         />
 
-        {/* Usuarios: Solo Admin y Secretaria */}
+        {/* Usuarios Solo Admin y Secretaria */}
         <Route 
           path="/users" 
           element={
@@ -59,7 +60,7 @@ function App() {
           } 
         />
 
-        {/* Usuarios: Solo Alumno y Instructor */}
+        {/* Usuarios Solo Alumno y Instructor */}
         <Route 
           path="/clases-practicas" 
           element={
@@ -67,6 +68,12 @@ function App() {
               ? <ClasesPracticas /> 
               : <Navigate to="/home" replace />
           } 
+        />
+
+          {/* Asignación de recursos: Solo Secretaria */}
+        <Route 
+          path="/asignaciones" 
+          element={user?.role === 'admin' || user?.role === 'secretaria' ? <AsignacionPage /> : <Navigate to="/home" replace />} 
         />
 
         <Route 
