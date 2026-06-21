@@ -4,7 +4,7 @@ import { preRegisterRequest } from '../services/user.services.js';
 import '../styles/Register.css';
 
 const PreRegisterPage = () => {
-    const [formData, setFormData] = useState({ nombre: '', email: '', numeroTelefonico: '', rut: '' });
+    const [formData, setFormData] = useState({ nombre: '', email: '', numeroTelefonico: '', run: '' });
     const [mensaje, setMensaje] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -16,7 +16,7 @@ const PreRegisterPage = () => {
         try {
             await preRegisterRequest(formData);
             setMensaje('¡Solicitud enviada con éxito! DrivingUBB revisará tus datos.');
-            setFormData({ nombre: '', numeroTelefonico: '', email: '', rut: '' });
+            setFormData({ nombre: '', numeroTelefonico: '', email: '', run: '' });
         } catch (error) {
             setMensaje(error.response?.data?.message || 'Error al enviar la solicitud');
         } finally {
@@ -37,8 +37,8 @@ const PreRegisterPage = () => {
                         <input type="text" name="nombre" value={formData.nombre} onChange={handleChange} required />
                     </div>
                     <div className="input-group">
-                        <label>RUT</label>
-                        <input type="text" name="rut" placeholder="12.345.678-9" value={formData.rut} onChange={handleChange} required />
+                        <label>RUT / RUN</label>
+                        <input type="text" name="run" placeholder="12.345.678-9" value={formData.run} onChange={handleChange} required />
                     </div>
                     <div className="input-group">
                         <label>Número Telefónico</label>
