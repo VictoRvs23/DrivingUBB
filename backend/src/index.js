@@ -6,6 +6,7 @@ import morgan from "morgan";
 import { connectDB } from "./config/configDb.js";
 import indexRoutes from "./routes/index.routes.js"; 
 import { PORT, HOST, FRONTEND_URL } from "./config/configEnv.js";
+import { createUsers } from "./config/initDb.js";
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.get("/", (req, res) => {
 async function startServer() {
   try {
     await connectDB();
+    await createUsers();
     
     app.use("/api", indexRoutes);
 
