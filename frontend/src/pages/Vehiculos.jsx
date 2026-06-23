@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { AiOutlineEdit, AiOutlineDelete, AiOutlineClose, AiOutlineCar } from "react-icons/ai";
+import { AiOutlineEdit, AiOutlineDelete, AiOutlineClose, AiOutlineCar, AiOutlineFilePdf } from "react-icons/ai";
 import { FiSliders } from "react-icons/fi";
 import Swal from 'sweetalert2'; 
 import { getVehiculosRequest, deleteVehiculoRequest, updateVehiculoRequest, createVehiculoRequest } from '../services/vehiculo.services';
@@ -19,31 +19,20 @@ const Vehiculos = () => {
         patente: "",
         numeroMovil: "",
         estado: "Disponible",
-        permiso_circulacion: "",
-        revision_tecnica: ""
+        permiso_circulacion: null,
+        revision_tecnica: null     
     };
     
     const [selectedVehiculo, setSelectedVehiculo] = useState(initialFormState);
-    
-    const formatDateForInput = (dateValue) => {
-        if (!dateValue) return "";
-        const dateString = String(dateValue);
-        if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) return dateString;
-        if (dateString.includes('T')) return dateString.split('T')[0]; 
-        if (dateString.includes('-')) {
-            const parts = dateString.split('-');
-            if (parts.length === 3 && parts[0].length === 2) {
-                return `${parts[2]}-${parts[1]}-${parts[0]}`; 
-            }
-        }
-        if (dateString.includes('/')) {
-            const parts = dateString.split('/');
-            if (parts.length === 3) {
-                return `${parts[2]}-${parts[1]}-${parts[0]}`; 
-            }
-        }
-        return "";
-    };
+    const [archivos, setArchivos] = useState({
+        permiso_circulacion: null,
+        revision_tecnica: null
+    });
+
+    const [archivosAQuitar, setArchivosAQuitar] = useState({
+        permiso: false,
+        revision: false
+    });
 
     const fetchVehiculos = async () => {
         try {
@@ -100,18 +89,40 @@ const Vehiculos = () => {
         });
     };
 
+    const handleVerDocumento = (archivo) => {
+        if (archivo && archivo.toLowerCase().includes('.pdf')) {
+            window.open(`http://localhost:3000/uploads/${archivo}`, '_blank');
+        } else {
+            Swal.fire({
+                title: "Sin documento",
+                text: "No existe un archivo registrado para este vehículo.",
+                icon: "warning",
+                background: '#1e293b',
+                color: '#f1f5f9',
+                confirmButtonColor: '#8b5cf6'
+            });
+        }
+    };
+
     const handleOpenAddModal = () => {
         setSelectedVehiculo(initialFormState); 
+        setArchivos({ permiso_circulacion: null, revision_tecnica: null }); 
+        setArchivosAQuitar({ permiso: false, revision: false });
         setIsEditing(false); 
         setIsModalOpen(true);
     };
 
     const handleOpenEditModal = (vehiculo) => {
         setSelectedVehiculo({
-            ...vehiculo,
-            permiso_circulacion: formatDateForInput(vehiculo.permiso_circulacion),
-            revision_tecnica: formatDateForInput(vehiculo.revision_tecnica)
+            id: vehiculo.id,
+            patente: vehiculo.patente,
+            numeroMovil: vehiculo.numeroMovil,
+            estado: vehiculo.estado,
+            permiso_circulacion: vehiculo.permiso_circulacion,
+            revision_tecnica: vehiculo.revision_tecnica
         });
+        setArchivos({ permiso_circulacion: null, revision_tecnica: null });
+        setArchivosAQuitar({ permiso: false, revision: false });
         setIsEditing(true); 
         setIsModalOpen(true); 
     };
@@ -127,21 +138,33 @@ const Vehiculos = () => {
         });
     };
 
+    const handleFileChange = (e) => {
+        setArchivos({
+            ...archivos,
+            [e.target.name]: e.target.files[0]
+        });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const payload = {
-                patente: selectedVehiculo.patente,
-                numeroMovil: parseInt(selectedVehiculo.numeroMovil, 10),
-                estado: selectedVehiculo.estado,
-                permiso_circulacion: selectedVehiculo.permiso_circulacion,
-                revision_tecnica: selectedVehiculo.revision_tecnica
-            };
+            const formData = new FormData();
+            formData.append('patente', selectedVehiculo.patente);
+            formData.append('numeroMovil', parseInt(selectedVehiculo.numeroMovil, 10));
+            formData.append('estado', selectedVehiculo.estado);
+
+            if (archivos.permiso_circulacion) {
+                formData.append('permiso_circulacion', archivos.permiso_circulacion);
+            }
+            if (archivos.revision_tecnica) {
+                formData.append('revision_tecnica', archivos.revision_tecnica);
+            }
 
             if (isEditing) {
-                await updateVehiculoRequest(selectedVehiculo.id, payload);
-                setVehiculos(vehiculos.map(v => v.id === selectedVehiculo.id ? { ...payload, id: selectedVehiculo.id } : v));
-                
+                if (archivosAQuitar.permiso) formData.append('quitar_permiso', 'true');
+                if (archivosAQuitar.revision) formData.append('quitar_revision', 'true');
+
+                await updateVehiculoRequest(selectedVehiculo.id, formData);
                 Swal.fire({
                     title: "Éxito",
                     text: "Vehículo actualizado con éxito.",
@@ -151,9 +174,7 @@ const Vehiculos = () => {
                     confirmButtonColor: '#8b5cf6'
                 });
             } else {
-                const response = await createVehiculoRequest(payload);
-                setVehiculos([...vehiculos, response.data]);
-                
+                await createVehiculoRequest(formData);
                 Swal.fire({
                     title: "Éxito",
                     text: "Vehículo creado con éxito.",
@@ -171,10 +192,10 @@ const Vehiculos = () => {
             console.error("DETALLE DEL ERROR DEL BACKEND:", error.response?.data);
             const backendMessage = error.response?.data?.message || "Revisa la consola para más detalles.";
             
-            if (error.response?.data?.errors) {
+            if (error.response?.data?.errores) {
                 Swal.fire({
                     title: "Error de validación", 
-                    text: error.response.data.errors.join('\n'), 
+                    text: error.response.data.errores.join('\n'), 
                     icon: "error",
                     background: '#1e293b',
                     color: '#f1f5f9',
@@ -267,8 +288,30 @@ const Vehiculos = () => {
                                                 {vehiculo.estado}
                                             </span>
                                         </td>
-                                        <td>{formatDateForInput(vehiculo.permiso_circulacion)}</td>
-                                        <td>{formatDateForInput(vehiculo.revision_tecnica)}</td>
+                                        
+                                        <td>
+                                            <button 
+                                                className="btn-documento"
+                                                onClick={() => handleVerDocumento(vehiculo.permiso_circulacion)}
+                                                style={{ color: vehiculo.permiso_circulacion && vehiculo.permiso_circulacion.includes('.pdf') ? '#ffffff' : '#94a3b8' }}
+                                                title="Ver Permiso de Circulación"
+                                            >
+                                                <AiOutlineFilePdf size={20} color={vehiculo.permiso_circulacion && vehiculo.permiso_circulacion.includes('.pdf') ? "#ef4444" : "#94a3b8"} /> 
+                                                {vehiculo.permiso_circulacion && vehiculo.permiso_circulacion.includes('.pdf') ? "Ver Documento" : "Faltante"}
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button 
+                                                className="btn-documento"
+                                                onClick={() => handleVerDocumento(vehiculo.revision_tecnica)}
+                                                style={{ color: vehiculo.revision_tecnica && vehiculo.revision_tecnica.includes('.pdf') ? '#ffffff' : '#94a3b8' }}
+                                                title="Ver Revisión Técnica"
+                                            >
+                                                <AiOutlineFilePdf size={20} color={vehiculo.revision_tecnica && vehiculo.revision_tecnica.includes('.pdf') ? "#ef4444" : "#94a3b8"} /> 
+                                                {vehiculo.revision_tecnica && vehiculo.revision_tecnica.includes('.pdf') ? "Ver Documento" : "Faltante"}
+                                            </button>
+                                        </td>
+                                        
                                         <td className="acciones-celda">
                                             <button 
                                                 className="btn-action editar" 
@@ -329,13 +372,59 @@ const Vehiculos = () => {
                             </div>
                             
                             <div className="form-group">
-                                <label>Venc. Permiso Circulación:</label>
-                                <input type="date" name="permiso_circulacion" value={selectedVehiculo.permiso_circulacion} onChange={handleFormChange} required/>
+                                <label>Permiso de Circulación (PDF):</label>
+                                {isEditing && selectedVehiculo.permiso_circulacion && selectedVehiculo.permiso_circulacion.includes('.pdf') && !archivosAQuitar.permiso ? (
+                                    <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#0f172a', padding: '10px 15px', borderRadius: '8px', border: '1px solid #334155' }}>
+                                        <AiOutlineFilePdf color="#ef4444" size={24} style={{ marginRight: '10px' }}/>
+                                        <span style={{ color: '#f1f5f9', fontSize: '0.9rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '250px' }} title={selectedVehiculo.permiso_circulacion}>
+                                            Archivo Actual Guardado
+                                        </span>
+                                        <button 
+                                            type="button" 
+                                            onClick={() => setArchivosAQuitar({...archivosAQuitar, permiso: true})}
+                                            style={{ background: 'transparent', border: 'none', color: '#ef4444', marginLeft: 'auto', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                                            title="Eliminar documento actual"
+                                        >
+                                            <AiOutlineDelete size={20} />
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <input 
+                                        type="file" 
+                                        name="permiso_circulacion" 
+                                        accept=".pdf" 
+                                        onChange={handleFileChange} 
+                                        required={!isEditing && !selectedVehiculo.permiso_circulacion} 
+                                    />
+                                )}
                             </div>
                             
                             <div className="form-group">
-                                <label>Venc. Revisión Técnica:</label>
-                                <input type="date" name="revision_tecnica" value={selectedVehiculo.revision_tecnica} onChange={handleFormChange} required/>
+                                <label>Revisión Técnica (PDF):</label>
+                                {isEditing && selectedVehiculo.revision_tecnica && selectedVehiculo.revision_tecnica.includes('.pdf') && !archivosAQuitar.revision ? (
+                                    <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#0f172a', padding: '10px 15px', borderRadius: '8px', border: '1px solid #334155' }}>
+                                        <AiOutlineFilePdf color="#ef4444" size={24} style={{ marginRight: '10px' }}/>
+                                        <span style={{ color: '#f1f5f9', fontSize: '0.9rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '250px' }} title={selectedVehiculo.revision_tecnica}>
+                                            Archivo Actual Guardado
+                                        </span>
+                                        <button 
+                                            type="button" 
+                                            onClick={() => setArchivosAQuitar({...archivosAQuitar, revision: true})}
+                                            style={{ background: 'transparent', border: 'none', color: '#ef4444', marginLeft: 'auto', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                                            title="Eliminar documento actual"
+                                        >
+                                            <AiOutlineDelete size={20} />
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <input 
+                                        type="file" 
+                                        name="revision_tecnica" 
+                                        accept=".pdf" 
+                                        onChange={handleFileChange} 
+                                        required={!isEditing && !selectedVehiculo.revision_tecnica}
+                                    />
+                                )}
                             </div>
                             
                             <div className="modal-actions">
@@ -346,6 +435,7 @@ const Vehiculos = () => {
                     </div>
                 </div>
             )}
+            
             {isFilterModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal-content" style={{ maxWidth: '400px' }}>

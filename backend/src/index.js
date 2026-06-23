@@ -25,13 +25,13 @@ app.get("/", (req, res) => {
   res.send("Servidor Escuela de Manejo - Sistema activo");
 });
 
-
 async function startServer() {
   try {
     await connectDB();
     await createUsers();
 
-    app.use("/api/src/upload", express.static("src/upload"));
+    app.use("/uploads", express.static("src/upload"));
+    
     app.use("/api", indexRoutes);
 
     app.listen(PORT, () => {

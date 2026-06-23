@@ -256,6 +256,33 @@
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
+.modal-form input[type="file"] {
+    padding: 8px 10px;
+    color: #94a3b8;
+    cursor: pointer;
+}
+
+.modal-form input[type="file"]::-webkit-file-upload-button {
+    background-color: #1e293b;
+    color: #f1f5f9;
+    border: 1px solid #334155;
+    border-radius: 4px;
+    padding: 6px 12px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: 0.2s;
+}
+
+.modal-form input[type="file"]::-webkit-file-upload-button:hover {
+    background-color: #334155;
+}
+
+.modal-form input:focus, .modal-form select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
 .modal-actions {
     display: flex;
     justify-content: flex-end;
@@ -294,4 +321,24 @@
 .btn-save:hover {
     background-color: #305731;
     transform: translateY(-1px);
+}
+
+.btn-documento {
+    background: transparent;
+    border: none;
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    text-decoration: none; 
+    font-weight: bold;
+    cursor: pointer;
+    padding: 4px 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-documento:hover {
+    background-color: rgba(255, 255, 255, 0.05);
 }
