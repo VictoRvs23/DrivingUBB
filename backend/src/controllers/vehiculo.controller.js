@@ -27,10 +27,26 @@ export const createVehiculo = async (req, res) => {
 
 export const updateVehiculo = async (req, res) => {
   try {
-    const { error, value } = vehiculoBodySchema.validate(req.body, { abortEarly: false });
+    const { error, value } = vehiculoBodySchema.validate(req.body, { abortEarly: false, allowUnknown: true });
     if (error) {
       return res.status(400).json({ mensaje: "Error de validación", errores: error.details.map(e => e.message) });
     }
+
+    if (req.files?.permiso_circulacion) {
+      value.permiso_circulacion = req.files.permiso_circulacion[0].filename;
+    } else if (req.body.quitar_permiso === 'true') {
+      value.permiso_circulacion = null;
+    }
+
+    if (req.files?.revision_tecnica) {
+      value.revision_tecnica = req.files.revision_tecnica[0].filename;
+    } else if (req.body.quitar_revision === 'true') {
+      value.revision_tecnica = null;
+    }
+
+    delete value.quitar_permiso;
+    delete value.quitar_revision;
+
     await vehiculoService.updateVehiculoService(req.params.id, value);
     res.status(200).json({ mensaje: "Vehículo actualizado con éxito" });
   } catch (error) {
