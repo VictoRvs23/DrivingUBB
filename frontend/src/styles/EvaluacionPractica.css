@@ -60,6 +60,25 @@
     padding-bottom: 10px;
 }
 
+/* Información del estudiante */
+.estudiante-info {
+    background: linear-gradient(135deg, #ecf0f1 0%, #d5dbdb 100%);
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    border-left: 4px solid #3498db;
+}
+
+.estudiante-info p {
+    margin: 8px 0;
+    color: #2c3e50;
+    font-size: 1rem;
+}
+
+.estudiante-info strong {
+    color: #34495e;
+}
+
 .form-group {
     margin-bottom: 20px;
 }

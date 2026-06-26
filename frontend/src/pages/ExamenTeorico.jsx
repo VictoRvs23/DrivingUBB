@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 import {
     generarExamenAleatorioRequest,
     guardarRespuestasRequest,
@@ -8,6 +9,7 @@ import {
 import '../styles/examenteorico.css';
 
 const ExamenTeorico = () => {
+    const { user } = useAuth(); // ✅ Traer datos del usuario autenticado
     const [step, setStep] = useState(1);
     const [examenId, setExamenId] = useState(null);
     const [preguntas, setPreguntas] = useState([]);
@@ -17,7 +19,6 @@ const ExamenTeorico = () => {
     const [error, setError] = useState('');
     const [resultado, setResultado] = useState(null);
     const [tiempoLimite] = useState(3600);
-    const [idEstudiante,setIdEstudiante] = useState('');
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
     // Timer countdown
@@ -37,8 +38,8 @@ const ExamenTeorico = () => {
     }, [step, timer]);
 
 const handleIniciarExamen = async () => {
-    if (!idEstudiante) {
-        setError('Debes ingresar tu ID de estudiante');
+    if (!user?.id) {
+        setError('No se pudo identificar al estudiante');
         return;
     }
 
@@ -47,7 +48,7 @@ const handleIniciarExamen = async () => {
 
     try {
         const response = await generarExamenAleatorioRequest(
-            parseInt(idEstudiante),  // ← Convierte a número
+            user.id,  // ✅ Automático del usuario autenticado
             tiempoLimite
         );
         setExamenId(response.data.id_examen);
@@ -131,19 +132,13 @@ const handleIniciarExamen = async () => {
     <div className="examen-inicio">
         <h2>Iniciar Examen Teórico</h2>
         
-        <form onSubmit={(e) => { e.preventDefault(); handleIniciarExamen(); }}>
-            <div className="form-group">
-                <label>ID Estudiante</label>
-                <input
-                    type="number"
-                    value={idEstudiante}
-                    onChange={(e) => setIdEstudiante(e.target.value)}
-                    required
-                    placeholder="Ej: 1"
-                    min="1"
-                />
-            </div>
+        {/* Resumen del estudiante */}
+        <div className="estudiante-info">
+            <p><strong>Estudiante:</strong> {user?.nombre || 'Usuario'}</p>
+            <p><strong>ID:</strong> {user?.id}</p>
+        </div>
 
+        <form onSubmit={(e) => { e.preventDefault(); handleIniciarExamen(); }}>
             <div className="info-box">
                 <p><strong>Tiempo límite:</strong> 1 hora</p>
                 <p><strong>Instrucciones:</strong></p>

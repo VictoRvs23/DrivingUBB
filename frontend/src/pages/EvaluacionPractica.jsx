@@ -1,4 +1,5 @@
 import {useState} from "react";
+import { useAuth } from "../context/AuthContext";
 import {
     crearEvaluacionRequest,
     registrarFaltaRequest,
@@ -7,12 +8,13 @@ import {
 import "../styles/EvaluacionPractica.css";
 
 const EvaluacionPractica = () => {
-    const [step,setStep]=useState(1); //1crear 2registrar falta 3 finalizar
+    const { user } = useAuth(); // ✅ Traer datos del usuario autenticado
+    const [step,setStep]=useState(1);
     const [evaluacionId,setEvaluacionId]=useState(null);
     const [loading,setLoading]=useState(false);
     const [error,setError]=useState('');
     const [evaluacionData,setEvaluacionData]=useState({
-        id_estudiante:"",
+        id_estudiante: user?.id || "", // ✅ Automático del usuario
         id_instructor:"",
         fecha_evaluacion:"",
     });
@@ -112,9 +114,7 @@ const handleFinalizarEvaluacion=async(e)=>{
 
         // Asegurar que el puntaje no sea negativo
         puntajeCalculado = Math.max(0, puntajeCalculado);
-        
-        const estadoFinal = puntajeCalculado >= 60 ? 'Aprobado' : 'Reprobado';
-        
+                
         let obs = '';
         if(faltas.length === 0) {
             obs = 'Evaluación perfecta. Sin faltas registradas. Puntaje: 100';
@@ -145,18 +145,14 @@ const handleFinalizarEvaluacion=async(e)=>{
         {step === 1 && (
             <div className="evaluacion-form">
                 <h2>Iniciar Nueva Evaluación</h2>
-                <form onSubmit={handleCrearEvaluacion}>
-                    <div className="form-group">
-                        <label>ID Estudiante</label>
-                        <input
-                            type="number"
-                            value={evaluacionData.id_estudiante}
-                            onChange={(e) => setEvaluacionData({...evaluacionData, id_estudiante: e.target.value})}
-                            required
-                            placeholder="Ej: 1"
-                        />
-                    </div>
+                
+                {/* Resumen del estudiante */}
+                <div className="estudiante-info">
+                    <p><strong>Estudiante:</strong> {user?.nombre || 'Usuario'}</p>
+                    <p><strong>ID:</strong> {user?.id}</p>
+                </div>
 
+                <form onSubmit={handleCrearEvaluacion}>
                     <div className="form-group">
                         <label>ID Instructor</label>
                         <input
