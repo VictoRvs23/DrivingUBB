@@ -1,4 +1,5 @@
 import {useState} from "react";
+import Sidebar from "../components/Sidebar.jsx";
 import { useAuth } from "../context/AuthContext";
 import {
     crearEvaluacionRequest,
@@ -6,6 +7,7 @@ import {
     finalizarEvaluacionRequest,
 } from "../services/evaluacionpractica.service.js";
 import "../styles/EvaluacionPractica.css";
+import "../styles/Home.css";
 
 const EvaluacionPractica = () => {
     const { user } = useAuth(); // ✅ Traer datos del usuario autenticado
@@ -138,8 +140,13 @@ const handleFinalizarEvaluacion=async(e)=>{
 };
 
     return(
+    <div className="dashboard-layout">
+    <Sidebar />
+    <main className="main-content">
+        <header className="content-header">
+            <h1>Evaluacion Practica</h1>
+        </header>
     <div className="evaluacion-practica-container">
-        <h1>Evaluacion Practica</h1>
         {error && <div className="error-message">{error}</div>}
 
         {step === 1 && (
@@ -308,6 +315,8 @@ const handleFinalizarEvaluacion=async(e)=>{
         </button>
     </div>
 )}
+            </div>
+        </main>
     </div>
 );
 };
