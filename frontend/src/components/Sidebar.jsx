@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { VscGitPullRequestNewChanges } from "react-icons/vsc";
 import { AiOutlineHome, AiOutlineUser, AiOutlineCheckCircle, AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { MdAssignment, MdQuiz } from 'react-icons/md';

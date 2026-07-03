@@ -17,7 +17,7 @@ export async function obtenerEvaluacionPorId(req, res) {
     try {
         const { id } = req.params;
         const evaluacionRepository = AppDataSource.getRepository(EvaluacionPractica);
-        const evaluacion=await eavluacionRepository.findOneBy({id_evaluacion:parseInt(id)});
+        const evaluacion = await evaluacionRepository.findOneBy({ id_evaluacion: parseInt(id) });
         if(!evaluacion){
             return res.status(404).json({message:"Evaluacion no encontrada"});
         }
@@ -96,11 +96,8 @@ export async function finalizarEvaluacion(req, res) {
             return res.status(404).json({message:"Evaluacion no encontrada"});
         }
 
-        //si existe la falta critica, mantiene el estado de reprobado
-        if(evaluacion.falta_critica){
-            evaluacion.puntaje_obtenido=puntaje_obtenido;
-            evaluacion.estado=puntaje_obtenido>=60 ? "aprobado":"reprobado";
-        }
+        evaluacion.puntaje_obtenido = puntaje_obtenido;
+        evaluacion.estado = puntaje_obtenido >= 60 ? "aprobado" : "reprobado";
 
         evaluacion.observaciones=observaciones;
         await evaluacionRepository.save(evaluacion);

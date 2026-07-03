@@ -1,6 +1,6 @@
 import {useState} from "react";
 import Sidebar from "../components/Sidebar.jsx";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 import {
     crearEvaluacionRequest,
     registrarFaltaRequest,
@@ -55,7 +55,12 @@ const handleCrearEvaluacion=async(e)=>{
     setError('');
 
     try{
-        const response=await crearEvaluacionRequest(evaluacionData);
+        const payload = {
+            ...evaluacionData,
+            id_estudiante: user?.id || "",
+        };
+
+        const response=await crearEvaluacionRequest(payload);
         const newId=response.data.id_evaluacion;
         setEvaluacionId(newId);
         setStep(2); //paso2

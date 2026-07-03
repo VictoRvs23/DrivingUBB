@@ -16,7 +16,7 @@ export async function obtenerPreguntas(req,res){
 //Examen aleatorio de preguntas
 export async function generarExamenAleatorio(req,res){
     try{
-        const{id_estudiante,cantidad_preguntas=10, tiempo_limite_segundos=3600}=req.body;
+        const{id_estudiante,tiempo_limite_segundos=3600}=req.body;
         
         if (!id_estudiante){
             return res.status(400).json({message:"id_estudiante es requerido"});
@@ -26,57 +26,95 @@ export async function generarExamenAleatorio(req,res){
         const preguntaRepository=AppDataSource.getRepository(Pregunta);
         const todasLasPreguntas=await preguntaRepository.find();
 
-        //suficientes preguntas
-        if (todasLasPreguntas.length < cantidad_preguntas) {
-            return res.status(400).json({ 
-                message: `No hay suficientes preguntas. Disponibles: ${todasLasPreguntas.length}` 
+        if (todasLasPreguntas.length === 0) {
+            return res.status(400).json({
+                message: "No hay preguntas registradas para generar el examen"
             });
         }
 
-        //preguntas al azar
-        const preguntasAleatorias=[];
-        const indicesUsados=new Set();
+        const distribucionCategorias={señales:4,mecanica:3,leyes:3};
 
-        while (preguntasAleatorias.length<cantidad_preguntas){
-            const indice=Math.floor(Math.random()*todasLasPreguntas.length);
-            if(!indicesUsados.has(indice)){
-                preguntasAleatorias.push(todasLasPreguntas[indice].id_pregunta);
-                indicesUsados.add(indice);
+        // preguntas elegidas para el examen
+        const preguntasSeleccionadas=[];
+        const idsUsados=new Set();
+
+        // toma preguntas de forma controlada por categoría
+        for (const [categoria, cantidad] of Object.entries(distribucionCategorias)) {
+            const preguntasCategoria = todasLasPreguntas.filter(
+                (pregunta) => pregunta.categoria === categoria
+            );
+
+            if (preguntasCategoria.length === 0) {
+                continue;
+            }
+
+            const cantidadReal = Math.min(cantidad, preguntasCategoria.length);
+
+            while (
+                preguntasSeleccionadas.filter((p) => p.categoria === categoria).length < cantidadReal
+            ) {
+                const preguntaAleatoria = preguntasCategoria[
+                    Math.floor(Math.random() * preguntasCategoria.length)
+                ];
+
+                if (!idsUsados.has(preguntaAleatoria.id_pregunta)) {
+                    preguntasSeleccionadas.push(preguntaAleatoria);
+                    idsUsados.add(preguntaAleatoria.id_pregunta);
+                }
             }
         }
 
-        //Crear nuevo examen
-        const examenRepository=AppDataSource.getRepository(ExamenTeorico);
-        const nuevoExamen=examenRepository.create({
+        const totalDeseado=10;
+        const preguntasRestantes=todasLasPreguntas.filter(
+            (pregunta)=>!idsUsados.has(pregunta.id_pregunta)
+        );
+
+        while (preguntasSeleccionadas.length < totalDeseado && preguntasRestantes.length > 0) {
+            const indice = Math.floor(Math.random() * preguntasRestantes.length);
+            const pregunta = preguntasRestantes[indice];
+
+            if (!idsUsados.has(pregunta.id_pregunta)) {
+                preguntasSeleccionadas.push(pregunta);
+                idsUsados.add(pregunta.id_pregunta);
+            }
+            preguntasRestantes.splice(indice, 1);
+        }
+
+        if (preguntasSeleccionadas.length===0) {
+            return res.status(400).json({
+                message: "No hay suficientes preguntas para generar el examen"
+            });
+        }
+
+        const examenRepository = AppDataSource.getRepository(ExamenTeorico);
+        const nuevoExamen = examenRepository.create({
             id_estudiante,
-            preguntas_asignadas:preguntasAleatorias,
+            preguntas_asignadas: preguntasSeleccionadas.map((p) => p.id_pregunta),
             tiempo_limite_segundos,
-            estado:"en_progreso"
+            estado: "en_progreso"
         });
 
         await examenRepository.save(nuevoExamen);
 
-    //retornar examen con las preguntas (sin las respuestas correctas)
-    const preguntasParaEstudiante=todasLasPreguntas
-    .filter(p=>preguntasAleatorias.includes(p.id_pregunta))
-    .map(p=>({
-        id_pregunta:p.id_pregunta,
-        texto_pregunta:p.texto_pregunta,
-        categoria:p.categoria,
-        opcion_a: p.opcion_a,
-        opcion_b:p.opcion_b,
-        opcion_c:p.opcion_c,
-        opcion_d:p.opcion_d,
-        //sin respuesta correcta
-    }));
-    res.status(201).json({
-        id_examen:nuevoExamen.id_examen,
-        preguntas:preguntasParaEstudiante,
-        tiempo_limite_segundos,
-        cantidad_preguntas
-    });
+        const preguntasParaEstudiante=preguntasSeleccionadas.map((p)=>({
+            id_pregunta:p.id_pregunta,
+            texto_pregunta:p.texto_pregunta,
+            categoria:p.categoria,
+            opcion_a:p.opcion_a,
+            opcion_b:p.opcion_b,
+            opcion_c:p.opcion_c,
+            opcion_d:p.opcion_d,
+        }));
+
+        // respuesta final
+        res.status(201).json({
+            id_examen:nuevoExamen.id_examen,
+            preguntas:preguntasParaEstudiante,
+            tiempo_limite_segundos,
+            cantidad_preguntas:preguntasParaEstudiante.length
+        });
     }catch(error){
-        res.status(500).json({message:"Error al generar el examen"});
+        res.status(500).json({message:"Error al generar examen"});
     }
 }
 
@@ -118,6 +156,10 @@ export async function finalizarExamen(req,res){
             return res.status(404).json({message:"Examen no encontrado"});
         }
 
+        const respuestasEstudiante = Array.isArray(examen.respuestas_estudiante)
+            ? examen.respuestas_estudiante
+            : [];
+
         //obtener todas las preguntas para verificar respuestas
         const todasLasPreguntas=await preguntaRepository.find();
 
@@ -125,7 +167,7 @@ export async function finalizarExamen(req,res){
         let respuestasCorrectas=0;
         const retroalimentacion=[];
 
-        examen.respuestas_estudiante.forEach(respuesta=>{
+        respuestasEstudiante.forEach(respuesta=>{
             const pregunta=todasLasPreguntas.find(p=>p.id_pregunta===respuesta.id_pregunta);
             if(pregunta){
                 const esCorrecta=respuesta.respuesta_dada===pregunta.respuesta_correcta;
@@ -144,14 +186,18 @@ export async function finalizarExamen(req,res){
         });
 
         //calcular puntaje (respuestas correctas/total*100)
-        const puntaje=Math.round((respuestasCorrectas/examen.respuestas_estudiante.length)*100);
+        const totalRespuestas = respuestasEstudiante.length;
+        const puntaje = totalRespuestas > 0
+            ? Math.round((respuestasCorrectas / totalRespuestas) * 100)
+            : 0;
+
         //actualizar examen
         examen.puntaje_obtenido=puntaje;
         examen.estado="finalizado";
         examen.fecha_finalizacion=new Date();
         examen.retroalimentacion=JSON.stringify({
             respuestas_correctas:respuestasCorrectas,
-            total_respuestas:examen.respuestas_estudiante.length,
+            total_respuestas:totalRespuestas,
             porcentaje:puntaje,
             preguntas_incorrectas:retroalimentacion,
             aprobo:puntaje>=60

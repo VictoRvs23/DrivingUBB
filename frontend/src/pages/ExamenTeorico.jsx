@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useState, useEffect, useCallback } from 'react';
+import { useAuth } from '../context/useAuth';
 import {
     generarExamenAleatorioRequest,
     guardarRespuestasRequest,
@@ -7,9 +7,11 @@ import {
     obtenerResultadoRequest
 } from '../services/examenteorico.service.js';
 import '../styles/examenteorico.css';
+import Sidebar from '../components/Sidebar.jsx';
+import '../styles/Home.css';
 
 const ExamenTeorico = () => {
-    const { user } = useAuth(); // ✅ Traer datos del usuario autenticado
+    const { user } = useAuth(); 
     const [step, setStep] = useState(1);
     const [examenId, setExamenId] = useState(null);
     const [preguntas, setPreguntas] = useState([]);
@@ -20,22 +22,6 @@ const ExamenTeorico = () => {
     const [resultado, setResultado] = useState(null);
     const [tiempoLimite] = useState(3600);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-
-    // Timer countdown
-    useEffect(() => {
-        if (step === 2 && timer > 0) {
-            const interval = setInterval(() => {
-                setTimer(prev => {
-                    if (prev <= 1) {
-                        handleFinalizarExamen();
-                        return 0;
-                    }
-                    return prev - 1;
-                });
-            }, 1000);
-            return () => clearInterval(interval);
-        }
-    }, [step, timer]);
 
 const handleIniciarExamen = async () => {
     if (!user?.id) {
@@ -48,7 +34,7 @@ const handleIniciarExamen = async () => {
 
     try {
         const response = await generarExamenAleatorioRequest(
-            user.id,  // ✅ Automático del usuario autenticado
+            user.id,
             tiempoLimite
         );
         setExamenId(response.data.id_examen);
@@ -81,12 +67,14 @@ const handleIniciarExamen = async () => {
         }
     };
 
-    const handleFinalizarExamen = async () => {
+    const handleFinalizarExamen = useCallback(async () => {
+        if(!examenId)return;
+
         setLoading(true);
         setError('');
 
         try {
-            const respuestasArray=preguntas.map(p=>{
+            const respuestasArray=preguntas.map((p)=>{
                 const respuestaTexto=respuestas[p.id_pregunta];
                 let respuestaLetra=null;
 
@@ -107,7 +95,6 @@ const handleIniciarExamen = async () => {
             await finalizarExamenRequest(examenId);
 
             const resultResponse = await obtenerResultadoRequest(examenId);
-            console.log('DATA DEL SERVIDOR:',resultResponse.data);
             setResultado(resultResponse.data);
             setStep(3);
         } catch (err) {
@@ -115,7 +102,23 @@ const handleIniciarExamen = async () => {
         } finally {
             setLoading(false);
         }
-    };
+    },[examenId,preguntas,respuestas]);
+
+    //temporizador
+    useEffect(()=>{
+        if(step ===2 && timer>0){
+            const interval=setInterval(()=>{
+                setTimer(prev=>{
+                    if(prev<=1){
+                        handleFinalizarExamen();
+                        return 0;
+                    }
+                    return prev-1;
+                });
+            },1000);
+            return ()=>clearInterval(interval);
+        }
+    },[step,timer,handleFinalizarExamen]);
 
     const formatearTiempo = (segundos) => {
         const minutos = Math.floor(segundos / 60);
@@ -124,10 +127,14 @@ const handleIniciarExamen = async () => {
     };
 
     return (
+        <div className="dashboard-layout">
+        <Sidebar/>
+        <main className="main-content">
+            <header className="content-header">
+                <h1>Examen Teorico</h1>
+                </header>
         <div className="examen-teorico-container">
-            <h1>Examen Teórico</h1>
             {error && <div className="error-message">{error}</div>}
-
             {step === 1 && (
     <div className="examen-inicio">
         <h2>Iniciar Examen Teórico</h2>
@@ -160,7 +167,7 @@ const handleIniciarExamen = async () => {
                 <div className="examen-responder">
                     <div className="examen-header">
                         <div className="timer" style={{ color: timer < 300 ? '#e74c3c' : '#3498db' }}>
-                            ⏱️ {formatearTiempo(timer)}
+                            {formatearTiempo(timer)}
                         </div>
                         <div className="progreso">
                             Pregunta {currentQuestionIndex + 1} de {preguntas.length}
@@ -267,7 +274,9 @@ const handleIniciarExamen = async () => {
                     </button>
                 </div>
             )}
-        </div>
+            </div>
+        </main>
+    </div>
     );
 };
 
