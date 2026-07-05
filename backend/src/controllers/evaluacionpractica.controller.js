@@ -12,6 +12,21 @@ export async function  obtenerEvaluaciones(req, res) {
     }
 }
 
+//obtener historial de evaluaciones de un estudiante especifico
+export async function obtenerEvaluacionesPorEstudiante(req, res) {
+    try {
+        const { id_estudiante } = req.params;
+        const evaluacionRepository = AppDataSource.getRepository(EvaluacionPractica);
+        const evaluaciones = await evaluacionRepository.find({
+            where: { id_estudiante: parseInt(id_estudiante) },
+            order: { fecha_evaluacion: "DESC" }
+        });
+        res.status(200).json(evaluaciones);
+    }catch (error){
+        res.status(500).json({message:"Error al obtener el historial de evaluaciones"});
+    }
+}
+
 //obetener evaluacion por id
 export async function obtenerEvaluacionPorId(req, res) {
     try {
