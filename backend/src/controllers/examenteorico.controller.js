@@ -217,6 +217,33 @@ export async function finalizarExamen(req,res){
     }
 }
 
+//obtener historial de examenes de un estudiante especifico
+export async function obtenerExamenesPorEstudiante(req,res){
+    try{
+        const {id_estudiante}=req.params;
+        const examenRepository=AppDataSource.getRepository(ExamenTeorico);
+        const examenes=await examenRepository.find({
+            where:{id_estudiante:parseInt(id_estudiante)},
+            order:{fecha_examen:"DESC"}
+        });
+
+        //parsea la retroalimentacion guardada como texto para que el frontend la reciba como objeto
+        const examenesFormateados=examenes.map(examen=>({
+            id_examen:examen.id_examen,
+            fecha_examen:examen.fecha_examen,
+            fecha_finalizacion:examen.fecha_finalizacion,
+            estado:examen.estado,
+            puntaje_obtenido:examen.puntaje_obtenido,
+            puntaje_total:examen.puntaje_total,
+            retroalimentacion: examen.retroalimentacion ? JSON.parse(examen.retroalimentacion) : null,
+        }));
+
+        res.status(200).json(examenesFormateados);
+    }catch(error){
+        res.status(500).json({message:"Error al obtener el historial de examenes"});
+    }
+}
+
 //obtener examen por id
 export async function obtenerExamenPorId(req,res){
     try{

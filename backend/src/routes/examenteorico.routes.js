@@ -5,6 +5,7 @@ import{
     guardarRespuestas,
     finalizarExamen,
     obtenerExamenPorId,
+    obtenerExamenesPorEstudiante,
     obtenerResultado
 }from "../controllers/examenteorico.controller.js";
 
@@ -21,6 +22,9 @@ examenTeoricoRoutes.put("/:id/respuestas",guardarRespuestas);
 
 //put finalizar examen
 examenTeoricoRoutes.put("/:id/finalizar",finalizarExamen);
+
+//get obtener historial de examenes de un estudiante (debe ir antes de /:id)
+examenTeoricoRoutes.get("/estudiante/:id_estudiante",obtenerExamenesPorEstudiante);
 
 //get- obtener examen por id
 examenTeoricoRoutes.get("/:id",obtenerExamenPorId);
