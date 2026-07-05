@@ -96,8 +96,14 @@ export async function finalizarEvaluacion(req, res) {
             return res.status(404).json({message:"Evaluacion no encontrada"});
         }
 
-        evaluacion.puntaje_obtenido = puntaje_obtenido;
-        evaluacion.estado = puntaje_obtenido >= 60 ? "aprobado" : "reprobado";
+        //si hubo falta critica, el resultado queda fijo en reprobado/0 sin importar lo que llegue del cliente
+        if(evaluacion.falta_critica){
+            evaluacion.puntaje_obtenido = 0;
+            evaluacion.estado = "reprobado";
+        }else{
+            evaluacion.puntaje_obtenido = puntaje_obtenido;
+            evaluacion.estado = puntaje_obtenido >= 60 ? "aprobado" : "reprobado";
+        }
 
         evaluacion.observaciones=observaciones;
         await evaluacionRepository.save(evaluacion);
