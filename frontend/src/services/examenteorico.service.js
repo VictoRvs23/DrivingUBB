@@ -44,3 +44,8 @@ export const obtenerExamenPorIdRequest = async (id_examen) => {
 export const obtenerResultadoRequest = async (id_examen) => {
     return api.get(`/examenteorico/${id_examen}/resultado`);
 };
+
+//historial de examenes de un estudiante
+export const obtenerExamenesPorEstudianteRequest = async (id_estudiante) => {
+    return api.get(`/examenteorico/estudiante/${id_estudiante}`);
+};
