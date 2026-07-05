@@ -12,37 +12,42 @@ const Sidebar = () => {
     const { logout, user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
-
     const menuItems = [
         { name: 'Inicio', icon: <AiOutlineHome />, path: '/home' },
         { name: 'Perfil', icon: <AiOutlineUser />, path: '/profile' },
-        { name: 'Reservas', icon: <AiOutlineCheckCircle />, path: '/reservas' },
     ];
 
     if (user?.role !== 'secretaria' && user?.role !== 'admin') {
+        menuItems.push({ 
+            name: 'Reservas', 
+            icon: <AiOutlineCheckCircle />, 
+            path: '/reservas' 
+        });
         menuItems.push({ 
             name: 'C. Prácticas', 
             icon: <PiSteeringWheel />,
             path: '/clases-practicas' 
         });
-    }
-
-    menuItems.push({
+        menuItems.push({
             name: 'Soporte',
             icon: <MdOutlineSupportAgent />,
             path: '/soporte'
         });
+    }
 
-    if (user?.role === 'secretaria' || user?.role === 'admin') {
+    if (user?.role === 'secretaria') {
         menuItems.push({ 
             name: 'Solicitudes', 
             icon: <VscGitPullRequestNewChanges />,
             path: '/admin/pending' 
         });
+    }
+
+    if (user?.role === 'secretaria' || user?.role === 'admin') {
         menuItems.push({
-                    name: 'G. Soportes',         
-                    icon: <MdOutlineSupportAgent style={{ opacity: 0.75 }} />,
-                    path: '/admin/soportes'
+            name: 'G. Soportes',         
+            icon: <MdOutlineSupportAgent style={{ opacity: 0.75 }} />,
+            path: '/admin/soportes'
         });
         menuItems.push({ 
             name: 'Vehículos', 
