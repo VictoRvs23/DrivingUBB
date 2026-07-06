@@ -19,7 +19,7 @@ const Vehiculos = () => {
         patente: "",
         numeroMovil: "",
         estado: "Disponible",
-        permiso_circulacion: null,
+        permiso_circulacion: null, 
         revision_tecnica: null     
     };
     
@@ -28,7 +28,6 @@ const Vehiculos = () => {
         permiso_circulacion: null,
         revision_tecnica: null
     });
-
     const [archivosAQuitar, setArchivosAQuitar] = useState({
         permiso: false,
         revision: false
@@ -92,6 +91,15 @@ const Vehiculos = () => {
     const handleVerDocumento = (archivo) => {
         if (archivo && archivo.toLowerCase().includes('.pdf')) {
             window.open(`http://localhost:3000/uploads/${archivo}`, '_blank');
+        } else if (archivo && !archivo.toLowerCase().includes('.pdf')) {
+            Swal.fire({
+                title: "Formato Incorrecto",
+                text: "El archivo seleccionado no es un PDF.",
+                icon: "error",
+                background: '#1e293b',
+                color: '#f1f5f9',
+                confirmButtonColor: '#8b5cf6'
+            });
         } else {
             Swal.fire({
                 title: "Sin documento",
@@ -122,7 +130,7 @@ const Vehiculos = () => {
             revision_tecnica: vehiculo.revision_tecnica
         });
         setArchivos({ permiso_circulacion: null, revision_tecnica: null });
-        setArchivosAQuitar({ permiso: false, revision: false });
+        setArchivosAQuitar({ permiso: false, revision: false }); 
         setIsEditing(true); 
         setIsModalOpen(true); 
     };

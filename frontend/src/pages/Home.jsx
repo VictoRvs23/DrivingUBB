@@ -1,36 +1,34 @@
-import React from 'react';
-import Sidebar from '../components/Sidebar';
 import { useAuth } from '../context/AuthContext';
+import Sidebar from '../components/Sidebar';
+import { AiOutlineHome } from "react-icons/ai";
+
+import HomeAlumno from '../pages/HomeAlumno';
+import HomeInstructor from '../pages/HomeInstructor';
+import HomeSecreAdmin from '../pages/HomeSecreAdmin';
+
 import '../styles/Home.css';
 
 const Home = () => {
     const { user } = useAuth();
 
     return (
-        <div className="dashboard-layout">
+        <div className="main-container">
             <Sidebar />
-            <main className="main-content">
-                <header className="content-header">
-                    <div className="header-left">
-                        <span className="header-icon"></span>
-                        <h1>Inicio</h1>
-                    </div>
-                    <div className="header-right">
-                        <button className="notification-btn"></button>
-                    </div>
-                </header>
 
-                <section className="welcome-section">
-                    <div className="welcome-card">
-                        <h2>Bienvenido/a, {user?.nombre || '[Nombre de Usuario]'}</h2>
-                        <div className="status-badge">
-                        </div>
-                    </div>
-                </section>
+            <div className="home-page">
+                <div className="home-header">
+                    <h1><AiOutlineHome className="title-icon"/> Inicio</h1>
+                </div>
 
-                <section className="main-data-area">
-                </section>
-            </main>
+                <div className="home-card-container">
+                    {(user?.role === 'admin' || user?.role === 'secretaria')
+                        ? <HomeSecreAdmin />
+                        : user?.role === 'instructor'
+                            ? <HomeInstructor />
+                            : <HomeAlumno />
+                    }
+                </div>
+            </div>
         </div>
     );
 };
