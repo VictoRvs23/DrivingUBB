@@ -207,6 +207,8 @@
     transform: scale(1.02);
 }
 
+/* INSTRUCTOR */
+
 .instructor-stats-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -242,4 +244,129 @@
     display: flex;
     align-items: center;
     gap: 20px;
+}
+
+
+/* ADMIN Y SECRETARIA */
+
+.admin-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columnas igual que el alumno */
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+.admin-stat-card {
+    background-color: rgba(15, 23, 42, 0.3);
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.admin-stat-card:hover {
+    transform: translateY(-5px);
+    border-color: #475569;
+}
+
+.admin-stat-card h3 {
+    margin: 0 0 5px 0;
+    font-size: 2.5rem;
+    color: #f1f5f9;
+}
+
+.admin-stat-card p {
+    margin: 0;
+    color: #94a3b8;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.admin-table-container {
+    background-color: rgba(15, 23, 42, 0.3);
+    border: 1px solid #334155;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.admin-table th {
+    background-color: #0f172a;
+    color: #94a3b8;
+    padding: 18px 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #334155;
+}
+
+.admin-table td {
+    padding: 15px;
+    border-bottom: 1px solid #334155;
+    color: #f1f5f9;
+    vertical-align: middle;
+}
+
+.admin-table tbody tr:hover {
+    background-color: #162032;
+}
+
+.admin-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table-icon {
+    font-size: 1.5rem;
+    color: #94a3b8;
+}
+
+.table-user {
+    font-weight: 500;
+}
+
+.table-date {
+    color: #cbd5e1;
+    font-size: 0.95rem;
+}
+
+.ticket-badge {
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.badge-green {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border: 1px solid #10b981;
+}
+
+.badge-blue {
+    background-color: rgba(59, 130, 246, 0.15);
+    color: #3b82f6;
+    border: 1px solid #3b82f6;
+}
+
+.badge-yellow {
+    background-color: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+    border: 1px solid #f59e0b;
+}
+
+.badge-gray {
+    background-color: rgba(148, 163, 184, 0.15);
+    color: #94a3b8;
+    border: 1px solid #94a3b8;
 }

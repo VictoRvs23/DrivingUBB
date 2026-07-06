@@ -17,12 +17,15 @@ const Sidebar = () => {
         { name: 'Perfil', icon: <AiOutlineUser />, path: '/profile' },
     ];
 
-    if (user?.role !== 'secretaria' && user?.role !== 'admin') {
+    if (user?.role === 'alumno') {
         menuItems.push({ 
             name: 'Reservas', 
             icon: <AiOutlineCheckCircle />, 
             path: '/reservas' 
         });
+    }
+
+    if (user?.role === 'alumno' || user?.role === 'instructor') {
         menuItems.push({ 
             name: 'C. Prácticas', 
             icon: <PiSteeringWheel />,

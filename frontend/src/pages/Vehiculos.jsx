@@ -94,12 +94,12 @@ const Vehiculos = () => {
             window.open(`http://localhost:3000/uploads/${archivo}`, '_blank');
         } else if (archivo && !archivo.toLowerCase().includes('.pdf')) {
             Swal.fire({
-                title: "Formato Antiguo",
-                text: "Este vehículo tiene guardada una fecha en lugar de un archivo PDF. Por favor, dale al botón de Editar y sube el documento real.",
-                icon: "info",
+                title: "Formato Incorrecto",
+                text: "El archivo seleccionado no es un PDF.",
+                icon: "error",
                 background: '#1e293b',
                 color: '#f1f5f9',
-                confirmButtonColor: '#3b82f6'
+                confirmButtonColor: '#8b5cf6'
             });
         } else {
             Swal.fire({
