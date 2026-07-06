@@ -31,7 +31,7 @@ async function startServer() {
     await connectDB();
     await createUsers();
 
-    app.use("/api/src/upload", express.static("src/upload"));
+    app.use("/uploads", express.static("src/upload"));;
     app.use("/api", indexRoutes);
 
     app.listen(PORT, () => {

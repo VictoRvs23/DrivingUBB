@@ -17,7 +17,7 @@ const LoginPage = () => {
             await login(credentials.email, credentials.password);
             navigate('/home');
         } catch (err) {
-            console.error("Error real:", err); // Para verlo en F12 -> Consola
+            console.error("Error real:", err);
             setError(err.message || 'Error de conexión con el servidor');
         }
     };

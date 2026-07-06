@@ -48,10 +48,14 @@ function App() {
           element={user ? <Reservas /> : <Navigate to="/login" replace />} 
         />
 
-        {/* Soporte — accesible para cualquier usuario autenticado */}
+        {/* Soporte: Alumno e Instructor */}
         <Route 
           path="/soporte" 
-          element={user ? <Soporte /> : <Navigate to="/login" replace />} 
+          element={
+            user && (user.role === 'alumno' || user.role === 'instructor')
+              ? <Soporte /> 
+              : <Navigate to="/home" replace />
+          } 
         />
 
         {/* Gestión de soportes — solo admin y secretaria */}

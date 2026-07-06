@@ -8,6 +8,7 @@ import clasesPracticasRoutes from "./clasesPracticas.routes.js";
 import vehiculosRoutes from "./vehiculo.routes.js";
 import reservasRoutes from "./reservas.routes.js";
 import faqRoutes from "./preguntaFrecuente.routes.js";
+import dashboardRoutes from "./dashboard.routes.js";
 
 const router = Router();
 
@@ -19,5 +20,7 @@ router.use("/clases-practicas", clasesPracticasRoutes);
 router.use("/vehiculos", vehiculosRoutes);
 router.use("/reservas", reservasRoutes);
 router.use("/faqs", faqRoutes);
+router.use("/dashboard", dashboardRoutes);
+
 
 export default router;
