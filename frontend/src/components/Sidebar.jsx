@@ -1,35 +1,40 @@
-import React from 'react';
+import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { VscGitPullRequestNewChanges } from "react-icons/vsc";
-import { AiOutlineHome, AiOutlineUser, AiOutlineCheckCircle, AiOutlineCar, AiOutlineTeam} from "react-icons/ai";
+import { AiOutlineHome, AiOutlineUser, AiOutlineCheckCircle, AiOutlineCar, AiOutlineTeam, AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { PiSteeringWheel } from "react-icons/pi";
 import { TbLogout2 } from "react-icons/tb";
-import { MdOutlineSupportAgent } from "react-icons/md";
+import { MdOutlineSupportAgent, MdAssignment, MdQuiz, MdOutlineFactCheck } from "react-icons/md";
 import '../styles/Sidebar.css';
 
 const Sidebar = () => {
     const { logout, user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+    const [isOpen, setIsOpen] = useState(false);
+
     const menuItems = [
         { name: 'Inicio', icon: <AiOutlineHome />, path: '/home' },
         { name: 'Perfil', icon: <AiOutlineUser />, path: '/profile' },
+        { name: 'Evaluación Práctica', icon: <MdAssignment />, path: '/evaluacionpractica' },
+        { name: 'Examen Teórico', icon: <MdQuiz />, path: '/examenteorico' },
+        { name: 'Mis Resultados', icon: <MdOutlineFactCheck />, path: '/mis-resultados' },
     ];
 
     if (user?.role === 'alumno') {
-        menuItems.push({ 
-            name: 'Reservas', 
-            icon: <AiOutlineCheckCircle />, 
-            path: '/reservas' 
+        menuItems.push({
+            name: 'Reservas',
+            icon: <AiOutlineCheckCircle />,
+            path: '/reservas'
         });
     }
 
     if (user?.role === 'alumno' || user?.role === 'instructor') {
-        menuItems.push({ 
-            name: 'C. Prácticas', 
+        menuItems.push({
+            name: 'C. Prácticas',
             icon: <PiSteeringWheel />,
-            path: '/clases-practicas' 
+            path: '/clases-practicas'
         });
         menuItems.push({
             name: 'Soporte',
@@ -39,56 +44,71 @@ const Sidebar = () => {
     }
 
     if (user?.role === 'secretaria') {
-        menuItems.push({ 
-            name: 'Solicitudes', 
+        menuItems.push({
+            name: 'Solicitudes',
             icon: <VscGitPullRequestNewChanges />,
-            path: '/admin/pending' 
+            path: '/admin/pending'
         });
     }
 
     if (user?.role === 'secretaria' || user?.role === 'admin') {
         menuItems.push({
-            name: 'G. Soportes',         
+            name: 'G. Soportes',
             icon: <MdOutlineSupportAgent style={{ opacity: 0.75 }} />,
             path: '/admin/soportes'
         });
-        menuItems.push({ 
-            name: 'Vehículos', 
+        menuItems.push({
+            name: 'Vehículos',
             icon: <AiOutlineCar />,
-            path: '/vehiculos' 
+            path: '/vehiculos'
         });
-        menuItems.push({ 
-            name: 'Usuarios', 
+        menuItems.push({
+            name: 'Usuarios',
             icon: <AiOutlineTeam />,
-            path: '/users' 
+            path: '/users'
         });
     }
 
-    return (
-        <div className="sidebar">
-            <div className="sidebar-logo">
-                <h2>DrivingUBB</h2>
-            </div>
-            
-            <nav className="sidebar-nav">
-                {menuItems.map((item) => (
-                    <button 
-                        key={item.name}
-                        className={`nav-item ${location.pathname === item.path ? 'active' : ''}`}
-                        onClick={() => navigate(item.path)}
-                    >
-                        <span className="sidebar-icon">{item.icon}</span>
-                        <span className="sidebar-text">{item.name}</span>
-                    </button>
-                ))}
-            </nav>
+    const toggleMenu = () => setIsOpen(!isOpen);
 
-            <div className="sidebar-footer">
-                <button className="btn-logout" onClick={() => { logout(); navigate('/login'); }}>
-                    <TbLogout2 className="logout-icon" /> Cerrar Sesión
-                </button>
+    return (
+        <>
+            {/* un boton para ocultar o mostrar la sidebar */}
+            <button className="mobile-nav-toggle" onClick={toggleMenu}>
+                {isOpen ? <AiOutlineClose /> : <AiOutlineMenu />}
+            </button>
+
+            {/* cosas para el celular, solo es una prueba */}
+            {isOpen && <div className="sidebar-overlay" onClick={toggleMenu}></div>}
+
+            <div className={`sidebar ${isOpen ? 'open' : ''}`}>
+                <div className="sidebar-logo">
+                    <h2>DrivingUBB</h2>
+                </div>
+
+                <nav className="sidebar-nav">
+                    {menuItems.map((item) => (
+                        <button
+                            key={item.name}
+                            className={`nav-item ${location.pathname === item.path ? 'active' : ''}`}
+                            onClick={() => {
+                                navigate(item.path);
+                                setIsOpen(false);
+                            }}
+                        >
+                            <span className="sidebar-icon">{item.icon}</span>
+                            <span className="sidebar-text">{item.name}</span>
+                        </button>
+                    ))}
+                </nav>
+
+                <div className="sidebar-footer">
+                    <button className="btn-logout" onClick={() => { logout(); navigate('/login'); }}>
+                        <TbLogout2 className="logout-icon" /> Cerrar Sesión
+                    </button>
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 
