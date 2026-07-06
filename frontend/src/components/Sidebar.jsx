@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { VscGitPullRequestNewChanges } from "react-icons/vsc";
 import { AiOutlineHome, AiOutlineUser, AiOutlineCheckCircle, AiOutlineCar, AiOutlineTeam} from "react-icons/ai";
 import { PiSteeringWheel } from "react-icons/pi";
-import { MdOutlineSupportAgent } from "react-icons/md";
+import { MdOutlineSupportAgent, MdOutlineQuestionAnswer } from "react-icons/md";
 import '../styles/Sidebar.css';
 
 const Sidebar = () => {
@@ -42,6 +42,11 @@ const Sidebar = () => {
                     name: 'G. Soportes',         // ← NUEVO
                     icon: <MdOutlineSupportAgent style={{ opacity: 0.75 }} />,
                     path: '/admin/soportes'
+        });
+        menuItems.push({
+                    name: 'G. FAQs',
+                    icon: <MdOutlineQuestionAnswer />,
+                    path: '/admin/faq'
         });
         menuItems.push({ 
             name: 'Vehículos', 

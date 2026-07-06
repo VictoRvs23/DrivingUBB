@@ -17,8 +17,8 @@ const TIPOS = [
 
 /**
  * Barra de filtro por tipo de soporte.
- * @param {string|null}  tipoActivo  - valor actualmente seleccionado
- * @param {Function}     onChange    - callback(nuevoTipo: string|null)
+ * @param {string|null}  tipoActivo  
+ * @param {Function}     onChange    
  */
 const FiltroTipo = ({ tipoActivo, onChange }) => {
     return (

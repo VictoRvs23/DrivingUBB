@@ -4,6 +4,7 @@ import { MdOutlineSupportAgent } from 'react-icons/md';
 import Sidebar from '../components/Sidebar';
 import SoporteFormModal from '../components/soporte/SoporteFormModal';
 import MisSolicitudes from '../components/soporte/MisSolicitudes';
+import PreguntasFrecuentes from '../components/soporte/PreguntasFrecuentes';
 import '../styles/Soporte.css';
 
 const CATEGORIAS = [
@@ -32,9 +33,14 @@ const CATEGORIAS = [
 const Soporte = () => {
     const [modalTipo, setModalTipo] = useState(null);   // null | 'Duda' | 'Error' | 'Reclamo' | 'Sugerencia'
     const [verSolicitudes, setVerSolicitudes] = useState(false);
+    const [verFAQs, setVerFAQs]             = useState(false);
 
     if (verSolicitudes) {
         return <MisSolicitudes onVolver={() => setVerSolicitudes(false)} />;
+    }
+
+    if (verFAQs) {
+            return <PreguntasFrecuentes onVolver={() => setVerFAQs(false)} />;
     }
 
     return (
@@ -78,7 +84,11 @@ const Soporte = () => {
                         <AiOutlineFileText style={{ fontSize: '1.2rem' }} />
                         Mis Solicitudes
                     </button>
-                    <button className="soporte-accion-btn soporte-accion-btn--secondary">
+                    
+                    <button
+                        className="soporte-accion-btn soporte-accion-btn--secondary"
+                        onClick={() => setVerFAQs(true)}
+                    >
                         <AiOutlineQuestionCircle style={{ fontSize: '1.2rem' }} />
                         Preguntas Frecuentes
                     </button>

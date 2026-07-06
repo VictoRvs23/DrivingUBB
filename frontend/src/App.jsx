@@ -11,6 +11,7 @@ import Users from './pages/User.jsx';
 import ClasesPracticas from './pages/ClasesPracticas.jsx';
 import Soporte from './pages/Soporte.jsx';
 import AdminSoportes from './pages/AdminSoportes.jsx';
+import AdminFAQ from './pages/AdminFAQ.jsx';
 
 function App() {
   const { user, loading } = useAuth(); 
@@ -55,6 +56,16 @@ function App() {
               ? <AdminSoportes />
               : <Navigate to="/home" replace />
           } 
+        />
+
+        {/* Gestión de FAQs — solo admin */}
+        <Route
+          path="/admin/faq"
+          element={
+            user && user.role === 'admin'
+              ? <AdminFAQ />
+              : <Navigate to="/home" replace />
+          }
         />
 
         {/* Vehiculos: Solo Admin y Secretaria */}
