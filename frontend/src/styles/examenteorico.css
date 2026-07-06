@@ -292,6 +292,63 @@
     opacity: 0.6;
 }
 
+/* Confirmacion antes de finalizar */
+.confirmacion-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.confirmacion-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    max-width: 450px;
+    width: 90%;
+    animation: fadeIn 0.2s ease-in;
+}
+
+.confirmacion-card h3 {
+    color: #2c3e50;
+    margin: 0 0 15px 0;
+    font-size: 1.3rem;
+}
+
+.confirmacion-card p {
+    color: #34495e;
+    line-height: 1.6;
+    margin: 0 0 25px 0;
+}
+
+.confirmacion-botones {
+    display: flex;
+    gap: 15px;
+}
+
+.confirmacion-botones button {
+    flex: 1;
+    margin-top: 0;
+}
+
+.btn-cancelar {
+    background-color: #ecf0f1;
+    color: #34495e;
+}
+
+.btn-cancelar:hover:not(:disabled) {
+    background-color: #dfe6e9;
+    transform: none;
+    box-shadow: none;
+}
+
 /* Paso 3: Resultados */
 .examen-resultados {
     background: white;

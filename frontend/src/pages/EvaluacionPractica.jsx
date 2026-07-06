@@ -119,8 +119,8 @@ const handleFinalizarEvaluacion=async(e)=>{
             }
         });
 
-        // Asegurar que el puntaje no sea negativo
-        puntajeCalculado = Math.max(0, puntajeCalculado);
+        // Si hubo falta critica el puntaje queda en 0 sin importar el resto de faltas
+        puntajeCalculado = tieneFaltaCritica ? 0 : Math.max(0, puntajeCalculado);
                 
         let obs = '';
         if(faltas.length === 0) {
@@ -198,7 +198,7 @@ const handleFinalizarEvaluacion=async(e)=>{
 
                 {faltaCritica && (
                     <div className="warning-message">
-                        FALTA CRITICA DETECTADA - Evaluacion reprobada automaticamente
+                        FALTA CRITICA DETECTADA - Evaluacion reprobada automaticamente. No se pueden registrar mas faltas, finalice la evaluacion.
                     </div>
                 )}
 
@@ -214,6 +214,7 @@ const handleFinalizarEvaluacion=async(e)=>{
                                     es_critica: faltaSeleccionada?.critica || false
                                 });
                             }}
+                            disabled={faltaCritica}
                             required
                         >
                             <option value="">-- Seleccionar falta --</option>
@@ -225,7 +226,7 @@ const handleFinalizarEvaluacion=async(e)=>{
                         </select>
                     </div>
 
-                    <button type="submit" disabled={loading}>
+                    <button type="submit" disabled={loading || faltaCritica}>
                         {loading ? 'Registrando...' : 'Registrar Falta'}
                     </button>
                 </form>

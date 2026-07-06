@@ -5,8 +5,9 @@ import PreRegisterPage from './pages/PreRegisterPage.jsx';
 import Home from './pages/Home.jsx'; 
 import PendingUsers from './pages/PendingUsers.jsx'; 
 import Reservas from './pages/Reservas.jsx';
-import EvaluacionPractica from './pages/EvaluacionPractica.jsx'; 
+import EvaluacionPractica from './pages/EvaluacionPractica.jsx';
 import ExamenTeorico from './pages/ExamenTeorico.jsx';
+import MisResultados from './pages/MisResultados.jsx';
 
 function App() {
   const { user, loading } = useAuth(); 
@@ -50,6 +51,11 @@ function App() {
         <Route
           path="/examenteorico"
           element={user ? <ExamenTeorico /> : <Navigate to="/login" replace />}
+        />
+
+        <Route
+          path="/mis-resultados"
+          element={user ? <MisResultados /> : <Navigate to="/login" replace />}
         />
 
         {/* Esto es por si la ruta no existe, te manda al pre-inscripción */}

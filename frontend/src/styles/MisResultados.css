@@ -1,0 +1,151 @@
+/* contenedor principal */
+.mis-resultados-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* pestañas practica / teorico */
+.historial-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.tab-btn {
+    background-color: #ecf0f1;
+    color: #34495e;
+    padding: 12px 25px;
+    margin-top: 0;
+}
+
+.tab-btn:hover:not(:disabled) {
+    background-color: #dfe6e9;
+    color: #34495e;
+    transform: none;
+    box-shadow: none;
+}
+
+.tab-btn.active {
+    background-color: #3498db;
+    color: white;
+}
+
+.tab-btn.active:hover {
+    background-color: #2980b9;
+}
+
+/* lista de intentos pasados */
+.historial-lista {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.historial-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #3498db;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.historial-item:last-child {
+    margin-bottom: 0;
+}
+
+.historial-item:hover {
+    background-color: #f0f8ff;
+    transform: translateX(5px);
+}
+
+.historial-item-fecha {
+    display: block;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.historial-item-sub {
+    display: block;
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    margin-top: 4px;
+}
+
+.estado-chip {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.estado-chip.aprobado {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.estado-chip.reprobado {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.estado-chip.en_progreso {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+/* volver al historial desde el detalle */
+.btn-volver {
+    background-color: #ecf0f1;
+    color: #34495e;
+    margin-bottom: 20px;
+}
+
+.btn-volver:hover:not(:disabled) {
+    background-color: #dfe6e9;
+    transform: none;
+    box-shadow: none;
+}
+
+/* detalle de preguntas erradas en examen teorico */
+.pregunta-incorrecta-item {
+    background-color: #fff3cd;
+    border-radius: 6px;
+    padding: 12px 15px;
+    margin-bottom: 12px;
+}
+
+.pregunta-incorrecta-item:last-child {
+    margin-bottom: 0;
+}
+
+.pregunta-incorrecta-item p {
+    margin: 5px 0;
+    color: #34495e;
+}
+
+@media (max-width: 768px) {
+    .mis-resultados-container {
+        padding: 20px 10px;
+    }
+
+    .historial-tabs {
+        flex-direction: column;
+    }
+
+    .historial-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}

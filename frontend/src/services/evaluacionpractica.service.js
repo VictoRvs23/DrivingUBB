@@ -25,6 +25,13 @@ export const obtenerEvaluacionPorIdRequest = async (id) => {
     });
 };
 
+export const obtenerEvaluacionesPorEstudianteRequest = async (id_estudiante) => {
+    const token = localStorage.getItem('token');
+    return await axios.get(`${API_URL}/estudiante/${id_estudiante}`, {
+        headers: { Authorization: `Bearer ${token}`, },
+    });
+};
+
 export const registrarFaltaRequest = async (id, faltaData) => {
     const token = localStorage.getItem('token');
     return await axios.post(`${API_URL}/${id}/falta`, faltaData, {

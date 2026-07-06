@@ -22,6 +22,7 @@ const ExamenTeorico = () => {
     const [resultado, setResultado] = useState(null);
     const [tiempoLimite] = useState(3600);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
 
 const handleIniciarExamen = async () => {
     if (!user?.id) {
@@ -213,13 +214,44 @@ const handleIniciarExamen = async () => {
                         </button>
                     </div>
 
-                    <button 
-                        onClick={handleFinalizarExamen} 
+                    <button
+                        onClick={() => setMostrarConfirmacion(true)}
                         disabled={loading}
                         className="btn-finalizar"
                     >
                         {loading ? 'Finalizando...' : 'Finalizar Examen'}
                     </button>
+
+                    {mostrarConfirmacion && (
+                        <div className="confirmacion-overlay">
+                            <div className="confirmacion-card">
+                                <h3>¿Finalizar el examen?</h3>
+                                <p>
+                                    {preguntas.length - Object.keys(respuestas).length > 0
+                                        ? `Te faltan ${preguntas.length - Object.keys(respuestas).length} pregunta(s) por responder. `
+                                        : ''}
+                                    Una vez que finalices no podrás volver a entrar a este examen.
+                                </p>
+                                <div className="confirmacion-botones">
+                                    <button
+                                        className="btn-cancelar"
+                                        onClick={() => setMostrarConfirmacion(false)}
+                                    >
+                                        Cancelar
+                                    </button>
+                                    <button
+                                        className="btn-finalizar"
+                                        onClick={() => {
+                                            setMostrarConfirmacion(false);
+                                            handleFinalizarExamen();
+                                        }}
+                                    >
+                                        Sí, finalizar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
 
