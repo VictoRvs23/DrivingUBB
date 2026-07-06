@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '../context/useAuth';
+import { useAuth } from '../context/AuthContext';
 import { obtenerEvaluacionesPorEstudianteRequest } from '../services/evaluacionpractica.service.js';
 import { obtenerExamenesPorEstudianteRequest } from '../services/examenteorico.service.js';
 import Sidebar from '../components/Sidebar.jsx';

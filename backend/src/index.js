@@ -6,12 +6,13 @@ import morgan from "morgan";
 import { connectDB } from "./config/configDb.js";
 import indexRoutes from "./routes/index.routes.js"; 
 import { PORT, HOST, FRONTEND_URL } from "./config/configEnv.js";
+import { createUsers } from "./config/initDb.js";
 
 const app = express();
 
 const allowedOrigins = [FRONTEND_URL || "http://localhost:5173"];
 app.use(cors({ 
-  origin: allowedOrigins,
+  origin: true,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], 
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -28,16 +29,18 @@ app.get("/", (req, res) => {
 async function startServer() {
   try {
     await connectDB();
-    
+    await createUsers();
+
+    app.use("/uploads", express.static("src/upload"));;
     app.use("/api", indexRoutes);
 
     app.listen(PORT, () => {
       console.log(`\n==========================================`);
-      console.log(`🚀 Servidor activo en: http://${HOST}:${PORT}`);
+      console.log(`Servidor activo en: http://${HOST}:${PORT}`);
       console.log(`==========================================\n`);
     });
   } catch (error) {
-    console.error("❌ Error crítico al iniciar el servidor:", error);
+    console.error(" Error crítico al iniciar el servidor:", error);
     process.exit(1); 
   }
 }

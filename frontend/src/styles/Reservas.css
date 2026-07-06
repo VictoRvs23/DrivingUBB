@@ -93,7 +93,6 @@
     background-color: #25334d;
 }
 
-
 /* PRUEBA CELULAR */
 @media (max-width: 768px) {
     .reservas-container {
@@ -101,8 +100,7 @@
     }
 
     .schedule-grid {
-        
-        grid-template-columns: repeat(2, 1fr); 
+        grid-template-columns: repeat(2, 1fr);
         gap: 10px;
     }
 
@@ -112,7 +110,7 @@
     }
 
     .date-selector {
-        max-width: 100%; 
+        max-width: 100%;
     }
 
     .btn-confirmar {

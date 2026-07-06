@@ -13,34 +13,41 @@ export async function createUsers() {
       return;
     }
 
-    // Usuarios de prueba 
     const users = [
       {
         nombre: "Admin Escuela",
         email: "admin@escuela.com",
+        run: "00000000-0",
         password: await bcrypt.hash("admin123", 10),
         role: "admin",
+        estado: "Activo",
         numeroTelefonico: "900000001",
       },
       {
         nombre: "Secretaria",
         email: "secretaria@escuela.com",
+        run: "11111111-1",
         password: await bcrypt.hash("secre123", 10),
         role: "secretaria",
+        estado: "Activo",
         numeroTelefonico: "900000002",
       },
       {
         nombre: "Instructor",
         email: "instructor@escuela.com",
+        run: "22222222-2",
         password: await bcrypt.hash("inst123", 10),
         role: "instructor",
+        estado: "Activo",
         numeroTelefonico: "900000003",
       },
       {
         nombre: "Alumno",
         email: "alumno@gmail.com",
+        run: "33333333-3",
         password: await bcrypt.hash("alumno123", 10),
         role: "alumno",
+        estado: "Activo",
         numeroTelefonico: "900000004",
       }
     ];
