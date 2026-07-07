@@ -30,7 +30,7 @@ const Sidebar = () => {
             name: 'Soporte',
             icon: <MdOutlineSupportAgent />,
             path: '/soporte'
-        });
+    });
 
     if (user?.role === 'secretaria' || user?.role === 'admin') {
         menuItems.push({ 
@@ -39,7 +39,7 @@ const Sidebar = () => {
             path: '/admin/pending' 
         });
         menuItems.push({
-                    name: 'G. Soportes',         // ← NUEVO
+                    name: 'G. Soportes',         
                     icon: <MdOutlineSupportAgent style={{ opacity: 0.75 }} />,
                     path: '/admin/soportes'
         });
