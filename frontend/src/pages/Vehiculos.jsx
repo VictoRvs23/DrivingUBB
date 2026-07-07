@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { AiOutlineEdit, AiOutlineDelete, AiOutlineClose, AiOutlineCar } from "react-icons/ai";
+import { AiOutlineEdit, AiOutlineDelete, AiOutlineClose, AiOutlineCar, AiOutlineFilePdf } from "react-icons/ai";
+import { FiSliders } from "react-icons/fi";
+import Swal from 'sweetalert2'; 
 import { getVehiculosRequest, deleteVehiculoRequest, updateVehiculoRequest, createVehiculoRequest } from '../services/vehiculo.services';
 import Sidebar from '../components/Sidebar';
 import '../styles/Vehiculos.css'; 
@@ -9,45 +11,27 @@ const Vehiculos = () => {
     const [error, setError] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
+    const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+    const [activeFilterEstado, setActiveFilterEstado] = useState("");
+    const [tempFilterEstado, setTempFilterEstado] = useState("");
     
     const initialFormState = {
         patente: "",
         numeroMovil: "",
         estado: "Disponible",
-        permiso_circulacion: "",
-        revision_tecnica: ""
+        permiso_circulacion: null, 
+        revision_tecnica: null     
     };
     
     const [selectedVehiculo, setSelectedVehiculo] = useState(initialFormState);
-    const formatDateForInput = (dateValue) => {
-        if (!dateValue) return "";
-        
-        const dateString = String(dateValue);
-
-        if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
-            return dateString;
-        }
-
-        if (dateString.includes('T')) {
-            return dateString.split('T')[0]; 
-        }
-
-        if (dateString.includes('-')) {
-            const parts = dateString.split('-');
-            if (parts.length === 3 && parts[0].length === 2) {
-                return `${parts[2]}-${parts[1]}-${parts[0]}`; 
-            }
-        }
-
-        if (dateString.includes('/')) {
-            const parts = dateString.split('/');
-            if (parts.length === 3) {
-                return `${parts[2]}-${parts[1]}-${parts[0]}`; 
-            }
-        }
-
-        return "";
-    };
+    const [archivos, setArchivos] = useState({
+        permiso_circulacion: null,
+        revision_tecnica: null
+    });
+    const [archivosAQuitar, setArchivosAQuitar] = useState({
+        permiso: false,
+        revision: false
+    });
 
     const fetchVehiculos = async () => {
         try {
@@ -64,31 +48,89 @@ const Vehiculos = () => {
     }, []);
 
     const handleDelete = async (id, patente) => {
-        const confirmar = window.confirm(`¿Estás seguro de eliminar el vehículo con patente ${patente}?`);
-        if (confirmar) {
-            try {
-                await deleteVehiculoRequest(id);
-                setVehiculos(vehiculos.filter(v => v.id !== id));
-                alert("Vehículo eliminado con éxito.");
-            } catch (error) {
-                console.error("Error al eliminar:", error);
-                alert("No se pudo eliminar el vehículo.");
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: `Vas a eliminar el vehículo con patente ${patente}. Esta acción no se puede deshacer.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444', 
+            cancelButtonColor: '#334155', 
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+            background: '#1e293b', 
+            color: '#f1f5f9' 
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    await deleteVehiculoRequest(id);
+                    setVehiculos(vehiculos.filter(v => v.id !== id));
+                    
+                    Swal.fire({
+                        title: "Eliminado",
+                        text: "Vehículo eliminado con éxito.",
+                        icon: "success",
+                        background: '#1e293b',
+                        color: '#f1f5f9',
+                        confirmButtonColor: '#8b5cf6'
+                    });
+                } catch (error) {
+                    console.error("Error al eliminar:", error);
+                    Swal.fire({
+                        title: "Error",
+                        text: "No se pudo eliminar el vehículo.",
+                        icon: "error",
+                        background: '#1e293b',
+                        color: '#f1f5f9',
+                        confirmButtonColor: '#8b5cf6'
+                    });
+                }
             }
+        });
+    };
+
+    const handleVerDocumento = (archivo) => {
+        if (archivo && archivo.toLowerCase().includes('.pdf')) {
+            window.open(`http://localhost:3000/uploads/${archivo}`, '_blank');
+        } else if (archivo && !archivo.toLowerCase().includes('.pdf')) {
+            Swal.fire({
+                title: "Formato Incorrecto",
+                text: "El archivo seleccionado no es un PDF.",
+                icon: "error",
+                background: '#1e293b',
+                color: '#f1f5f9',
+                confirmButtonColor: '#8b5cf6'
+            });
+        } else {
+            Swal.fire({
+                title: "Sin documento",
+                text: "No existe un archivo registrado para este vehículo.",
+                icon: "warning",
+                background: '#1e293b',
+                color: '#f1f5f9',
+                confirmButtonColor: '#8b5cf6'
+            });
         }
     };
 
     const handleOpenAddModal = () => {
         setSelectedVehiculo(initialFormState); 
+        setArchivos({ permiso_circulacion: null, revision_tecnica: null }); 
+        setArchivosAQuitar({ permiso: false, revision: false });
         setIsEditing(false); 
         setIsModalOpen(true);
     };
 
     const handleOpenEditModal = (vehiculo) => {
         setSelectedVehiculo({
-            ...vehiculo,
-            permiso_circulacion: formatDateForInput(vehiculo.permiso_circulacion),
-            revision_tecnica: formatDateForInput(vehiculo.revision_tecnica)
+            id: vehiculo.id,
+            patente: vehiculo.patente,
+            numeroMovil: vehiculo.numeroMovil,
+            estado: vehiculo.estado,
+            permiso_circulacion: vehiculo.permiso_circulacion,
+            revision_tecnica: vehiculo.revision_tecnica
         });
+        setArchivos({ permiso_circulacion: null, revision_tecnica: null });
+        setArchivosAQuitar({ permiso: false, revision: false }); 
         setIsEditing(true); 
         setIsModalOpen(true); 
     };
@@ -104,25 +146,51 @@ const Vehiculos = () => {
         });
     };
 
+    const handleFileChange = (e) => {
+        setArchivos({
+            ...archivos,
+            [e.target.name]: e.target.files[0]
+        });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const payload = {
-                patente: selectedVehiculo.patente,
-                numeroMovil: parseInt(selectedVehiculo.numeroMovil, 10),
-                estado: selectedVehiculo.estado,
-                permiso_circulacion: selectedVehiculo.permiso_circulacion,
-                revision_tecnica: selectedVehiculo.revision_tecnica
-            };
+            const formData = new FormData();
+            formData.append('patente', selectedVehiculo.patente);
+            formData.append('numeroMovil', parseInt(selectedVehiculo.numeroMovil, 10));
+            formData.append('estado', selectedVehiculo.estado);
+
+            if (archivos.permiso_circulacion) {
+                formData.append('permiso_circulacion', archivos.permiso_circulacion);
+            }
+            if (archivos.revision_tecnica) {
+                formData.append('revision_tecnica', archivos.revision_tecnica);
+            }
 
             if (isEditing) {
-                await updateVehiculoRequest(selectedVehiculo.id, payload);
-                setVehiculos(vehiculos.map(v => v.id === selectedVehiculo.id ? { ...payload, id: selectedVehiculo.id } : v));
-                alert("Vehículo actualizado con éxito.");
+                if (archivosAQuitar.permiso) formData.append('quitar_permiso', 'true');
+                if (archivosAQuitar.revision) formData.append('quitar_revision', 'true');
+
+                await updateVehiculoRequest(selectedVehiculo.id, formData);
+                Swal.fire({
+                    title: "Éxito",
+                    text: "Vehículo actualizado con éxito.",
+                    icon: "success",
+                    background: '#1e293b',
+                    color: '#f1f5f9',
+                    confirmButtonColor: '#8b5cf6'
+                });
             } else {
-                const response = await createVehiculoRequest(payload);
-                setVehiculos([...vehiculos, response.data]);
-                alert("Vehículo creado con éxito.");
+                await createVehiculoRequest(formData);
+                Swal.fire({
+                    title: "Éxito",
+                    text: "Vehículo creado con éxito.",
+                    icon: "success",
+                    background: '#1e293b',
+                    color: '#f1f5f9',
+                    confirmButtonColor: '#8b5cf6'
+                });
             }
             
             handleCloseModal();
@@ -130,12 +198,51 @@ const Vehiculos = () => {
             
         } catch (error) {
             console.error("DETALLE DEL ERROR DEL BACKEND:", error.response?.data);
-            const backendMessage = error.response?.data?.message || "Revisa la consola para ver qué campo falló.";
-            alert(`Error 400: ${backendMessage}`);
+            const backendMessage = error.response?.data?.message || "Revisa la consola para más detalles.";
+            
+            if (error.response?.data?.errores) {
+                Swal.fire({
+                    title: "Error de validación", 
+                    text: error.response.data.errores.join('\n'), 
+                    icon: "error",
+                    background: '#1e293b',
+                    color: '#f1f5f9',
+                    confirmButtonColor: '#8b5cf6'
+                });
+            } else {
+                Swal.fire({
+                    title: "Error", 
+                    text: backendMessage, 
+                    icon: "error",
+                    background: '#1e293b',
+                    color: '#f1f5f9',
+                    confirmButtonColor: '#8b5cf6'
+                });
+            }
         }
     };
 
-    const vehiculosOrdenados = [...vehiculos].sort((a, b) => a.numeroMovil - b.numeroMovil);
+    const handleOpenFilterModal = () => {
+        setTempFilterEstado(activeFilterEstado);
+        setIsFilterModalOpen(true);
+    };
+
+    const handleFilterSubmit = (e) => {
+        e.preventDefault();
+        setActiveFilterEstado(tempFilterEstado);
+        setIsFilterModalOpen(false);
+    };
+
+    const handleClearFilters = () => {
+        setActiveFilterEstado("");
+        setTempFilterEstado("");
+        setIsFilterModalOpen(false);
+    };
+
+    const filteredVehiculos = vehiculos.filter(v => {
+        return activeFilterEstado === "" || v.estado === activeFilterEstado;
+    });
+    const vehiculosOrdenados = [...filteredVehiculos].sort((a, b) => a.numeroMovil - b.numeroMovil);
 
     return (
         <div className="main-container">
@@ -144,13 +251,24 @@ const Vehiculos = () => {
             <div className="vehiculos-page">
                 <div className="vehiculos-header">
                     <h1><AiOutlineCar className="title-icon"/> Gestión de Vehículos</h1>
-                    <button 
-                        className="btn-add" 
-                        onClick={handleOpenAddModal}
-                        title="Registrar Nuevo Vehículo"
-                    >
-                        +
-                    </button>
+
+                    <div className="header-actions">
+                        <button 
+                            className="btn-filter" 
+                            onClick={handleOpenFilterModal}
+                            title="Filtrar Vehículos"
+                        >
+                            <FiSliders />
+                        </button>
+                        
+                        <button 
+                            className="btn-add" 
+                            onClick={handleOpenAddModal}
+                            title="Registrar Nuevo Vehículo"
+                        >
+                            +
+                        </button>
+                    </div>
                 </div>
                 
                 {error && <p className="error-msg">{error}</p>}
@@ -178,8 +296,30 @@ const Vehiculos = () => {
                                                 {vehiculo.estado}
                                             </span>
                                         </td>
-                                        <td>{formatDateForInput(vehiculo.permiso_circulacion)}</td>
-                                        <td>{formatDateForInput(vehiculo.revision_tecnica)}</td>
+                                        
+                                        <td>
+                                            <button 
+                                                className="btn-documento"
+                                                onClick={() => handleVerDocumento(vehiculo.permiso_circulacion)}
+                                                style={{ color: vehiculo.permiso_circulacion && vehiculo.permiso_circulacion.includes('.pdf') ? '#ffffff' : '#94a3b8' }}
+                                                title="Ver Permiso de Circulación"
+                                            >
+                                                <AiOutlineFilePdf size={20} color={vehiculo.permiso_circulacion && vehiculo.permiso_circulacion.includes('.pdf') ? "#ef4444" : "#94a3b8"} /> 
+                                                {vehiculo.permiso_circulacion && vehiculo.permiso_circulacion.includes('.pdf') ? "Ver Documento" : "Faltante"}
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button 
+                                                className="btn-documento"
+                                                onClick={() => handleVerDocumento(vehiculo.revision_tecnica)}
+                                                style={{ color: vehiculo.revision_tecnica && vehiculo.revision_tecnica.includes('.pdf') ? '#ffffff' : '#94a3b8' }}
+                                                title="Ver Revisión Técnica"
+                                            >
+                                                <AiOutlineFilePdf size={20} color={vehiculo.revision_tecnica && vehiculo.revision_tecnica.includes('.pdf') ? "#ef4444" : "#94a3b8"} /> 
+                                                {vehiculo.revision_tecnica && vehiculo.revision_tecnica.includes('.pdf') ? "Ver Documento" : "Faltante"}
+                                            </button>
+                                        </td>
+                                        
                                         <td className="acciones-celda">
                                             <button 
                                                 className="btn-action editar" 
@@ -201,7 +341,7 @@ const Vehiculos = () => {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="6" className="text-center">No hay vehículos registrados.</td>
+                                    <td colSpan="6" className="text-center">No se encontraron vehículos con esos filtros.</td>
                                 </tr>
                             )}
                         </tbody>
@@ -240,18 +380,97 @@ const Vehiculos = () => {
                             </div>
                             
                             <div className="form-group">
-                                <label>Venc. Permiso Circulación:</label>
-                                <input type="date" name="permiso_circulacion" value={selectedVehiculo.permiso_circulacion} onChange={handleFormChange} required/>
+                                <label>Permiso de Circulación (PDF):</label>
+                                {isEditing && selectedVehiculo.permiso_circulacion && selectedVehiculo.permiso_circulacion.includes('.pdf') && !archivosAQuitar.permiso ? (
+                                    <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#0f172a', padding: '10px 15px', borderRadius: '8px', border: '1px solid #334155' }}>
+                                        <AiOutlineFilePdf color="#ef4444" size={24} style={{ marginRight: '10px' }}/>
+                                        <span style={{ color: '#f1f5f9', fontSize: '0.9rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '250px' }} title={selectedVehiculo.permiso_circulacion}>
+                                            Archivo Actual Guardado
+                                        </span>
+                                        <button 
+                                            type="button" 
+                                            onClick={() => setArchivosAQuitar({...archivosAQuitar, permiso: true})}
+                                            style={{ background: 'transparent', border: 'none', color: '#ef4444', marginLeft: 'auto', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                                            title="Eliminar documento actual"
+                                        >
+                                            <AiOutlineDelete size={20} />
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <input 
+                                        type="file" 
+                                        name="permiso_circulacion" 
+                                        accept=".pdf" 
+                                        onChange={handleFileChange} 
+                                        required={!isEditing && !selectedVehiculo.permiso_circulacion} 
+                                    />
+                                )}
                             </div>
                             
                             <div className="form-group">
-                                <label>Venc. Revisión Técnica:</label>
-                                <input type="date" name="revision_tecnica" value={selectedVehiculo.revision_tecnica} onChange={handleFormChange} required/>
+                                <label>Revisión Técnica (PDF):</label>
+                                {isEditing && selectedVehiculo.revision_tecnica && selectedVehiculo.revision_tecnica.includes('.pdf') && !archivosAQuitar.revision ? (
+                                    <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#0f172a', padding: '10px 15px', borderRadius: '8px', border: '1px solid #334155' }}>
+                                        <AiOutlineFilePdf color="#ef4444" size={24} style={{ marginRight: '10px' }}/>
+                                        <span style={{ color: '#f1f5f9', fontSize: '0.9rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '250px' }} title={selectedVehiculo.revision_tecnica}>
+                                            Archivo Actual Guardado
+                                        </span>
+                                        <button 
+                                            type="button" 
+                                            onClick={() => setArchivosAQuitar({...archivosAQuitar, revision: true})}
+                                            style={{ background: 'transparent', border: 'none', color: '#ef4444', marginLeft: 'auto', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                                            title="Eliminar documento actual"
+                                        >
+                                            <AiOutlineDelete size={20} />
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <input 
+                                        type="file" 
+                                        name="revision_tecnica" 
+                                        accept=".pdf" 
+                                        onChange={handleFileChange} 
+                                        required={!isEditing && !selectedVehiculo.revision_tecnica}
+                                    />
+                                )}
                             </div>
                             
                             <div className="modal-actions">
                                 <button type="button" className="btn-cancel" onClick={handleCloseModal}>Cancelar</button>
                                 <button type="submit" className="btn-save">{isEditing ? "Guardar Cambios" : "Crear Vehículo"}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+            
+            {isFilterModalOpen && (
+                <div className="modal-overlay">
+                    <div className="modal-content" style={{ maxWidth: '400px' }}>
+                        <div className="modal-header">
+                            <h2>Filtrar Vehículos</h2>
+                            <button className="btn-close-modal" onClick={() => setIsFilterModalOpen(false)}>
+                                <AiOutlineClose />
+                            </button>
+                        </div>
+                        
+                        <form onSubmit={handleFilterSubmit} className="modal-form">
+                            <div className="form-group">
+                                <label>Filtrar por Estado:</label>
+                                <select 
+                                    value={tempFilterEstado} 
+                                    onChange={(e) => setTempFilterEstado(e.target.value)}
+                                >
+                                    <option value="">Todos los Estados</option>
+                                    <option value="Disponible">Disponible</option>
+                                    <option value="Mantencion">Mantencion</option>
+                                    <option value="En Ruta">En Ruta</option>
+                                </select>
+                            </div>
+                            
+                            <div className="modal-actions">
+                                <button type="button" className="btn-cancel" onClick={handleClearFilters}>Limpiar Filtro</button>
+                                <button type="submit" className="btn-save">Aplicar Filtro</button>
                             </div>
                         </form>
                     </div>

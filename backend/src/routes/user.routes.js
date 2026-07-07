@@ -21,9 +21,20 @@ router.delete("/reject/:id", verifyToken, isAdmin, rejectUser);
 
 const accesosPermitidos = authorizeRoles("admin", "secretaria");
 
+const canEditProfile = (req, res, next) => {
+    const idFromUrl = req.params.id;
+    const userRole = req.user.role;
+    const idFromToken = req.user.id;
+
+    if (userRole === "admin" || userRole === "secretaria" || String(idFromToken) === String(idFromUrl)) {
+        return next();
+    }
+    return res.status(403).json({ message: "No tienes permiso para editar este perfil." });
+};
+
 router.get("/", verifyToken, accesosPermitidos, getUsers);
 router.post("/", verifyToken, accesosPermitidos, createUser);
-router.put("/:id", verifyToken, accesosPermitidos, updateUser);
+router.put("/:id", verifyToken, canEditProfile, updateUser);
 router.delete("/:id", verifyToken, accesosPermitidos, deleteUser);
 
 export default router;

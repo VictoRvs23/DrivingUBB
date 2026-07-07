@@ -12,7 +12,7 @@ export const createPreRegisterService = async (data) => {
     if (existingUser) {
         throw { status: 400, message: "Este correo ya envió una solicitud o ya está registrado." };
     }
-    const newUser = userRepository.create({ ...data, role: "alumno", estado: "Inactivo" });
+    const newUser = userRepository.create({ ...data, role: "alumno", estado: "Inactivo", run: data.run || data.rut });
     return await userRepository.save(newUser);
 };
 

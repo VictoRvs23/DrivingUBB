@@ -16,11 +16,28 @@
     text-align: center;
 }
 
-.register-box h1 { color: #1a2639; margin-bottom: 5px; }
-.register-box h2 { font-size: 1.2rem; color: #666; margin-bottom: 20px; }
+.register-box h1 {
+    color: #1a2639;
+    margin-bottom: 5px;
+}
 
-.input-group { text-align: left; margin-bottom: 15px; }
-.input-group label { display: block; margin-bottom: 5px; color: #333; }
+.register-box h2 {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+
 .input-group input {
     width: 100%;
     padding: 10px;
@@ -39,6 +56,18 @@
     cursor: pointer;
     font-size: 1rem;
     margin-top: 10px;
+    margin-bottom: 30px;
 }
 
-.status-message { color: green; margin-top: 15px; }
+.status-message {
+    color: green;
+    margin-top: 15px;
+}
+
+/* PRUEBA CELULAR*/
+@media (max-width: 480px) {
+    .register-box {
+        padding: 20px;
+        width: 90%;
+    }
+}

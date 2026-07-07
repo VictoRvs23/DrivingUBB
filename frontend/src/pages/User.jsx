@@ -21,8 +21,7 @@ const User = () => {
         email: "",
         numeroTelefonico: "",
         role: "alumno",
-        estado: "Activo",
-        password: "" 
+        estado: "Activo"
     };
     
     const [selectedUser, setSelectedUser] = useState(initialFormState);
@@ -40,6 +39,7 @@ const User = () => {
     useEffect(() => {
         fetchUsers();
     }, []);
+    
     const handleDelete = async (id, nombre) => {
         Swal.fire({
             title: '¿Estás seguro?',
@@ -47,18 +47,35 @@ const User = () => {
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#ef4444',
-            cancelButtonColor: '#1a2639',
+            cancelButtonColor: '#334155', 
             confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar'
+            cancelButtonText: 'Cancelar',
+            background: '#1e293b',
+            color: '#f1f5f9'      
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
                     await deleteUserRequest(id);
                     setUsers(users.filter(u => u.id !== id));
-                    Swal.fire("Eliminado", "Usuario eliminado con éxito.", "success");
+                    
+                    Swal.fire({
+                        title: "Eliminado", 
+                        text: "Usuario eliminado con éxito.", 
+                        icon: "success",
+                        background: '#1e293b',
+                        color: '#f1f5f9',
+                        confirmButtonColor: '#8b5cf6'
+                    });
                 } catch (error) {
                     console.error("Error al eliminar:", error);
-                    Swal.fire("Error", "No se pudo eliminar el usuario.", "error");
+                    Swal.fire({
+                        title: "Error", 
+                        text: "No se pudo eliminar el usuario.", 
+                        icon: "error",
+                        background: '#1e293b',
+                        color: '#f1f5f9',
+                        confirmButtonColor: '#8b5cf6'
+                    });
                 }
             }
         });
@@ -67,22 +84,47 @@ const User = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const payload = {
-                nombre: selectedUser.nombre,
-                run: selectedUser.run,
-                email: selectedUser.email,
-                numeroTelefonico: String(selectedUser.numeroTelefonico),
-                role: selectedUser.role,
-                estado: selectedUser.estado 
-            };
-
             if (isEditing) {
+                const payload = {
+                    nombre: selectedUser.nombre,
+                    run: selectedUser.run,
+                    email: selectedUser.email,
+                    numeroTelefonico: String(selectedUser.numeroTelefonico),
+                    role: selectedUser.role,
+                    estado: selectedUser.estado 
+                };
                 await updateUserRequest(selectedUser.id, payload);
-                Swal.fire("Éxito", "Usuario actualizado con éxito.", "success");
+                
+                Swal.fire({
+                    title: "Éxito", 
+                    text: "Usuario actualizado con éxito.", 
+                    icon: "success",
+                    background: '#1e293b',
+                    color: '#f1f5f9',
+                    confirmButtonColor: '#8b5cf6'
+                });
             } else {
-                payload.password = selectedUser.password;
+                const payload = {
+                    nombre: selectedUser.nombre,
+                    run: selectedUser.run,
+                    rut: selectedUser.run, 
+                    email: selectedUser.email,
+                    numeroTelefonico: String(selectedUser.numeroTelefonico),
+                    role: "alumno",
+                    estado: "Activo", 
+                    password: selectedUser.run
+                };
+                
                 await createUserRequest(payload);
-                Swal.fire("Éxito", "Usuario creado con éxito.", "success");
+                
+                Swal.fire({
+                    title: "Éxito", 
+                    text: "Usuario creado y activado con éxito.", 
+                    icon: "success",
+                    background: '#1e293b',
+                    color: '#f1f5f9',
+                    confirmButtonColor: '#8b5cf6'
+                });
             }
             
             setIsModalOpen(false);
@@ -91,10 +133,25 @@ const User = () => {
         } catch (error) {
             console.error("DETALLE DEL ERROR:", error.response?.data);
             const backendMessage = error.response?.data?.message || "Revisa la consola para más detalles.";
+            
             if (error.response?.data?.errors) {
-                Swal.fire("Error de validación", error.response.data.errors.join('\n'), "error");
+                Swal.fire({
+                    title: "Error de validación", 
+                    text: error.response.data.errors.join('\n'), 
+                    icon: "error",
+                    background: '#1e293b',
+                    color: '#f1f5f9',
+                    confirmButtonColor: '#8b5cf6'
+                });
             } else {
-                Swal.fire("Error", backendMessage, "error");
+                Swal.fire({
+                    title: "Error", 
+                    text: backendMessage, 
+                    icon: "error",
+                    background: '#1e293b',
+                    color: '#f1f5f9',
+                    confirmButtonColor: '#8b5cf6'
+                });
             }
         }
     };
@@ -108,10 +165,11 @@ const User = () => {
     };
 
     const handleOpenEditModal = (user) => {
-        setSelectedUser({ ...user, estado: user.estado || "Inactivo", password: "" });
+        setSelectedUser({ ...user, estado: user.estado || "Inactivo" });
         setIsEditing(true); 
         setIsModalOpen(true); 
     };
+    
     const handleOpenFilterModal = () => {
         setTempFilters(activeFilters);
         setIsFilterModalOpen(true);
@@ -129,11 +187,13 @@ const User = () => {
         setTempFilters(emptyFilters);
         setIsFilterModalOpen(false);
     };
+    
     const filteredUsers = users.filter(user => {
         const matchRole = activeFilters.role === "" || user.role === activeFilters.role;
         const matchEstado = activeFilters.estado === "" || user.estado === activeFilters.estado;
         return matchRole && matchEstado;
     });
+    
     const rolePriority = { admin: 1, secretaria: 2, instructor: 3, alumno: 4 };
     const displayUsers = [...filteredUsers].sort((a, b) => {
         const prioridadA = rolePriority[a.role?.toLowerCase()] || 5;
@@ -230,6 +290,7 @@ const User = () => {
                     </table>
                 </div>
             </div>
+            
             {isModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal-content">
@@ -260,33 +321,38 @@ const User = () => {
                                 <label>Teléfono (Debe empezar con 9):</label>
                                 <input type="text" name="numeroTelefonico" value={selectedUser.numeroTelefonico} onChange={handleFormChange} required maxLength="9" placeholder="912345678" />
                             </div>
+                            
+                            {isEditing && (
+                                <>
+                                    <div className="form-group">
+                                        <label>Rol:</label>
+                                        <select 
+                                            name="role" 
+                                            value={selectedUser.role} 
+                                            onChange={handleFormChange} 
+                                            required 
+                                        >
+                                            <option value="alumno">Alumno</option>
+                                            <option value="instructor">Instructor</option>
+                                            <option value="secretaria">Secretaria</option>
+                                            <option value="admin">Administrador</option>
+                                        </select>
+                                    </div>
 
-                            {!isEditing && (
-                                <div className="form-group">
-                                    <label>Contraseña Temporal:</label>
-                                    <input type="password" name="password" value={selectedUser.password} onChange={handleFormChange} required />
-                                </div>
+                                    <div className="form-group">
+                                        <label>Estado del Acceso:</label>
+                                        <select 
+                                            name="estado" 
+                                            value={selectedUser.estado} 
+                                            onChange={handleFormChange} 
+                                            required 
+                                        >
+                                            <option value="Activo">Activo</option>
+                                            <option value="Inactivo">Inactivo</option>
+                                        </select>
+                                    </div>
+                                </>
                             )}
-                            
-                            <div className="form-group">
-                                <label>Rol:</label>
-                                <select name="role" value={selectedUser.role} onChange={handleFormChange} required>
-                                    <option value="alumno">Alumno</option>
-                                    <option value="instructor">Instructor</option>
-                                    <option value="secretaria">Secretaria</option>
-                                    <option value="admin">Administrador</option>
-                                </select>
-                            </div>
-                            
-                            <div className="form-group">
-                                <label>Estado del Acceso:</label>
-                                <select name="estado" value={selectedUser.estado} onChange={handleFormChange} required>
-                                    <option value="Activo">Activo</option>
-                                    <option value="Inactivo">Inactivo</option>
-                                    <option value="Aprobado">Aprobado</option>
-                                    <option value="Reprobado">Reprobado</option>
-                                </select>
-                            </div>
                             
                             <div className="modal-actions">
                                 <button type="button" className="btn-cancel" onClick={() => setIsModalOpen(false)}>Cancelar</button>
@@ -296,6 +362,7 @@ const User = () => {
                     </div>
                 </div>
             )}
+            
             {isFilterModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal-content" style={{ maxWidth: '400px' }}>
@@ -330,8 +397,6 @@ const User = () => {
                                     <option value="">Todos los Estados</option>
                                     <option value="Activo">Activo</option>
                                     <option value="Inactivo">Inactivo</option>
-                                    <option value="Aprobado">Aprobado</option>
-                                    <option value="Reprobado">Reprobado</option>
                                 </select>
                             </div>
                             
