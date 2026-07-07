@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import LoginPage from './pages/LoginPage.jsx';
@@ -14,6 +15,7 @@ import AdminSoportes from './pages/AdminSoportes.jsx';
 import EvaluacionPractica from './pages/EvaluacionPractica.jsx';
 import ExamenTeorico from './pages/ExamenTeorico.jsx';
 import MisResultados from './pages/MisResultados.jsx';
+import AsignacionPage from './pages/AsignacionPage.jsx'; 
 
 function App() {
   const { user, loading } = useAuth(); 
@@ -99,10 +101,22 @@ function App() {
               : <Navigate to="/home" replace />
           }
         />
+        <Route
+          path="/asignaciones"
+          element={
+            user && (user.role === 'admin' || user.role === 'secretaria')
+              ? <AsignacionPage />
+              : <Navigate to="/login" replace />
+          }
+        />
 
         <Route
           path="/admin/pending"
-          element={user?.role === 'secretaria' ? <PendingUsers /> : <Navigate to="/login" replace />}
+          element={
+            user && (user.role === 'secretaria' || user.role === 'admin')
+              ? <PendingUsers /> 
+              : <Navigate to="/login" replace />
+          }
         />
 
         <Route

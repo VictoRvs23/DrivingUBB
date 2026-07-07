@@ -50,14 +50,14 @@ export const sendReservaConfirmationEmail = async (email, nombre, fecha, hora) =
   const mailOptions = {
     from: `"Escuela de Manejo DrivingUBB" <${EMAIL_USER}>`,
     to: email,
-    subject: "Confirmación de Clase Práctica - DrivingUBB 🚗",
+    subject: "Confirmación de Clase Práctica - DrivingUBB ",
     html: `
       <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
         <h2 style="color: #2c3e50;">¡Reserva Confirmada, ${nombre}!</h2>
         <p>Tu clase de conducción ha sido agendada exitosamente en nuestro sistema.</p>
         <div style="background-color: #eef7ff; padding: 20px; border-radius: 8px; border-left: 5px solid #3498db; margin: 20px 0;">
-          <p style="margin: 5px 0;"><strong>📅 Fecha:</strong> ${fecha}</p>
-          <p style="margin: 5px 0;"><strong>⏰ Horario:</strong> ${hora} hrs.</p>
+          <p style="margin: 5px 0;"><strong> Fecha:</strong> ${fecha}</p>
+          <p style="margin: 5px 0;"><strong> Horario:</strong> ${hora} hrs.</p>
         </div>
         <p><strong>Recomendaciones importantes:</strong></p>
         <ul>

@@ -7,8 +7,12 @@ export const crearClaseSchema = Joi.object({
 });
 
 export const asignarRecursosSchema = Joi.object({
-  instructor_id: Joi.number().integer().required(),
-  vehiculo_id: Joi.number().integer().required(),
+  instructorId: Joi.number().integer().required().messages({
+    "any.required": "El ID del instructor es obligatorio"
+  }),
+  vehiculoId: Joi.number().integer().required().messages({
+    "any.required": "El ID del vehículo es obligatorio"
+  }),
 });
 
 export const calificarClaseSchema = Joi.object({
