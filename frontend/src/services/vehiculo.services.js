@@ -9,16 +9,26 @@ const getConfig = () => {
     };
 };
 
+const getMultipartConfig = () => {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    return {
+        headers: { 
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data' 
+        }
+    };
+};
+
 export const getVehiculosRequest = async () => {
     return await axios.get(API_URL, getConfig());
 };
 
 export const createVehiculoRequest = async (vehiculoData) => {
-    return await axios.post(API_URL, vehiculoData, getConfig());
+    return await axios.post(API_URL, vehiculoData, getMultipartConfig());
 };
 
 export const updateVehiculoRequest = async (id, vehiculoData) => {
-    return await axios.put(`${API_URL}/${id}`, vehiculoData, getConfig());
+    return await axios.put(`${API_URL}/${id}`, vehiculoData, getMultipartConfig());
 };
 
 export const deleteVehiculoRequest = async (id) => {

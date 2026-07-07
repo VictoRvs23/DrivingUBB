@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import '../styles/Register.css';
@@ -17,7 +17,7 @@ const LoginPage = () => {
             await login(credentials.email, credentials.password);
             navigate('/home');
         } catch (err) {
-            setError('Correo o contraseña incorrectos');
+            setError(err.message || 'Error de conexión con el servidor');
         }
     };
 

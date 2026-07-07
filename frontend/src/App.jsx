@@ -1,14 +1,20 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
-import LoginPage from './pages/LoginPage.jsx'; 
-import PreRegisterPage from './pages/PreRegisterPage.jsx'; 
-import Home from './pages/Home.jsx'; 
-import PendingUsers from './pages/PendingUsers.jsx'; 
-import Reservas from './pages/Reservas.jsx'; 
+import LoginPage from './pages/LoginPage.jsx';
+import PreRegisterPage from './pages/PreRegisterPage.jsx';
+import Home from './pages/Home.jsx';
+import PendingUsers from './pages/PendingUsers.jsx';
+import Profile from './components/Profile';
+import Reservas from './pages/Reservas.jsx';
 import Vehiculos from './pages/Vehiculos.jsx';
 import Users from './pages/User.jsx';
 import ClasesPracticas from './pages/ClasesPracticas.jsx';
+import Soporte from './pages/Soporte.jsx';
+import AdminSoportes from './pages/AdminSoportes.jsx';
+import EvaluacionPractica from './pages/EvaluacionPractica.jsx';
+import ExamenTeorico from './pages/ExamenTeorico.jsx';
+import MisResultados from './pages/MisResultados.jsx';
 import AsignacionPage from './pages/AsignacionPage.jsx'; 
 
 function App() {
@@ -34,51 +40,98 @@ function App() {
           element={user ? <Home /> : <Navigate to="/login" replace />} 
         />
 
+        {/* Perfil de usuario */}
+        <Route
+          path="/profile"
+          element={user ? <Profile /> : <Navigate to="/login" replace />}
+        />
+
         {/* Reservas */}
         <Route 
           path="/reservas" 
           element={user ? <Reservas /> : <Navigate to="/login" replace />} 
         />
 
+        {/* Soporte: Alumno e Instructor */}
+        <Route
+          path="/soporte"
+          element={
+            user && (user.role === 'alumno' || user.role === 'instructor')
+              ? <Soporte />
+              : <Navigate to="/home" replace />
+          }
+        />
+
+        {/* Gestión de soportes — solo admin y secretaria */}
+        <Route
+          path="/admin/soportes"
+          element={
+            user && (user.role === 'admin' || user.role === 'secretaria')
+              ? <AdminSoportes />
+              : <Navigate to="/home" replace />
+          }
+        />
+
         {/* Vehiculos: Solo Admin y Secretaria */}
-        <Route 
-          path="/vehiculos" 
+        <Route
+          path="/vehiculos"
           element={
-            user && (user.role === 'admin' || user.role === 'secretaria') 
-              ? <Vehiculos /> 
+            user && (user.role === 'admin' || user.role === 'secretaria')
+              ? <Vehiculos />
               : <Navigate to="/home" replace />
-          } 
+          }
         />
 
-        {/* Usuarios Solo Admin y Secretaria */}
-        <Route 
-          path="/users" 
+        {/* Usuarios: Solo Admin y Secretaria */}
+        <Route
+          path="/users"
           element={
-            user && (user.role === 'admin' || user.role === 'secretaria') 
-              ? <Users /> 
+            user && (user.role === 'admin' || user.role === 'secretaria')
+              ? <Users />
               : <Navigate to="/home" replace />
-          } 
+          }
         />
 
-        {/* Usuarios Solo Alumno y Instructor */}
-        <Route 
-          path="/clases-practicas" 
+        {/* Clases Practicas: Solo Alumno y Instructor */}
+        <Route
+          path="/clases-practicas"
           element={
-            user && (user.role === 'alumno' || user.role === 'instructor') 
-              ? <ClasesPracticas /> 
+            user && (user.role === 'alumno' || user.role === 'instructor')
+              ? <ClasesPracticas />
               : <Navigate to="/home" replace />
-          } 
+          }
+        />
+        <Route
+          path="/asignaciones"
+          element={
+            user && (user.role === 'admin' || user.role === 'secretaria')
+              ? <AsignacionPage />
+              : <Navigate to="/login" replace />
+          }
         />
 
-          {/* Asignación de recursos: Solo Secretaria */}
-        <Route 
-          path="/asignaciones" 
-          element={user?.role === 'admin' || user?.role === 'secretaria' ? <AsignacionPage /> : <Navigate to="/home" replace />} 
+        <Route
+          path="/admin/pending"
+          element={
+            user && (user.role === 'secretaria' || user.role === 'admin')
+              ? <PendingUsers /> 
+              : <Navigate to="/login" replace />
+          }
         />
 
-        <Route 
-          path="/admin/pending" 
-          element={user?.role === 'secretaria' ? <PendingUsers /> : <Navigate to="/login" replace />} 
+        <Route
+          path="/evaluacionpractica"
+          element={user ? <EvaluacionPractica /> : <Navigate to="/login" replace />}
+        />
+
+        <Route
+          path="/examenteorico"
+          element={user ? <ExamenTeorico /> : <Navigate to="/login" replace />}
+        />
+
+        <Route
+          path="/mis-resultados"
+          element={user ? <MisResultados /> : <Navigate to="/login" replace />}
         />
 
         {/* Esto es por si la ruta no existe, te manda al pre-inscripción */}

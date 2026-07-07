@@ -82,7 +82,7 @@ const ClasesPracticas = () => {
                                             <FaCarSide size={40} />
                                         </div>
                                         <div className="cp-class-info">
-                                            <h3><strong>Clase n°{clase.numero_clase}:</strong> {clase.tema}</h3>
+                                            <h3><strong>{clase.tema}</strong></h3>
                                             <p>{formatearFecha(clase.fecha_hora)}</p>
                                         </div>
                                     </div>

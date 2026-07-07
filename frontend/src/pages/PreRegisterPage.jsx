@@ -4,7 +4,6 @@ import { preRegisterRequest } from '../services/user.services.js';
 import '../styles/Register.css';
 
 const PreRegisterPage = () => {
-
     const [formData, setFormData] = useState({ nombre: '', email: '', numeroTelefonico: '', run: '' });
     const [mensaje, setMensaje] = useState('');
     const [loading, setLoading] = useState(false);
@@ -43,8 +42,7 @@ const PreRegisterPage = () => {
                         <input type="text" name="nombre" placeholder="Juan Pérez" value={formData.nombre} onChange={handleChange} required />
                     </div>
                     <div className="input-group">
-                        <label>RUN / RUT</label>
-                        
+                        <label>RUT / RUN</label>
                         <input type="text" name="run" placeholder="12.345.678-9" value={formData.run} onChange={handleChange} required />
                     </div>
                     <div className="input-group">

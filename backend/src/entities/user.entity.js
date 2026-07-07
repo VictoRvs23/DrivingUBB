@@ -48,6 +48,11 @@ export const User = new EntitySchema({
       length: 15,
       nullable: true 
     },
+    direccion: {
+      type: "varchar",
+      length: 255,
+      nullable: true
+    },
     rut: { 
       type: "varchar",
       length: 20,
