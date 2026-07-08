@@ -2,6 +2,7 @@ import { AppDataSource } from "../config/configDb.js";
 import { ClasePractica } from "../entities/clasesPracticas.entity.js";
 import { User } from "../entities/user.entity.js";
 import { Vehiculo } from "../entities/vehiculo.entity.js";
+import { Reserva } from "../entities/reservas.entity.js";
 import * as clasesService from "../services/clasesPracticas.services.js";
 
 export const getClasesAlumno = async (req, res) => {
@@ -114,10 +115,20 @@ export const cancelarClase = async (req, res) => {
     try {
         const { id } = req.params;
         const claseRepository = AppDataSource.getRepository(ClasePractica);
+        const reservaRepository = AppDataSource.getRepository(Reserva);
         const clase = await claseRepository.findOne({ where: { id: parseInt(id) } });
         
         if (!clase) {
             return res.status(404).json({ mensaje: "Clase práctica no encontrada" });
+        }
+
+        const fechaHora = new Date(clase.fecha_hora);
+        const fecha = fechaHora.toISOString().slice(0, 10);
+        const hora = fechaHora.toTimeString().slice(0,5);
+
+        const reserva = await reservaRepository.findOne({ where: { fecha, hora } });
+        if (reserva) {
+            await reservaRepository.remove(reserva);
         }
 
         await claseRepository.remove(clase);

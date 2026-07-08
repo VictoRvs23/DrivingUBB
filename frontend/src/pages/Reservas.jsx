@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
 import Sidebar from '../components/Sidebar';
 import { getReservasRequest, createReservaRequest } from '../services/reservas.services';
 import '../styles/Reservas.css';
@@ -27,15 +28,38 @@ const Reservas = () => {
     }, [fecha]);
 
     const handleConfirmar = async () => {
-        if (!seleccionado) return alert("Por favor selecciona un horario");
-        
+        if (!seleccionado) {
+            return Swal.fire({
+                icon: 'warning',
+                title: 'Selecciona un horario',
+                text: 'Debes elegir un horario antes de confirmar la reserva.',
+                background: '#1e293b',
+                color: '#f1f5f9',
+                confirmButtonColor: '#3b82f6'
+            });
+        }
+
         try {
             await createReservaRequest({ fecha, hora: seleccionado });
-            alert(`¡Reserva confirmada para el ${fecha} a las ${seleccionado}!`);
+            await Swal.fire({
+                icon: 'success',
+                title: 'Reserva Confirmada',
+                text: `¡Reserva confirmada para el ${fecha} a las ${seleccionado}!`,
+                background: '#1e293b',
+                color: '#f1f5f9',
+                confirmButtonColor: '#3b82f6'
+            });
             setOcupados([...ocupados, seleccionado]);
             setSeleccionado(null);
         } catch (error) {
-            alert(error.response?.data?.message || "Error al reservar");
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al reservar',
+                text: error.response?.data?.message || 'Ocurrió un error al crear la reserva.',
+                background: '#1e293b',
+                color: '#f1f5f9',
+                confirmButtonColor: '#ef4444'
+            });
         }
     };
 

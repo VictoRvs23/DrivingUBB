@@ -27,11 +27,6 @@ const Sidebar = () => {
             path: '/reservas'
         });
         menuItems.push({
-            name: 'Examen Teórico',
-            icon: <MdQuiz />,
-            path: '/examenteorico'
-        });
-        menuItems.push({
             name: 'Mis Resultados',
             icon: <MdOutlineFactCheck />,
             path: '/mis-resultados'
