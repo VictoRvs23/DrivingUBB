@@ -5,7 +5,7 @@ import Liston from '../assets/LISTON.png';
 
 const CertificadoPDF = forwardRef(({ alumno, fecha, nota }, ref) => {
     return (
-        <div style={{ transform: 'scale(0.5)', transformOrigin: 'top left', border: '1px solid red' }}>
+       <div style={{ position: 'absolute', top: '-10000px', left: '-10000px' }}>
             <div 
                 ref={ref} 
                 style={{
