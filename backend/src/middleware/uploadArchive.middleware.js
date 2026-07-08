@@ -5,30 +5,34 @@ const storage = multer.diskStorage({
     cb(null, "./src/upload/");
   },
   filename: function (req, file, cb) {
-    const fileName = file.originalname.replace(/\s+/g, "-");
+    const fileName = Date.now() + "-" + file.originalname.replace(/\s+/g, "-");
     cb(null, fileName);
   }
 });
 
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype === "application/pdf") {
+  const allowedTypes = ["application/pdf", "image/jpeg", "image/jpg", "image/png"];
+  if (allowedTypes.includes(file.mimetype)) {
     cb(null, true); 
   } else {
-    cb(new Error("Solo se permiten archivos .pdf"), false); 
+    cb(new Error("Solo se permiten comprobantes en formato PDF o imágenes (.jpg, .jpeg, .png)"), false); 
   }
 };
 
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 5 * 1024 * 1024 // 5 MB 
+    fileSize: 8 * 1024 * 1024 
   },
   fileFilter: fileFilter
 });
 
 const handleFileSizeLimit = (err, req, res, next) => {
   if (err instanceof multer.MulterError) {
-    res.status(400).json({ message: "El tamaño del archivo excede el límite de 5 MB" });
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ message: "El tamaño del archivo excede el límite de 8 MB" });
+    }
+    return res.status(400).json({ message: `Error en la carga: ${err.message}` });
   } else if (err) {
     res.status(400).json({ message: err.message });
   } else {

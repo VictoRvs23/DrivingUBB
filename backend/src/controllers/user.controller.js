@@ -1,10 +1,21 @@
 "use strict";
+import path from "path";
+import { HOST, PORT } from "../config/configEnv.js"; // Importamos variables de red corporativas
 import * as userService from "../services/user.services.js";
 
 export const preRegister = async (req, res) => {
     try {
-        await userService.createPreRegisterService(req.body);
-        res.status(201).json({ message: "Solicitud enviada con éxito. Un administrador revisará tu perfil." });
+        const archivo = req.file;
+
+        if (!archivo) {
+            return res.status(400).json({ message: "El archivo de la boleta de pago es obligatorio para realizar la pre-inscripción." });
+        }
+
+        const urlCompletaBoleta = `http://${HOST}:${PORT}/uploads/${path.basename(archivo.path)}`;
+
+        await userService.createPreRegisterService(req.body, urlCompletaBoleta);
+        
+        res.status(201).json({ message: "Solicitud enviada con éxito. Un administrador revisará tu perfil y tu boleta." });
     } catch (error) {
         if (error.status) return res.status(error.status).json({ message: error.message });
         console.error("Error en preRegister:", error);

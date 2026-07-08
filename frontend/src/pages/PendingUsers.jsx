@@ -72,7 +72,7 @@ const PendingUsers = () => {
                                         <div className="user-details">
                                             <div className="detail-row">
                                                 <span className="detail-label">RUT:</span>
-                                                <span className="detail-value">{user.rut}</span>
+                                                <span className="detail-value">{user.run || user.rut}</span>
                                             </div>
                                             <div className="detail-row">
                                                 <span className="detail-label">Email:</span>
@@ -87,20 +87,45 @@ const PendingUsers = () => {
                                                 <span className="detail-value">{new Date(user.created_at).toLocaleDateString()}</span>
                                             </div>
                                         </div>
-                                        <div className="user-date">Solicitud recibida el: {new Date(user.created_at).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                                        
+                                        {user.comprobante_pago && (
+                                            <div style={{ marginTop: '15px' }}>
+                                                <a 
+                                                    href={user.comprobante_pago} 
+                                                    target="_blank" 
+                                                    rel="noopener noreferrer"
+                                                    style={{
+                                                        display: 'inline-block',
+                                                        backgroundColor: '#1a2639',
+                                                        color: 'white',
+                                                        padding: '8px 16px',
+                                                        borderRadius: '6px',
+                                                        textDecoration: 'none',
+                                                        fontWeight: 'bold',
+                                                        fontSize: '0.85rem'
+                                                    }}
+                                                >
+                                                    Ver Boleta de Pago
+                                                </a>
+                                            </div>
+                                        )}
+
+                                        <div className="user-date" style={{ marginTop: '10px' }}>
+                                            Solicitud recibida el: {new Date(user.created_at).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                                        </div>
                                     </div>
                                     <div className="card-actions">
                                         <button 
                                             className="btn-approve"
                                             onClick={() => handleApprove(user.id)}
                                         >
-                                            ✓ Aprobar
+                                            Aprobar
                                         </button>
                                         <button 
                                             className="btn-reject"
                                             onClick={() => handleReject(user.id)}
                                         >
-                                            ✕ Rechazar
+                                            Rechazar
                                         </button>
                                     </div>
                                 </div>
