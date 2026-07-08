@@ -77,6 +77,20 @@ export const asignarInstructorYVehiculo = async (req, res) => {
             if (!vehiculo) {
                 return res.status(404).json({ mensaje: "El vehículo seleccionado no existe" });
             }
+            
+            const hoy = new Date();
+            const vencimientoPermiso = new Date(vehiculo.vencimiento_permiso);
+            const vencimientoRevision = new Date(vehiculo.vencimiento_revision);
+
+            if (vencimientoPermiso < hoy || vencimientoRevision < hoy) {
+                vehiculo.estado = "Mantencion";
+                await vehiculoRepository.save(vehiculo);
+                
+                return res.status(400).json({ 
+                    mensaje: "Operación rechazada: Los documentos del vehículo están vencidos. El vehículo ha sido inhabilitado." 
+                });
+            }
+
             clase.vehiculo = vehiculo;
         }
 

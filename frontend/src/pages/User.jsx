@@ -263,21 +263,23 @@ const User = () => {
                                             </span>
                                         </td>
                                         <td className="acciones-celda">
-                                            <button 
-                                                className="btn-action editar" 
-                                                title="Editar"
-                                                onClick={() => handleOpenEditModal(user)} 
-                                            >
-                                                <AiOutlineEdit />
-                                            </button>
+                                            <div className="acciones-wrapper">
+                                                <button 
+                                                    className="btn-action editar" 
+                                                    title="Editar"
+                                                    onClick={() => handleOpenEditModal(user)} 
+                                                >
+                                                    <AiOutlineEdit />
+                                                </button>
 
-                                            <button 
-                                                className="btn-action eliminar" 
-                                                title="Eliminar"
-                                                onClick={() => handleDelete(user.id, user.nombre)}
-                                            >
-                                                <AiOutlineDelete />
-                                            </button>
+                                                <button 
+                                                    className="btn-action eliminar" 
+                                                    title="Eliminar"
+                                                    onClick={() => handleDelete(user.id, user.nombre)}
+                                                >
+                                                    <AiOutlineDelete />
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))
