@@ -71,6 +71,11 @@ export const User = new EntitySchema({
       type: "timestamp",
       updateDate: true
     },
+    recibir_correos: {
+      type: "boolean",
+      default: true, 
+      nullable: false
+    },
   },
   relations: {
     reservas: {

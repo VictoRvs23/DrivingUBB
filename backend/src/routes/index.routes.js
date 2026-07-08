@@ -13,11 +13,13 @@ import vehiculosRoutes from "./vehiculo.routes.js";
 import reservasRoutes from "./reservas.routes.js";
 import faqRoutes from "./preguntaFrecuente.routes.js";
 import dashboardRoutes from "./dashboard.routes.js";
+import configuracionRoutes from "./configuracion.routes.js";
 
 const router = Router();
 
 router.use("/users", userRoutes);
 router.use("/auth", authRoutes);
+router.use("/configuracion", configuracionRoutes);
 router.use("/claseteorica", claseteorica);
 router.use("/evaluacionpractica", evaluacionpractica);
 router.use("/examenteorico", examenTeoricoRoutes);
