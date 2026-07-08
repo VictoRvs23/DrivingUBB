@@ -1,0 +1,93 @@
+.gestion-preguntas-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.preguntas-lista {
+    background: white;
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.preguntas-lista h3 {
+    color: #2c3e50;
+    margin: 0 0 20px 0;
+    font-size: 1.3rem;
+}
+
+.pregunta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #3498db;
+}
+
+.pregunta-row:last-child {
+    margin-bottom: 0;
+}
+
+.pregunta-row-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.pregunta-row-texto {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.pregunta-row-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    color: #7f8c8d;
+}
+
+.categoria-chip {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.75rem;
+}
+
+.categoria-chip.señales { background-color: #e3f2fd; color: #1565c0; }
+.categoria-chip.mecanica { background-color: #fff3e0; color: #e65100; }
+.categoria-chip.leyes { background-color: #f3e5f5; color: #6a1b9a; }
+
+.btn-eliminar-pregunta {
+    background-color: #e74c3c;
+    margin-top: 0;
+    flex-shrink: 0;
+}
+
+.btn-eliminar-pregunta:hover:not(:disabled) {
+    background-color: #c0392b;
+    box-shadow: 0 6px 15px rgba(231, 76, 60, 0.3);
+}
+
+@media (max-width: 768px) {
+    .gestion-preguntas-container {
+        padding: 20px 10px;
+    }
+
+    .pregunta-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

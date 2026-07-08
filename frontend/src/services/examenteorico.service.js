@@ -18,6 +18,16 @@ export const obtenerPreguntasRequest = async () => {
     return api.get('/preguntas');
 };
 
+//crear pregunta para el banco
+export const crearPreguntaRequest = async (preguntaData) => {
+    return api.post('/preguntas', preguntaData);
+};
+
+//eliminar pregunta del banco
+export const eliminarPreguntaRequest = async (id_pregunta) => {
+    return api.delete(`/preguntas/${id_pregunta}`);
+};
+
 //generar examen aleatorio
 export const generarExamenAleatorioRequest = async (id_estudiante, tiempo_limite_segundos = 3600) => {
     return api.post('/examenteorico', { id_estudiante, tiempo_limite_segundos });

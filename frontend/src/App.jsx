@@ -14,6 +14,7 @@ import AdminSoportes from './pages/AdminSoportes.jsx';
 import EvaluacionPractica from './pages/EvaluacionPractica.jsx';
 import ExamenTeorico from './pages/ExamenTeorico.jsx';
 import MisResultados from './pages/MisResultados.jsx';
+import GestionPreguntas from './pages/GestionPreguntas.jsx';
 
 function App() {
   const { user, loading } = useAuth(); 
@@ -105,19 +106,44 @@ function App() {
           element={user?.role === 'secretaria' ? <PendingUsers /> : <Navigate to="/login" replace />}
         />
 
+        {/* Evaluacion Practica: solo Instructor la administra */}
         <Route
           path="/evaluacionpractica"
-          element={user ? <EvaluacionPractica /> : <Navigate to="/login" replace />}
+          element={
+            user?.role === 'instructor'
+              ? <EvaluacionPractica />
+              : <Navigate to="/home" replace />
+          }
         />
 
+        {/* Examen Teorico: solo Alumno lo rinde */}
         <Route
           path="/examenteorico"
-          element={user ? <ExamenTeorico /> : <Navigate to="/login" replace />}
+          element={
+            user?.role === 'alumno'
+              ? <ExamenTeorico />
+              : <Navigate to="/home" replace />
+          }
         />
 
+        {/* Mis Resultados: solo Alumno ve su historial */}
         <Route
           path="/mis-resultados"
-          element={user ? <MisResultados /> : <Navigate to="/login" replace />}
+          element={
+            user?.role === 'alumno'
+              ? <MisResultados />
+              : <Navigate to="/home" replace />
+          }
+        />
+
+        {/* Gestion de Preguntas: solo Instructor arma el banco de preguntas */}
+        <Route
+          path="/gestion-preguntas"
+          element={
+            user?.role === 'instructor'
+              ? <GestionPreguntas />
+              : <Navigate to="/home" replace />
+          }
         />
 
         {/* Esto es por si la ruta no existe, te manda al pre-inscripción */}

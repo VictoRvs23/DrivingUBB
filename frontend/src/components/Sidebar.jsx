@@ -17,9 +17,6 @@ const Sidebar = () => {
     const menuItems = [
         { name: 'Inicio', icon: <AiOutlineHome />, path: '/home' },
         { name: 'Perfil', icon: <AiOutlineUser />, path: '/profile' },
-        { name: 'Evaluación Práctica', icon: <MdAssignment />, path: '/evaluacionpractica' },
-        { name: 'Examen Teórico', icon: <MdQuiz />, path: '/examenteorico' },
-        { name: 'Mis Resultados', icon: <MdOutlineFactCheck />, path: '/mis-resultados' },
     ];
 
     if (user?.role === 'alumno') {
@@ -27,6 +24,29 @@ const Sidebar = () => {
             name: 'Reservas',
             icon: <AiOutlineCheckCircle />,
             path: '/reservas'
+        });
+        menuItems.push({
+            name: 'Examen Teórico',
+            icon: <MdQuiz />,
+            path: '/examenteorico'
+        });
+        menuItems.push({
+            name: 'Mis Resultados',
+            icon: <MdOutlineFactCheck />,
+            path: '/mis-resultados'
+        });
+    }
+
+    if (user?.role === 'instructor') {
+        menuItems.push({
+            name: 'Evaluación Práctica',
+            icon: <MdAssignment />,
+            path: '/evaluacionpractica'
+        });
+        menuItems.push({
+            name: 'Gestión de Preguntas',
+            icon: <MdQuiz />,
+            path: '/gestion-preguntas'
         });
     }
 
