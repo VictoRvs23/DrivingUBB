@@ -10,7 +10,6 @@ import { createUsers } from "./config/initDb.js";
 
 const app = express();
 
-const allowedOrigins = [FRONTEND_URL || "http://localhost:5173"];
 app.use(cors({ 
   origin: true,
   credentials: true,

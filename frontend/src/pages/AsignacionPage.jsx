@@ -4,8 +4,10 @@ import { getClasesAsignacionesRequest, guardarAsignacionRequest } from '../servi
 import { getUsersRequest } from '../services/user.services';
 import { getVehiculosRequest } from '../services/vehiculo.services';
 import Swal from 'sweetalert2'; 
+import { FiSave } from "react-icons/fi"; 
+import { AiOutlineUsergroupAdd } from "react-icons/ai"; 
 import '../styles/User.css';           
-import '../styles/AsignacionPage.css';  
+import '../styles/AsignacionPage.css';
 
 function AsignacionPage() {
   const [clases, setClases] = useState([]);
@@ -72,7 +74,9 @@ function AsignacionPage() {
       <Sidebar />
       <div className="users-page">
         <div className="users-header">
-          <h1>Asignación de Clases Prácticas</h1>
+          <h1>
+            <AiOutlineUsergroupAdd className="title-icon" /> Asignación de Clases Prácticas
+          </h1>
         </div>
 
         {loading ? (
@@ -142,8 +146,9 @@ function AsignacionPage() {
                           <button 
                             className="btn-guardar-asignacion"
                             onClick={() => handleGuardarAsignacion(clase)}
+                            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
                           >
-                            Guardar
+                            <FiSave size={16} />
                           </button>
                         </td>
                       </tr>

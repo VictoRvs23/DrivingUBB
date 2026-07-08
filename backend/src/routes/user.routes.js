@@ -11,10 +11,12 @@ import {
     deleteUser     
 } from "../controllers/user.controller.js";
 import { verifyToken, isAdmin, authorizeRoles } from "../middleware/auth.middleware.js";
+import { upload, handleFileSizeLimit } from "../middleware/uploadArchive.middleware.js";
 
 const router = Router();
 
-router.post("/pre-register", preRegister);
+router.post("/pre-register", upload.single("boleta"), handleFileSizeLimit, preRegister);
+
 router.get("/pending", verifyToken, isAdmin, getPendingUsers);
 router.patch("/approve/:id", verifyToken, isAdmin, approveUser); 
 router.delete("/reject/:id", verifyToken, isAdmin, rejectUser);
