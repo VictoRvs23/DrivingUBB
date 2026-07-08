@@ -36,8 +36,6 @@ export const calificarClase = async (req, res) => {
     }
 };
 
-// --- esto es para asignar ---
-
 export const getClasesParaAsignacion = async (req, res) => {
     try {
         const claseRepository = AppDataSource.getRepository(ClasePractica);
@@ -95,5 +93,24 @@ export const asignarInstructorYVehiculo = async (req, res) => {
     } catch (error) {
         console.error("Error en la asignación de recursos:", error);
         return res.status(500).json({ mensaje: "Error interno al procesar la asignación" });
+    }
+};
+
+export const cancelarClase = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const claseRepository = AppDataSource.getRepository(ClasePractica);
+        const clase = await claseRepository.findOne({ where: { id: parseInt(id) } });
+        
+        if (!clase) {
+            return res.status(404).json({ mensaje: "Clase práctica no encontrada" });
+        }
+
+        await claseRepository.remove(clase);
+
+        return res.status(200).json({ mensaje: "Clase cancelada exitosamente" });
+    } catch (error) {
+        console.error("Error al cancelar la clase:", error);
+        return res.status(500).json({ mensaje: "Error interno al cancelar la clase" });
     }
 };

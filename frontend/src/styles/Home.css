@@ -64,7 +64,6 @@
     text-decoration: underline;
 }
 
-/* Estoy probando esto todavia, pero es para que se vea bien en celular */
 @media (max-width: 768px) {
     .main-content {
         margin-left: 0; 
@@ -106,11 +105,16 @@
 }
 
 .home-content {
-    background-color: #1e293b;
+    background-color: #1e293b !important;
     border-radius: 12px;
-    padding: 35px;
+    padding: 50px;
+    width: 100%;
+    min-height: 650px;
+    box-sizing: border-box;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     color: #f1f5f9;
+    display: flex;
+    flex-direction: column;
 }
 
 .welcome-bar {
@@ -165,7 +169,7 @@
 
 .stat-card:hover {
     transform: translateY(-5px);
-    border-color: #475569;
+    border-color: #3b82f6;
 }
 
 .stat-icon {
@@ -291,6 +295,7 @@
     transform: scale(1.02);
 }
 
+
 /* INSTRUCTOR */
 
 .instructor-stats-grid {
@@ -304,11 +309,17 @@
     background-color: rgba(15, 23, 42, 0.3);
     border: 1px solid #334155;
     border-radius: 16px;
-    padding: 30px;
+    padding: 30px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    text-align: center;
+    justify-content: center;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.instructor-stat-card:hover {
+    transform: translateY(-5px);
+    border-color: #3b82f6 !important;
 }
 
 .stat-icon-large {
@@ -354,7 +365,7 @@
 
 .admin-stat-card:hover {
     transform: translateY(-5px);
-    border-color: #475569;
+    border-color: #3b82f6 !important;
 }
 
 .admin-stat-card h3 {
