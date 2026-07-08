@@ -1,58 +1,75 @@
 import React from 'react';
 import { forwardRef } from 'react';
+import LogoUBB from '../assets/LogDrivingUBB.png';
+import Liston from '../assets/LISTON.png'; 
 
 const CertificadoPDF = forwardRef(({ alumno, fecha, nota }, ref) => {
     return (
-        <div style={{ position: 'absolute', top: '-10000px', left: '-10000px' }}>
-            
+        <div style={{ transform: 'scale(0.5)', transformOrigin: 'top left', border: '1px solid red' }}>
             <div 
                 ref={ref} 
                 style={{
                     width: '1123px',
                     height: '794px',
-                    backgroundColor: '#ffffff',
-                    padding: '40px',
+                    backgroundColor: '#1a2639', 
+                    padding: '20px',
                     boxSizing: 'border-box',
-                    fontFamily: 'Arial, sans-serif',
-                    color: '#1a2639'
+                    fontFamily: 'serif',
+                    color: '#f1f5f9'
                 }}
             >
                 <div style={{
-                    border: '10px solid #1e293b',
+                    border: '4px solid #3b82f6',
                     height: '100%',
                     padding: '40px',
-                    textAlign: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     position: 'relative'
                 }}>
-                    <h2 style={{ color: '#3b82f6', letterSpacing: '2px' }}>ESCUELA DE CONDUCTORES DRIVINGUBB</h2>
+                    <img src={LogoUBB} alt="Logo" style={{ width: '120px', marginBottom: '20px' }} />
                     
-                    <div style={{ marginTop: '80px', marginBottom: '40px' }}>
-                        <h1 style={{ fontSize: '3.5rem', margin: '0' }}>CERTIFICADO DE APROBACIÓN</h1>
-                    </div>
+                    <h1 style={{ fontSize: '4rem', margin: '0', color: '#fff', textTransform: 'uppercase', letterSpacing: '4px' }}>CERTIFICADO</h1>
+                    <p style={{ fontSize: '1.5rem', marginBottom: '40px', color: '#94a3b8' }}>Este certificado se otorga a</p>
                     
-                    <p style={{ fontSize: '1.5rem', margin: '20px 0' }}>Se otorga el presente documento a:</p>
-                    
-                    <h2 style={{ fontSize: '2.5rem', textTransform: 'uppercase', borderBottom: '2px solid #94a3b8', display: 'inline-block', paddingBottom: '10px' }}>
+                    <div style={{ borderBottom: '2px solid #3b82f6', width: '600px', paddingBottom: '10px', fontSize: '2.5rem', fontWeight: 'bold', textAlign: 'center' }}>
                         {alumno.nombre}
-                    </h2>
-                    
-                    <p style={{ fontSize: '1.2rem', marginTop: '20px' }}>RUT: {alumno.run}</p>
-                    
-                    <p style={{ fontSize: '1.2rem', marginTop: '40px', lineHeight: '1.6', padding: '0 50px' }}>
-                        Por haber completado y aprobado satisfactoriamente los módulos teóricos y prácticos del curso de conducción Clase B, obteniendo una calificación final de <strong>{nota}</strong>.
+                    </div>
+
+                    <p style={{ marginTop: '50px', fontSize: '1.2rem', color: '#94a3b8' }}>
+                        En reconocimiento por su aprobación en la escuela de manejo
                     </p>
-                    
-                    <div style={{ 
-                        display: 'flex', 
-                        justifyContent: 'space-around', 
-                        marginTop: '100px',
-                        padding: '0 100px'
-                    }}>
+
+                    <div style={{ display: 'flex', width: '80%', marginTop: '100px', justifyContent: 'space-between' }}>
                         <div style={{ textAlign: 'center' }}>
-                            <p style={{ borderTop: '2px solid #1a2639', width: '200px', paddingTop: '10px' }}>Director Académico</p>
+                            <div style={{ borderTop: '1px solid #f1f5f9', width: '200px', paddingTop: '10px' }}>Secretaria</div>
+                            <div style={{ fontSize: '0.9rem', marginTop: '5px' }}>Firma</div>
                         </div>
+            
+                        <div style={{ 
+                        position: 'relative', 
+                        width: '100px', 
+                        height: '100px', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center' 
+                    }}>
+                        <img 
+                            src={Liston} 
+                            alt="Listón" 
+                            style={{ 
+                                position: 'absolute', 
+                                width: '110px',
+                                top: '-5px', 
+                                left: '-15px' 
+                            }} 
+                        />
+                    </div>
+
                         <div style={{ textAlign: 'center' }}>
-                            <p style={{ borderTop: '2px solid #1a2639', width: '200px', paddingTop: '10px' }}>Fecha de Emisión<br/>{fecha}</p>
+                            <div style={{ borderTop: '1px solid #f1f5f9', width: '200px', paddingTop: '10px' }}>Instructor</div>
+                            <div style={{ fontSize: '0.9rem', marginTop: '5px' }}>Firma</div>
                         </div>
                     </div>
                 </div>

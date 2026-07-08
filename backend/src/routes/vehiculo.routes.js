@@ -1,8 +1,6 @@
 import { Router } from "express";
 import * as controller from "../controllers/vehiculo.controller.js";
 import { verifyToken, authorizeRoles } from "../middleware/auth.middleware.js";
-import { vehiculoBodySchema } from "../validations/vehiculo.validation.js";
-import { validateBody } from "../middleware/validateBody.js";
 import { upload, handleFileSizeLimit } from "../middleware/uploadArchive.middleware.js"; 
 
 const router = Router();
@@ -20,7 +18,6 @@ router.post("/",
   authorizeRoles("secretaria", "admin"), 
   uploadArchivos, 
   handleFileSizeLimit, 
-  validateBody(vehiculoBodySchema), 
   controller.createVehiculo
 );
 
