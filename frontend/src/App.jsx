@@ -15,6 +15,7 @@ import AdminFAQ from './pages/AdminFAQ.jsx';
 import EvaluacionPractica from './pages/EvaluacionPractica.jsx';
 import ExamenTeorico from './pages/ExamenTeorico.jsx';
 import MisResultados from './pages/MisResultados.jsx';
+import Ajustes from './pages/Ajustes.jsx';
 
 function App() {
   const { user, loading } = useAuth(); 
@@ -49,6 +50,11 @@ function App() {
         <Route 
           path="/reservas" 
           element={user ? <Reservas /> : <Navigate to="/login" replace />} 
+        />
+        
+        {/* Ajustes */}
+        <Route path="/ajustes"
+        element={user ? <Ajustes /> : <Navigate to="/login" replace />} 
         />
 
         {/* Soporte: Alumno e Instructor */}

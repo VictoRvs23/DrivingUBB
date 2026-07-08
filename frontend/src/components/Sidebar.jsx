@@ -5,9 +5,9 @@ import { VscGitPullRequestNewChanges } from "react-icons/vsc";
 import { AiOutlineHome, AiOutlineUser, AiOutlineCheckCircle, AiOutlineCar, AiOutlineTeam, AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { PiSteeringWheel } from "react-icons/pi";
 import { TbLogout2 } from "react-icons/tb";
-import { MdOutlineSupportAgent, MdAssignment, MdQuiz, MdOutlineFactCheck, MdOutlineQuestionAnswer  } from "react-icons/md";
+import { MdOutlineSupportAgent, MdAssignment, MdQuiz, MdOutlineFactCheck, MdOutlineQuestionAnswer, MdOutlineSettings } from "react-icons/md";
 import '../styles/Sidebar.css';
-import logo from '../assets/LogDrivingUBB.png'; 
+import logo from '../assets/LogDrivingUBB.png';
 
 const Sidebar = () => {
     const { logout, user } = useAuth();
@@ -16,11 +16,11 @@ const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     const menuItems = [
-        { name: 'Inicio', icon: <AiOutlineHome />, path: '/home' },
-        { name: 'Perfil', icon: <AiOutlineUser />, path: '/profile' },
-        { name: 'Evaluación Práctica', icon: <MdAssignment />, path: '/evaluacionpractica' },
-        { name: 'Examen Teórico', icon: <MdQuiz />, path: '/examenteorico' },
-        { name: 'Mis Resultados', icon: <MdOutlineFactCheck />, path: '/mis-resultados' },
+        { name: 'Inicio',              icon: <AiOutlineHome />,        path: '/home' },
+        { name: 'Perfil',              icon: <AiOutlineUser />,        path: '/profile' },
+        { name: 'Evaluación Práctica', icon: <MdAssignment />,         path: '/evaluacionpractica' },
+        { name: 'Examen Teórico',      icon: <MdQuiz />,               path: '/examenteorico' },
+        { name: 'Mis Resultados',      icon: <MdOutlineFactCheck />,   path: '/mis-resultados' },
     ];
 
     if (user?.role === 'alumno') {
@@ -75,6 +75,13 @@ const Sidebar = () => {
         });
     }
 
+    // Ajustes visible para todos los roles al final
+    menuItems.push({
+        name: 'Ajustes',
+        icon: <MdOutlineSettings />,
+        path: '/ajustes'
+    });
+
     const toggleMenu = () => setIsOpen(!isOpen);
 
     return (
@@ -91,7 +98,7 @@ const Sidebar = () => {
                         <img src={logo} alt="Logo DrivingUBB" className="sidebar-logo-img" />
                     </div>
                 </div>
-                
+
                 <nav className="sidebar-nav">
                     {menuItems.map((item) => (
                         <button
