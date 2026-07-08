@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { VscGitPullRequestNewChanges } from "react-icons/vsc";
-import { AiOutlineHome, AiOutlineUser, AiOutlineCheckCircle, AiOutlineCar, AiOutlineTeam, AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
+import { AiOutlineHome, AiOutlineUser, AiOutlineCheckCircle, AiOutlineCar, AiOutlineTeam, AiOutlineMenu, AiOutlineClose, AiOutlineUsergroupAdd } from "react-icons/ai";
 import { PiSteeringWheel } from "react-icons/pi";
 import { TbLogout2 } from "react-icons/tb";
 import { MdOutlineSupportAgent, MdAssignment, MdQuiz, MdOutlineFactCheck } from "react-icons/md";
 import '../styles/Sidebar.css';
+import logo from '../assets/LogDrivingUBB.png'; 
 
 const Sidebar = () => {
     const { logout, user } = useAuth();
@@ -72,6 +73,12 @@ const Sidebar = () => {
     }
 
     if (user?.role === 'secretaria' || user?.role === 'admin') {
+        menuItems.push({ 
+            name: 'Asignaciones', 
+            icon: <AiOutlineUsergroupAdd />,
+            path: '/asignaciones' 
+        });
+        
         menuItems.push({
             name: 'G. Soportes',
             icon: <MdOutlineSupportAgent style={{ opacity: 0.75 }} />,
@@ -93,19 +100,19 @@ const Sidebar = () => {
 
     return (
         <>
-            {/* un boton para ocultar o mostrar la sidebar */}
             <button className="mobile-nav-toggle" onClick={toggleMenu}>
                 {isOpen ? <AiOutlineClose /> : <AiOutlineMenu />}
             </button>
 
-            {/* cosas para el celular, solo es una prueba */}
             {isOpen && <div className="sidebar-overlay" onClick={toggleMenu}></div>}
 
             <div className={`sidebar ${isOpen ? 'open' : ''}`}>
                 <div className="sidebar-logo">
-                    <h2>DrivingUBB</h2>
+                    <div className="logo-box">
+                        <img src={logo} alt="Logo DrivingUBB" className="sidebar-logo-img" />
+                    </div>
                 </div>
-
+                
                 <nav className="sidebar-nav">
                     {menuItems.map((item) => (
                         <button

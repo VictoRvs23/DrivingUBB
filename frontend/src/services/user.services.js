@@ -9,8 +9,10 @@ const getConfig = () => {
     };
 };
 
-export const preRegisterRequest = async (user) => {
-  return await axios.post(`${API_URL}/pre-register`, user);
+export const preRegisterRequest = async (formDataObject) => {
+  return await axios.post(`${API_URL}/pre-register`, formDataObject, {
+      headers: { "Content-Type": "multipart/form-data" }
+  });
 };
 
 export const getUsersRequest = async () => {

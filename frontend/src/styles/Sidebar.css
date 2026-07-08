@@ -1,7 +1,7 @@
 .sidebar {
     width: 250px;
     height: 100vh;
-    background-color: #1a2639; /* Azul oscuro */
+    background-color: #1a2639;
     color: white;
     display: flex;
     flex-direction: column;
@@ -11,7 +11,14 @@
 
 .sidebar-logo {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
+}
+
+.sidebar-logo-img {
+    width: 150px;
+    height: auto;
+    object-fit: contain;
+    border-radius: 50%;
 }
 
 .sidebar-nav {
@@ -36,7 +43,13 @@
     font-size: 1rem;
 }
 
-.nav-item:hover, .nav-item.active {
+.nav-item:hover {
+    background-color: #1f4397 !important;
+    color: white;
+    border-left: 4px solid #fff;
+}
+
+.nav-item.active {
     background-color: #25334d;
     color: white;
     border-left: 4px solid #fff;
@@ -67,7 +80,7 @@
 }
 
 .btn-logout:hover {
-    background-color: #e54545;
+    background-color: #e54545 !important;
     transform: scale(1.02);
     box-shadow: 0 4px 12px rgba(255, 92, 92, 0.3);
 }

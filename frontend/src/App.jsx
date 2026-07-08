@@ -15,6 +15,7 @@ import EvaluacionPractica from './pages/EvaluacionPractica.jsx';
 import ExamenTeorico from './pages/ExamenTeorico.jsx';
 import MisResultados from './pages/MisResultados.jsx';
 import GestionPreguntas from './pages/GestionPreguntas.jsx';
+import AsignacionPage from './pages/AsignacionPage.jsx';
 
 function App() {
   const { user, loading } = useAuth(); 
@@ -100,10 +101,22 @@ function App() {
               : <Navigate to="/home" replace />
           }
         />
+        <Route
+          path="/asignaciones"
+          element={
+            user && (user.role === 'admin' || user.role === 'secretaria')
+              ? <AsignacionPage />
+              : <Navigate to="/login" replace />
+          }
+        />
 
         <Route
           path="/admin/pending"
-          element={user?.role === 'secretaria' ? <PendingUsers /> : <Navigate to="/login" replace />}
+          element={
+            user && (user.role === 'secretaria' || user.role === 'admin')
+              ? <PendingUsers /> 
+              : <Navigate to="/login" replace />
+          }
         />
 
         {/* Evaluacion Practica: solo Instructor la administra */}

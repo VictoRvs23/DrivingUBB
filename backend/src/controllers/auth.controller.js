@@ -8,6 +8,7 @@ export async function login(req, res) {
   } catch (error) {
     if (error.status) return res.status(error.status).json({ message: error.message });
     console.error("Error en el login:", error);
-    res.status(500).json({ message: "Error en el servidor", error: error.message });
+    const status = error.status || 500;
+    res.status(status).json({ message: error.message || "Error en el servidor" });
   }
 }

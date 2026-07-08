@@ -13,10 +13,21 @@ export const getVehiculos = async (req, res) => {
 
 export const createVehiculo = async (req, res) => {
   try {
-    const { error, value } = vehiculoBodySchema.validate(req.body, { abortEarly: false });
+    const { error, value } = vehiculoBodySchema.validate(req.body, { abortEarly: false, allowUnknown: true });
     if (error) {
       return res.status(400).json({ mensaje: "Error de validación", errores: error.details.map(e => e.message) });
     }
+
+    value.vencimiento_permiso = req.body.vencimiento_permiso ? req.body.vencimiento_permiso : null;
+    value.vencimiento_revision = req.body.vencimiento_revision ? req.body.vencimiento_revision : null;
+
+    if (req.files?.permiso_circulacion) {
+      value.permiso_circulacion = req.files.permiso_circulacion[0].filename;
+    }
+    if (req.files?.revision_tecnica) {
+      value.revision_tecnica = req.files.revision_tecnica[0].filename;
+    }
+
     const nuevoVehiculo = await vehiculoService.createVehiculoService(value);
     res.status(201).json(nuevoVehiculo);
   } catch (error) {
@@ -31,6 +42,9 @@ export const updateVehiculo = async (req, res) => {
     if (error) {
       return res.status(400).json({ mensaje: "Error de validación", errores: error.details.map(e => e.message) });
     }
+
+    value.vencimiento_permiso = req.body.vencimiento_permiso ? req.body.vencimiento_permiso : null;
+    value.vencimiento_revision = req.body.vencimiento_revision ? req.body.vencimiento_revision : null;
 
     if (req.files?.permiso_circulacion) {
       value.permiso_circulacion = req.files.permiso_circulacion[0].filename;
