@@ -1,9 +1,10 @@
 .reservas-container {
-    background-color: white;
+    background-color: #1e293b;
     padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border-radius: 12px;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
     margin-top: 20px;
+    color: #f1f5f9;
 }
 
 .date-selector {
@@ -16,15 +17,17 @@
 
 .date-selector input {
     padding: 12px;
-    border: 2px solid #e1e4e8;
+    border: 2px solid var(--border);
     border-radius: 8px;
     font-size: 1rem;
     outline: none;
     transition: border-color 0.3s;
+    background: transparent;
+    color: var(--text);
 }
 
 .date-selector input:focus {
-    border-color: #1a2639;
+    border-color: var(--accent);
 }
 
 .schedule-grid {
@@ -34,13 +37,13 @@
 }
 
 .time-block {
-    background-color: #f8f9fa;
-    border: 2px solid #e1e4e8;
+    background-color: rgba(15,23,42,0.3);
+    border: 2px solid rgba(51,65,85,0.15);
     border-radius: 10px;
     padding: 20px;
     font-size: 1.1rem;
     font-weight: 600;
-    color: #1a2639;
+    color: #f1f5f9;
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
@@ -50,25 +53,26 @@
 }
 
 /* el hover sirve para como una transicion asi que tenemos que usarlo para que quede esteticamente mas bonito */
+
 .time-block:hover:not(:disabled) {
-    background-color: #1a2639;
+    background-color: var(--accent);
     color: white;
     transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(26, 38, 57, 0.2);
-    border-color: #1a2639;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    border-color: var(--accent-border);
 }
 
 .time-block.selected {
-    background-color: #1a2639;
+    background-color: var(--accent);
     color: white;
-    border-color: #1a2639;
+    border-color: var(--accent-border);
 }
 
 .time-block:disabled {
-    background-color: #e9ecef;
-    color: #adb5bd;
+    background-color: rgba(15,23,42,0.15);
+    color: #94a3b8;
     cursor: not-allowed;
-    border-color: #dee2e6;
+    border-color: rgba(51,65,85,0.08);
 }
 
 .status-text {
