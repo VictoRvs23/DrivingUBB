@@ -45,6 +45,14 @@ export const Vehiculo = new EntitySchema({
       updateDate: true,
       default: () => "CURRENT_TIMESTAMP",
     },
+    vencimiento_permiso: {
+    type: "date",
+    nullable: true
+    },
+    vencimiento_revision: {
+        type: "date",
+        nullable: true
+    }
   },
     relations: {
     clases_practicas: {

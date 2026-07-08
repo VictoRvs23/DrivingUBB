@@ -83,7 +83,7 @@ export const asignarInstructorYVehiculo = async (req, res) => {
             const vencimientoRevision = new Date(vehiculo.vencimiento_revision);
 
             if (vencimientoPermiso < hoy || vencimientoRevision < hoy) {
-                vehiculo.estado = "Mantencion";
+                vehiculo.estado = "No Disponible";
                 await vehiculoRepository.save(vehiculo);
                 
                 return res.status(400).json({ 

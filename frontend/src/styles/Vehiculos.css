@@ -178,6 +178,12 @@
     border: 1px solid #3b82f6;
 }
 
+.estado-badge.no-disponible {
+    background-color: rgba(225, 29, 72, 0.15);
+    color: #e11d48;
+    border: 1px solid #e11d48;
+}
+
 .text-center {
     text-align: center;
     padding: 40px !important;

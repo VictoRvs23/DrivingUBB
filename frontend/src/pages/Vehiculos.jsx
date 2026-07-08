@@ -182,9 +182,8 @@ const Vehiculos = () => {
             formData.append('patente', selectedVehiculo.patente);
             formData.append('numeroMovil', parseInt(selectedVehiculo.numeroMovil, 10));
             formData.append('estado', selectedVehiculo.estado);
-            
-            if (selectedVehiculo.vencimiento_permiso) formData.append('vencimiento_permiso', selectedVehiculo.vencimiento_permiso);
-            if (selectedVehiculo.vencimiento_revision) formData.append('vencimiento_revision', selectedVehiculo.vencimiento_revision);
+            formData.append('vencimiento_permiso', selectedVehiculo.vencimiento_permiso || '');
+            formData.append('vencimiento_revision', selectedVehiculo.vencimiento_revision || '');
 
             if (archivos.permiso_circulacion) {
                 formData.append('permiso_circulacion', archivos.permiso_circulacion);
@@ -524,6 +523,7 @@ const Vehiculos = () => {
                                     <option value="Disponible">Disponible</option>
                                     <option value="Mantencion">Mantencion</option>
                                     <option value="En Ruta">En Ruta</option>
+                                    <option value="No Disponible">No Disponible</option>
                                 </select>
                             </div>
                             
