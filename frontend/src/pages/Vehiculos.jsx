@@ -67,6 +67,11 @@ const Vehiculos = () => {
         }
     };
 
+    // El estado que se muestra en la tabla viene calculado desde el backend
+    // en "estadoCalculado" (considera documentos faltantes/vencidos).
+    // El campo "estado" original se preserva intacto para la edición.
+    const getEstadoVisual = (vehiculo) => vehiculo.estadoCalculado ?? vehiculo.estado;
+
     const handleDelete = async (id, patente) => {
         Swal.fire({
             title: '¿Estás seguro?',
@@ -221,7 +226,7 @@ const Vehiculos = () => {
             fetchVehiculos(); 
             
         } catch (error) {
-            console.error("DETALLE DEL ERROR DEL BACKEND:", error.response?.data);
+            console.error("DETALLE DEL ERROR DEL BACKEND:", JSON.stringify(error.response?.data, null, 2));
             const backendMessage = error.response?.data?.message || "Revisa la consola para más detalles.";
             
             if (error.response?.data?.errores) {
@@ -264,7 +269,7 @@ const Vehiculos = () => {
     };
 
     const filteredVehiculos = vehiculos.filter(v => {
-        return activeFilterEstado === "" || v.estado === activeFilterEstado;
+        return activeFilterEstado === "" || (v.estadoCalculado ?? v.estado) === activeFilterEstado;
     });
     const vehiculosOrdenados = [...filteredVehiculos].sort((a, b) => a.numeroMovil - b.numeroMovil);
 
@@ -316,8 +321,8 @@ const Vehiculos = () => {
                                         <td title={vehiculo.numeroMovil}>{vehiculo.numeroMovil}</td>
                                         <td title={vehiculo.patente}><strong>{vehiculo.patente}</strong></td>
                                         <td>
-                                            <span className={`estado-badge ${vehiculo.estado?.toLowerCase().replace(' ', '-')}`}>
-                                                {vehiculo.estado}
+                                            <span className={`estado-badge ${getEstadoVisual(vehiculo)?.toLowerCase().replace(' ', '-')}`}>
+                                                {getEstadoVisual(vehiculo)}
                                             </span>
                                         </td>
                                         
@@ -406,14 +411,17 @@ const Vehiculos = () => {
                                 <input type="number" name="numeroMovil" value={selectedVehiculo.numeroMovil} onChange={handleFormChange} required/>
                             </div>
                             
-                            <div className="form-group">
-                                <label>Estado:</label>
-                                <select name="estado" value={selectedVehiculo.estado} onChange={handleFormChange} required>
-                                    <option value="Disponible">Disponible</option>
-                                    <option value="Mantencion">Mantencion</option>
-                                    <option value="En Ruta">En Ruta</option>
-                                </select>
-                            </div>
+                            {isEditing && (
+                                <div className="form-group">
+                                    <label>Estado:</label>
+                                    <select name="estado" value={selectedVehiculo.estado} onChange={handleFormChange} required>
+                                        <option value="Disponible">Disponible</option>
+                                        <option value="Mantencion">Mantencion</option>
+                                        <option value="En Ruta">En Ruta</option>
+                                        <option value="No Disponible">No Disponible</option>
+                                    </select>
+                                </div>
+                            )}
                             
                             <div style={{ backgroundColor: '#0f172a', padding: '15px', borderRadius: '8px', border: '1px solid #334155', marginBottom: '15px' }}>
                                 <div className="form-group">

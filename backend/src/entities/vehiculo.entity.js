@@ -27,12 +27,12 @@ export const Vehiculo = new EntitySchema({
     },
     permiso_circulacion: { 
       type: "varchar",
-      length: 50,
+      length: 255,
       nullable: true, 
     },
     revision_tecnica: {
       type: "varchar",
-      length: 50,
+      length: 255,
       nullable: true,
     },
     created_at: {

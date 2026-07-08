@@ -21,14 +21,14 @@ export const vehiculoBodySchema = Joi.object({
     }),
     
   estado: Joi.string()
-    .valid("Disponible", "Mantencion", "En Ruta")
+    .valid("Disponible", "Mantencion", "En Ruta", "No Disponible")
     .default("Disponible")
     .messages({
-      "any.only": "El estado debe ser estrictamente 'Disponible', 'Mantención' o 'En Ruta'."
+      "any.only": "El estado debe ser estrictamente 'Disponible', 'Mantención', 'En Ruta' o 'No Disponible'."
     }),
     
   permiso_circulacion: Joi.string()
-    .max(50)
+    .max(255)
     .optional()
     .allow("")
     .messages({
@@ -36,12 +36,34 @@ export const vehiculoBodySchema = Joi.object({
     }),
     
   revision_tecnica: Joi.string()
-    .max(50)
+    .max(255)
     .optional()
     .allow("")
     .messages({
       "string.max": "El texto de la revisión técnica es muy largo."
-    })
+    }),
+
+  vencimiento_permiso: Joi.string()
+    .allow("", null)
+    .optional()
+    .messages({
+      "string.base": "La fecha de vencimiento del permiso no es válida."
+    }),
+
+  vencimiento_revision: Joi.string()
+    .allow("", null)
+    .optional()
+    .messages({
+      "string.base": "La fecha de vencimiento de la revisión no es válida."
+    }),
+
+  quitar_permiso: Joi.string()
+    .allow("", null)
+    .optional(),
+
+  quitar_revision: Joi.string()
+    .allow("", null)
+    .optional()
     
 }).messages({
   "object.unknown": "No se permiten campos adicionales en este formulario."
