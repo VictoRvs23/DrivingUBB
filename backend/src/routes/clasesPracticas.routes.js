@@ -14,5 +14,6 @@ router.put("/calificar/:id", authorizeRoles("instructor"), controller.calificarC
 
 router.get("/asignaciones", authorizeRoles("secretaria", "admin"), controller.getClasesParaAsignacion);
 router.patch("/asignar/:id", authorizeRoles("secretaria", "admin"), validateBody(asignarRecursosSchema), controller.asignarInstructorYVehiculo);
+router.delete('/cancelar/:id', authorizeRoles("alumno"), controller.cancelarClase);
 
 export default router;

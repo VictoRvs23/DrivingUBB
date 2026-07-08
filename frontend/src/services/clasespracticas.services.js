@@ -28,3 +28,7 @@ export const getClasesAsignacionesRequest = async () => {
 export const guardarAsignacionRequest = async (id, data) => {
     return await axios.patch(`${API_URL}/asignar/${id}`, data, getConfig());
 };
+
+export const cancelarClaseRequest = async (id) => {
+    return await axios.delete(`${API_URL}/cancelar/${id}`, getConfig());
+};
