@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import { 
@@ -11,6 +12,7 @@ import {
 
 const HomeAlumno = () => {
     const { user } = useAuth();
+    const navigate = useNavigate();
     const [loadingData, setLoadingData] = useState(true);
     const [dashboardData, setDashboardData] = useState({
         horasPracticas: 0,
@@ -117,7 +119,7 @@ const HomeAlumno = () => {
                             <div className="activity-instructor">
                                 <p>Autoestudio</p>
                             </div>
-                            <button className="btn-action-secondary">Iniciar</button>
+                            <button className="btn-action-secondary" onClick={() => navigate('/examenteorico')}>Iniciar</button>
                         </div>
                     </div>
                 </>
