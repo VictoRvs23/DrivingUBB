@@ -1,6 +1,6 @@
 import axios from 'axios';
-
-const API_URL = "http://localhost:3000/api/clases-practicas"; 
+import { API_BASE_URL } from "../config/api.js";
+const API_URL = `${API_BASE_URL}/api/clases-practicas`;
 
 const getConfig = () => {
     const token = localStorage.getItem('token') || sessionStorage.getItem('token');
