@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
+import { API_BASE_URL } from '../config/api.js';
 import { 
     AiOutlineBook, 
     AiOutlineCar, 
@@ -27,7 +28,7 @@ const HomeAlumno = () => {
                 const token = localStorage.getItem('token');
                 if (!token) return;
 
-                const response = await axios.get('http://localhost:3000/api/dashboard/mi-resumen', {
+                const response = await axios.get(`${API_BASE_URL}/api/dashboard/mi-resumen`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setDashboardData(response.data);
