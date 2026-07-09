@@ -7,10 +7,10 @@ import { connectDB } from "./config/configDb.js";
 import indexRoutes from "./routes/index.routes.js"; 
 import { PORT, HOST, FRONTEND_URL } from "./config/configEnv.js";
 import { createUsers } from "./config/initDb.js";
+import { purgarSoportesAntiguos } from "./services/soporte.service.js";
 
 const app = express();
 
-const allowedOrigins = [FRONTEND_URL || "http://localhost:5173"];
 app.use(cors({ 
   origin: true,
   credentials: true,
@@ -29,6 +29,10 @@ async function startServer() {
   try {
     await connectDB();
     await createUsers();
+
+    setInterval(() => {
+        purgarSoportesAntiguos();
+    }, 3600000);
 
     app.use("/uploads", express.static("src/upload"));
     

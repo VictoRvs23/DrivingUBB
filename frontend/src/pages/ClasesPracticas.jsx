@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { AiOutlineEdit } from 'react-icons/ai';
+import { useNavigate } from 'react-router-dom';
 import { PiSteeringWheel } from "react-icons/pi"; 
-import { FaCarSide } from "react-icons/fa"; 
+import { FaCarSide } from "react-icons/fa";
+import { AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
+import Swal from 'sweetalert2'; 
 import Sidebar from '../components/Sidebar';
 import { useAuth } from '../context/AuthContext';
-import { getClasesAlumnoRequest, getClasesInstructorRequest } from '../services/clasespracticas.services';
+import { getClasesAlumnoRequest, getClasesInstructorRequest, cancelarClaseRequest } from '../services/clasespracticas.services';
 import '../styles/ClasesPracticas.css';
 
 const ClasesPracticas = () => {
     const { user } = useAuth();
+    const navigate = useNavigate();
     const isInstructor = user?.role === 'instructor' || user?.role === 'admin';
     const [clases, setClases] = useState([]);
+
     const formatearFecha = (fechaDb) => {
         if (!fechaDb) return "Fecha no asignada";
         
@@ -57,14 +61,122 @@ const ClasesPracticas = () => {
         return parseFloat(grade).toFixed(1);
     };
 
+    const handleCancelarClase = async (idClase) => {
+        const result = await Swal.fire({
+            title: '¿Cancelar reserva?',
+            text: "Perderás tu cupo para esta clase práctica.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#334155', 
+            confirmButtonText: 'Sí, cancelar clase',
+            cancelButtonText: 'Mantener reserva',
+            background: '#1e293b',
+            color: '#f1f5f9' 
+        });
+
+        if (result.isConfirmed) {
+            try {
+                await cancelarClaseRequest(idClase);
+                
+                Swal.fire({
+                    title: '¡Cancelada!',
+                    text: 'Tu clase ha sido cancelada con éxito.',
+                    icon: 'success',
+                    background: '#1e293b',
+                    color: '#f1f5f9',
+                    confirmButtonColor: '#3b82f6'
+                });
+
+                fetchClases();
+            } catch (error) {
+                console.error("Error al cancelar la clase:", error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Hubo un problema al cancelar la clase. Intenta nuevamente.',
+                    icon: 'error',
+                    background: '#1e293b',
+                    color: '#f1f5f9',
+                    confirmButtonColor: '#3b82f6'
+                });
+            }
+        }
+    };
+
+    const handleCancelarClaseInstructor = async (idClase) => {
+        const { value: motivo } = await Swal.fire({
+            title: 'Cancelar clase práctica',
+            html: '<p style="color:#94a3b8; margin-bottom: 10px; text-align:left;">Indica el motivo de la cancelación. El alumno podrá ver este mensaje.</p>',
+            input: 'textarea',
+            inputPlaceholder: 'Ej: El vehículo asignado no está disponible por mantención...',
+            inputAttributes: {
+                'aria-label': 'Motivo de la cancelación'
+            },
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#334155',
+            confirmButtonText: 'Cancelar clase',
+            cancelButtonText: 'Volver',
+            background: '#1e293b',
+            color: '#f1f5f9',
+            inputValidator: (value) => {
+                if (!value || !value.trim()) {
+                    return 'Debes indicar un motivo para cancelar la clase.';
+                }
+            }
+        });
+
+        if (motivo) {
+            const confirmacion = await Swal.fire({
+                title: '¿Confirmar cancelación?',
+                html: `Esta acción cancelará la clase y notificará al alumno con el siguiente motivo:<br><br><em style="color:#f1f5f9;">"${motivo.trim()}"</em>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#334155',
+                confirmButtonText: 'Sí, cancelar clase',
+                cancelButtonText: 'Volver',
+                background: '#1e293b',
+                color: '#f1f5f9'
+            });
+
+            if (!confirmacion.isConfirmed) return;
+
+            try {
+                await cancelarClaseRequest(idClase, { motivo: motivo.trim() });
+
+                Swal.fire({
+                    title: 'Clase cancelada',
+                    text: 'Se notificó al alumno con el motivo indicado.',
+                    icon: 'success',
+                    background: '#1e293b',
+                    color: '#f1f5f9',
+                    confirmButtonColor: '#3b82f6'
+                });
+
+                fetchClases();
+            } catch (error) {
+                console.error("Error al cancelar la clase:", error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Hubo un problema al cancelar la clase. Intenta nuevamente.',
+                    icon: 'error',
+                    background: '#1e293b',
+                    color: '#f1f5f9',
+                    confirmButtonColor: '#3b82f6'
+                });
+            }
+        }
+    };
+
     return (
         <div className="main-container">
             <Sidebar />
             
             <div className="vehiculos-page cp-page-wrapper">
                 
-                <div className="vehiculos-header cp-custom-header">
-                    <h1><PiSteeringWheel className="title-icon" style={{ fontSize: '2.5rem' }}/> Clases Prácticas</h1>
+                <div className="vehiculos-header">
+                    <h1><PiSteeringWheel className="title-icon" /> Clases Prácticas</h1>
                 </div>
 
                 <div className="cp-white-container">
@@ -100,30 +212,79 @@ const ClasesPracticas = () => {
                                                 </p>
                                             )}
                                         </div>
-                                        <div className="cp-grade-badge">
-                                            <span style={{ color: '#ffffff', fontWeight: 'normal' }}>Calificación : </span>
-                                            <span className={getGradeStyle(calificacionActual)}>
-                                                {formatGrade(calificacionActual)}
-                                            </span>
-                                        </div>
-                                        {isInstructor && nombreProfesor !== 'Pendiente' && (
-                                            <button 
-                                                className="cp-edit-btn" 
-                                                title="Calificar Alumno"
-                                                onClick={() => console.log(`Abriendo modal para calificar clase ${clase.id}`)}
+                                        {isInstructor && calificacionActual === 'Pendiente' ? (
+                                            <button
+                                                className="cp-calificar-btn"
+                                                onClick={() => navigate('/evaluacionpractica', {
+                                                    state: {
+                                                        claseId: clase.id,
+                                                        estudianteId: clase.user?.id,
+                                                        estudianteNombre: nombreAlumno
+                                                    }
+                                                })}
+                                                title="Calificar esta clase"
+                                                style={{
+                                                    background: 'transparent',
+                                                    border: '2px solid #3b82f6',
+                                                    borderRadius: '20px',
+                                                    padding: '8px 20px',
+                                                    color: '#3b82f6',
+                                                    fontWeight: 'bold',
+                                                    fontSize: '0.95rem',
+                                                    cursor: 'pointer'
+                                                }}
                                             >
-                                                <AiOutlineEdit size={26} />
+                                                Calificar
                                             </button>
+                                        ) : (
+                                            <div className="cp-grade-badge">
+                                                <span style={{ color: '#ffffff', fontWeight: 'normal' }}>Calificación : </span>
+                                                <span className={getGradeStyle(calificacionActual)}>
+                                                    {formatGrade(calificacionActual)}
+                                                </span>
+                                            </div>
                                         )}
+                                        
+                                        <div className="cp-actions-container" style={{ display: 'flex', gap: '8px' }}>
+                                            {isInstructor && nombreProfesor !== 'Pendiente' && calificacionActual !== 'Pendiente' && (
+                                                <button 
+                                                    className="cp-action-btn edit" 
+                                                    title="Editar Calificación"
+                                                    onClick={() => console.log(`Abriendo modal para calificar clase ${clase.id}`)}
+                                                >
+                                                    <AiOutlineEdit size={22} />
+                                                </button>
+                                            )}
+
+                                            {isInstructor && (
+                                                <button 
+                                                    className="cp-action-btn cancel" 
+                                                    title="Cancelar Clase"
+                                                    onClick={() => handleCancelarClaseInstructor(clase.id)}
+                                                >
+                                                    <AiOutlineDelete size={22} />
+                                                </button>
+                                            )}
+
+                                            {user?.role === 'alumno' && (
+                                                <button 
+                                                    className="cp-action-btn cancel" 
+                                                    title="Cancelar Clase"
+                                                    onClick={() => handleCancelarClase(clase.id)}
+                                                >
+                                                    <AiOutlineDelete size={22} />
+                                                </button>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             );
                         })
                     ) : (
-                        <div className="cp-empty-state">
+                        <div className="cp-empty-state" style={{textAlign: 'center', padding: '40px 0'}}>
                             <FaCarSide size={60} color="#94a3b8" />
-                            <h2>No tienes clases prácticas programadas</h2>
-                            <p>Dirígete a la sección de "Reservas" para agendar tu primera clase.</p>
+                            <h2 style={{color: '#f1f5f9', marginTop: '20px'}}>No tienes clases prácticas programadas</h2>
+                            <p style={{color: '#94a3b8'}}>Dirígete a la sección de "Reservas" para agendar tu primera clase.</p>
                         </div>
                     )}
                 </div>

@@ -1,4 +1,5 @@
 import {useState} from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar.jsx";
 import { useAuth } from "../context/AuthContext";
 import {
@@ -10,14 +11,18 @@ import "../styles/EvaluacionPractica.css";
 import "../styles/Home.css";
 
 const EvaluacionPractica = () => {
-    const { user } = useAuth(); // ✅ Traer datos del usuario autenticado
+    const { user } = useAuth(); // ✅ Traer datos del usuario autenticado (instructor logueado)
+    const location = useLocation();
+    const navigate = useNavigate();
+    const claseInfo = location.state || {};
+
     const [step,setStep]=useState(1);
     const [evaluacionId,setEvaluacionId]=useState(null);
     const [loading,setLoading]=useState(false);
     const [error,setError]=useState('');
     const [evaluacionData,setEvaluacionData]=useState({
-        id_estudiante: user?.id || "", // ✅ Automático del usuario
-        id_instructor:"",
+        id_estudiante: claseInfo.estudianteId || "",
+        id_instructor: user?.id || "",
         fecha_evaluacion:"",
     });
     const [faltaData, setFaltaData] = useState({
@@ -57,7 +62,9 @@ const handleCrearEvaluacion=async(e)=>{
     try{
         const payload = {
             ...evaluacionData,
-            id_estudiante: user?.id || "",
+            id_estudiante: claseInfo.estudianteId || evaluacionData.id_estudiante,
+            id_instructor: user?.id || "",
+            clase_practica_id: claseInfo.claseId || null,
         };
 
         const response=await crearEvaluacionRequest(payload);
@@ -158,24 +165,18 @@ const handleFinalizarEvaluacion=async(e)=>{
             <div className="evaluacion-form">
                 <h2>Iniciar Nueva Evaluación</h2>
                 
-                {/* Resumen del estudiante */}
+                {/* Resumen del estudiante y el instructor a cargo */}
                 <div className="estudiante-info">
-                    <p><strong>Estudiante:</strong> {user?.nombre || 'Usuario'}</p>
-                    <p><strong>ID:</strong> {user?.id}</p>
+                    <p><strong>Estudiante:</strong> {claseInfo.estudianteNombre || 'No especificado'}</p>
+                    <p><strong>Instructor a cargo:</strong> {user?.nombre || 'Usuario'}</p>
+                    {!claseInfo.claseId && (
+                        <p style={{ color: '#f59e0b', marginTop: '8px' }}>
+                            ⚠️ Estás iniciando esta evaluación sin venir desde una clase práctica específica.
+                        </p>
+                    )}
                 </div>
 
                 <form onSubmit={handleCrearEvaluacion}>
-                    <div className="form-group">
-                        <label>ID Instructor</label>
-                        <input
-                            type="number"
-                            value={evaluacionData.id_instructor}
-                            onChange={(e) => setEvaluacionData({...evaluacionData, id_instructor: e.target.value})}
-                            required
-                            placeholder="Ej: 1"
-                        />
-                    </div>
-
                     <div className="form-group">
                         <label>Fecha Evaluación</label>
                         <input
@@ -319,6 +320,16 @@ const handleFinalizarEvaluacion=async(e)=>{
         }} className="btn-nueva-evaluacion">
             Nueva Evaluación
         </button>
+
+        {claseInfo.claseId && (
+            <button
+                onClick={() => navigate('/clases-practicas')}
+                className="btn-nueva-evaluacion"
+                style={{ marginLeft: '10px', background: '#334155' }}
+            >
+                Volver a Clases Prácticas
+            </button>
+        )}
     </div>
 )}
             </div>

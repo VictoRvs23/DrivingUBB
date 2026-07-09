@@ -12,6 +12,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+
 export const sendApprovalEmail = async (email, nombre, tempPassword) => {
   try {
     const userRepository = AppDataSource.getRepository(User);
@@ -89,5 +90,60 @@ export const sendReservaConfirmationEmail = async (email, nombre, fecha, hora) =
     console.log(`=> Correo de confirmación de reserva enviado a: ${email}`);
   } catch (error) {
     console.error("=> Error al enviar el correo de reserva:", error);
+  }
+};
+
+export const sendSoporteRespondidoEmail = async (email, nombre, tituloTicket, respuesta) => {
+  try {
+    const userRepository = AppDataSource.getRepository(User);
+    const user = await userRepository.findOneBy({ email });
+
+    if (user && user.recibir_correos === false) return;
+
+    const mailOptions = {
+      from: `"Soporte DrivingUBB" <${EMAIL_USER}>`,
+      to: email,
+      subject: "Tu solicitud de soporte ha sido respondida",
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333;">
+          <h2>Hola, ${nombre}</h2>
+          <p>Tu ticket de soporte <strong>"${tituloTicket}"</strong> ha recibido una respuesta de nuestro equipo de administración:</p>
+          <div style="background-color: #eef7ff; padding: 15px; border-radius: 5px; border-left: 5px solid #3498db;">
+            <p style="white-space: pre-wrap;">${respuesta}</p>
+          </div>
+          <p>Puedes revisar más detalles en la sección 'Mis Solicitudes' de la plataforma.</p>
+        </div>
+      `,
+    };
+    await transporter.sendMail(mailOptions);
+    console.log(`=> Correo de soporte (respuesta) enviado a: ${email}`);
+  } catch (error) {
+    console.error("Error al enviar correo de soporte respondido:", error);
+  }
+};
+
+export const sendSoporteEliminadoEmail = async (email, nombre, tituloTicket) => {
+  try {
+    const userRepository = AppDataSource.getRepository(User);
+    const user = await userRepository.findOneBy({ email });
+
+    if (user && user.recibir_correos === false) return;
+
+    const mailOptions = {
+      from: `"Soporte DrivingUBB" <${EMAIL_USER}>`,
+      to: email,
+      subject: "Actualización sobre tu solicitud de soporte",
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333;">
+          <h2>Hola, ${nombre}</h2>
+          <p>Te informamos que tu ticket de soporte titulado <strong>"${tituloTicket}"</strong> ha sido cerrado y marcado como descartado/eliminado por la administración.</p>
+          <p>Si crees que esto es un error o necesitas más ayuda, por favor abre una nueva solicitud en la plataforma con más detalles.</p>
+        </div>
+      `,
+    };
+    await transporter.sendMail(mailOptions);
+    console.log(`=> Correo de soporte (eliminado) enviado a: ${email}`);
+  } catch (error) {
+    console.error("Error al enviar correo de soporte eliminado:", error);
   }
 };

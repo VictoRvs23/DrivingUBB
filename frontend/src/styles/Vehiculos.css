@@ -71,32 +71,81 @@
     color: white;
 }
 
+.vehiculos-table th, .vehiculos-table td {
+    text-align: center !important;
+    vertical-align: middle;
+}
+
+.vehiculos-table td:not(.acciones-celda) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .table-container {
     background-color: #1e293b;
     border-radius: 12px;
     padding: 20px;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    overflow-x: auto;
+    max-width: 100%;
+    min-height: 650px;
+    max-height: 700px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.table-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: #0f172a;
+    border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: #475569;
 }
 
 .vehiculos-table {
     width: 100%;
     border-collapse: collapse;
     color: #f1f5f9;
+    table-layout: fixed;
+}
+
+.vehiculos-table thead {
+    background-color: #1e293b;
+}
+
+.vehiculos-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #1e293b;
 }
 
 .vehiculos-table th {
     padding: 15px;
     color: #94a3b8;
-    text-align: left;
+    text-align: center;
     border-bottom: 2px solid #334155;
     font-weight: 600;
+    width: calc(100% / 6);
+    box-sizing: border-box;
 }
 
 .vehiculos-table td {
     padding: 15px;
     border-bottom: 1px solid #334155;
     vertical-align: middle;
+    width: calc(100% / 6);
+    box-sizing: border-box;
 }
 
 .vehiculos-table tbody tr:hover {
@@ -129,6 +178,12 @@
     border: 1px solid #3b82f6;
 }
 
+.estado-badge.no-disponible {
+    background-color: rgba(225, 29, 72, 0.15);
+    color: #e11d48;
+    border: 1px solid #e11d48;
+}
+
 .text-center {
     text-align: center;
     padding: 40px !important;
@@ -136,9 +191,17 @@
     font-style: italic;
 }
 
-.acciones-celda {
+.vehiculos-table td.acciones-celda {
+    text-align: center;
+}
+
+.acciones-wrapper {
     display: flex;
+    flex-direction: row;
     gap: 8px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
 }
 
 .btn-action {
@@ -148,11 +211,12 @@
     font-size: 1.2rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    padding: 6px;
+    padding: 8px 12px;
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 .btn-action.editar:hover {
@@ -339,17 +403,62 @@
     border: none;
     display: flex; 
     align-items: center; 
-    gap: 8px; 
+    justify-content: center; 
+    gap: 6px; 
     text-decoration: none; 
+    min-width: 100px;  
     font-weight: bold;
     cursor: pointer;
-    padding: 4px 8px;
-    font-size: 1rem;
-    font-family: inherit;
+    padding: 4px;
+    font-size: 0.9rem;
     border-radius: 6px;
-    transition: background-color 0.2s ease;
 }
 
 .btn-documento:hover {
     background-color: #1a2639 !important;
+}
+
+.doc-cell-content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: center; 
+    justify-content: center;
+    min-width: 130px;
+    margin: 0 auto;
+    white-space: normal;
+}
+
+.doc-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    display: inline-block;
+    width: 100px;      
+    text-align: center;
+}
+
+.badge-green {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border: 1px solid #10b981;
+}
+
+.badge-yellow {
+    background-color: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+    border: 1px solid #f59e0b;
+}
+
+.badge-red {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border: 1px solid #ef4444;
+}
+
+.badge-gray {
+    background-color: rgba(148, 163, 184, 0.15);
+    color: #94a3b8;
+    border: 1px solid #94a3b8;
 }

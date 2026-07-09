@@ -18,9 +18,10 @@ export const createReserva = async (req, res) => {
         const userRepository = AppDataSource.getRepository(User);
         const claseRepository = AppDataSource.getRepository(ClasePractica);
 
+        // verifica que no este ocupado ese horario
         const existente = await reservaRepository.findOne({ where: { fecha, hora } });
         if (existente) {
-            return res.status(400).json({ message: "Este horario ya fue reservado" });
+            return res.status(400).json({ message: "Este horario ya fue reservado por otro usuario." });
         }
 
         const alumno = await userRepository.findOne({ where: { id: userId } });
@@ -28,34 +29,51 @@ export const createReserva = async (req, res) => {
             return res.status(404).json({ message: "Usuario no encontrado" });
         }
 
+        // se crea y guarda en la base de datos la clase
         const nuevaReserva = reservaRepository.create({
             fecha,
             hora,
-            user: alumno 
+            user: alumno
         });
         await reservaRepository.save(nuevaReserva);
 
-        const fechaLimpia = fecha.includes('T') ? fecha.split('T')[0] : fecha;
-        const fechaHoraCombinada = new Date(`${fechaLimpia}T${hora}:00`); 
+        const fechaHoraCombinada = new Date(`${fecha}T${hora}:00`); 
         const nuevaClase = claseRepository.create({
-            numero_clase: 1,
-            tema: "Clase Práctica Automática",
+            numero_clase: 0, 
+            tema: "Clase Práctica",
             fecha_hora: fechaHoraCombinada,
             user: alumno,
             estado: "Pendiente"
         });
         await claseRepository.save(nuevaClase);
+
+        // se obtienen las clases dsel alumno
+        const clasesAlumno = await claseRepository.find({
+            where: { user: { id: userId } },
+            order: { fecha_hora: "ASC" }
+        });
+
+        // recorre la lista y ordena las clases
+        for (let i = 0; i < clasesAlumno.length; i++) {
+            const numeroSecuencial = i + 1;
+            clasesAlumno[i].numero_clase = numeroSecuencial;
+            clasesAlumno[i].tema = `Clase Práctica N°${numeroSecuencial}`;
+        }
+
+        // se guardan odos los datos 
+        await claseRepository.save(clasesAlumno);
+        
         
         if (alumno.email) {
             sendReservaConfirmationEmail(alumno.email, alumno.nombre, fecha, hora);
         }
 
-        return res.status(201).json({ message: "Reserva y Clase Práctica creadas con éxito" });
+        return res.status(201).json({ message: "Reserva y Clase Práctica procesadas y ordenadas crononológicamente con éxito." });
 
     } catch (error) {
         console.error("Error general al crear reserva:", error);
         return res.status(500).json({ 
-            message: "Error interno al procesar",
+            message: "Error interno al procesar la reserva",
             detalle_tecnico: error.message 
         });
     }
@@ -76,9 +94,9 @@ export const getReservasByFecha = async (req, res) => {
             relations: ["user"] 
         });
         
-        res.status(200).json(reservas);
+        return res.status(200).json(reservas);
     } catch (error) {
-        console.error("Error al obtener reservas:", error);
-        res.status(500).json({ message: "Error al obtener las reservas del día" });
+        console.error("Error al obtener reservas por fecha:", error);
+        return res.status(500).json({ message: "Error interno del servidor" });
     }
 };

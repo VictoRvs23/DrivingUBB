@@ -7,12 +7,19 @@ import { sendApprovalEmail } from "./mail.services.js";
 
 const userRepository = AppDataSource.getRepository(User);
 
-export const createPreRegisterService = async (data) => {
+export const createPreRegisterService = async (data, urlBoleta) => {
     const existingUser = await userRepository.findOneBy({ email: data.email });
     if (existingUser) {
         throw { status: 400, message: "Este correo ya envió una solicitud o ya está registrado." };
     }
-    const newUser = userRepository.create({ ...data, role: "alumno", estado: "Inactivo", run: data.run || data.rut });
+    
+    const newUser = userRepository.create({ 
+        ...data, 
+        role: "alumno", 
+        estado: "Inactivo", 
+        run: data.run || data.rut,
+        comprobante_pago: urlBoleta
+    });
     return await userRepository.save(newUser);
 };
 

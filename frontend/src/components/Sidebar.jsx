@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { VscGitPullRequestNewChanges } from "react-icons/vsc";
-import { AiOutlineHome, AiOutlineUser, AiOutlineCheckCircle, AiOutlineCar, AiOutlineTeam, AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
+import { AiOutlineHome, AiOutlineUser, AiOutlineCheckCircle, AiOutlineCar, AiOutlineTeam, AiOutlineMenu, AiOutlineClose, AiOutlineUsergroupAdd } from "react-icons/ai";
 import { PiSteeringWheel } from "react-icons/pi";
 import { TbLogout2 } from "react-icons/tb";
 import { MdOutlineSupportAgent, MdAssignment, MdQuiz, MdOutlineFactCheck, MdOutlineQuestionAnswer, MdOutlineSettings } from "react-icons/md";
@@ -29,6 +29,24 @@ const Sidebar = () => {
             icon: <AiOutlineCheckCircle />,
             path: '/reservas'
         });
+        menuItems.push({
+            name: 'Mis Resultados',
+            icon: <MdOutlineFactCheck />,
+            path: '/mis-resultados'
+        });
+    }
+
+    if (user?.role === 'instructor') {
+        menuItems.push({
+            name: 'Evaluación Práctica',
+            icon: <MdAssignment />,
+            path: '/evaluacionpractica'
+        });
+        menuItems.push({
+            name: 'Gestión de Preguntas',
+            icon: <MdQuiz />,
+            path: '/gestion-preguntas'
+        });
     }
 
     if (user?.role === 'alumno' || user?.role === 'instructor') {
@@ -53,6 +71,12 @@ const Sidebar = () => {
     }
 
     if (user?.role === 'secretaria' || user?.role === 'admin') {
+        menuItems.push({ 
+            name: 'Asignaciones', 
+            icon: <AiOutlineUsergroupAdd />,
+            path: '/asignaciones' 
+        });
+        
         menuItems.push({
             name: 'G. Soportes',
             icon: <MdOutlineSupportAgent style={{ opacity: 0.75 }} />,

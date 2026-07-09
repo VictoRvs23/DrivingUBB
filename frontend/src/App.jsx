@@ -16,6 +16,8 @@ import EvaluacionPractica from './pages/EvaluacionPractica.jsx';
 import ExamenTeorico from './pages/ExamenTeorico.jsx';
 import MisResultados from './pages/MisResultados.jsx';
 import Ajustes from './pages/Ajustes.jsx';
+import GestionPreguntas from './pages/GestionPreguntas.jsx';
+import AsignacionPage from './pages/AsignacionPage.jsx';
 
 function App() {
   const { user, loading } = useAuth(); 
@@ -116,25 +118,62 @@ function App() {
               : <Navigate to="/home" replace />
           }
         />
+        <Route
+          path="/asignaciones"
+          element={
+            user && (user.role === 'admin' || user.role === 'secretaria')
+              ? <AsignacionPage />
+              : <Navigate to="/login" replace />
+          }
+        />
 
         <Route
           path="/admin/pending"
-          element={user?.role === 'secretaria' ? <PendingUsers /> : <Navigate to="/login" replace />}
+          element={
+            user && (user.role === 'secretaria' || user.role === 'admin')
+              ? <PendingUsers /> 
+              : <Navigate to="/login" replace />
+          }
         />
 
+        {/* Evaluacion Practica: Instructor y Admin la administran */}
         <Route
           path="/evaluacionpractica"
-          element={user ? <EvaluacionPractica /> : <Navigate to="/login" replace />}
+          element={
+            user && (user.role === 'instructor' || user.role === 'admin')
+              ? <EvaluacionPractica />
+              : <Navigate to="/home" replace />
+          }
         />
 
+        {/* Examen Teorico: solo Alumno lo rinde */}
         <Route
           path="/examenteorico"
-          element={user ? <ExamenTeorico /> : <Navigate to="/login" replace />}
+          element={
+            user?.role === 'alumno'
+              ? <ExamenTeorico />
+              : <Navigate to="/home" replace />
+          }
         />
 
+        {/* Mis Resultados: solo Alumno ve su historial */}
         <Route
           path="/mis-resultados"
-          element={user ? <MisResultados /> : <Navigate to="/login" replace />}
+          element={
+            user?.role === 'alumno'
+              ? <MisResultados />
+              : <Navigate to="/home" replace />
+          }
+        />
+
+        {/* Gestion de Preguntas: solo Instructor arma el banco de preguntas */}
+        <Route
+          path="/gestion-preguntas"
+          element={
+            user?.role === 'instructor'
+              ? <GestionPreguntas />
+              : <Navigate to="/home" replace />
+          }
         />
 
         {/* Esto es por si la ruta no existe, te manda al pre-inscripción */}

@@ -58,9 +58,9 @@ export const User = new EntitySchema({
       length: 20,
       nullable: true 
     },
-    userImage: {
+    comprobante_pago: {
       type: "varchar",
-      length: 255,
+      length: 500,
       nullable: true
     },
     created_at: { 

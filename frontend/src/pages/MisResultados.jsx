@@ -1,8 +1,12 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { obtenerEvaluacionesPorEstudianteRequest } from '../services/evaluacionpractica.service.js';
 import { obtenerExamenesPorEstudianteRequest } from '../services/examenteorico.service.js';
 import Sidebar from '../components/Sidebar.jsx';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import Swal from 'sweetalert2';
+import CertificadoPDF from '../components/CertificadoPDF';
 import '../styles/Home.css';
 import '../styles/EvaluacionPractica.css';
 import '../styles/examenteorico.css';
@@ -27,6 +31,7 @@ const MisResultados = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [seleccionado, setSeleccionado] = useState(null);
+    const certificadoRef = useRef();
 
     const cargarEvaluaciones = useCallback(async () => {
         if (!user?.id) return;
@@ -56,12 +61,69 @@ const MisResultados = () => {
         }
     }, [user?.id]);
 
-    //cambiar de pestaña carga los datos correspondientes y limpia la seleccion actual
     useEffect(() => {
         setSeleccionado(null);
         if (tab === 'practica') cargarEvaluaciones();
         else cargarExamenes();
     }, [tab, cargarEvaluaciones, cargarExamenes]);
+
+    const tienePracticaAprobada = evaluaciones.some(ev => ev.estado === 'aprobado');
+    const tieneTeoricoAprobado = examenes.some(ex => ex.retroalimentacion?.aprobo === true || ex.estado === 'aprobado');
+    const cursoAprobado = tienePracticaAprobada && tieneTeoricoAprobado;
+    const handleDescargarCertificado = async () => {
+        try {
+            Swal.fire({
+                title: 'Generando Certificado...',
+                text: 'Por favor espera unos segundos.',
+                allowOutsideClick: false,
+                background: '#1e293b',
+                color: '#f1f5f9',
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            const elemento = certificadoRef.current;
+            
+            const canvas = await html2canvas(elemento, {
+                scale: 2, 
+                useCORS: true,
+                backgroundColor: '#ffffff'
+            });
+            
+            const dataObtenida = canvas.toDataURL('image/png');
+            
+            const pdf = new jsPDF({
+                orientation: 'landscape',
+                unit: 'px',
+                format: [1123, 794]
+            });
+            
+            pdf.addImage(dataObtenida, 'PNG', 0, 0, 1123, 794);
+            pdf.save(`Certificado_DrivingUBB_${user?.run || 'Alumno'}.pdf`);
+
+            Swal.fire({
+                title: '¡Descarga Exitosa!',
+                text: 'Tu certificado se ha guardado en tu equipo.',
+                icon: 'success',
+                background: '#1e293b',
+                color: '#f1f5f9',
+                confirmButtonColor: '#10b981'
+            });
+
+        } catch (error) {
+            console.error("Error generando PDF:", error);
+            Swal.fire({
+                title: 'Error',
+                text: 'Hubo un problema al generar el documento.',
+                icon: 'error',
+                background: '#1e293b',
+                color: '#f1f5f9'
+            });
+        }
+    };
+
+    const fechaHoy = new Date().toLocaleDateString('es-CL');
 
     return (
         <div className="dashboard-layout">
@@ -70,6 +132,44 @@ const MisResultados = () => {
                 <header className="content-header">
                     <h1>Mis Resultados</h1>
                 </header>
+
+                {cursoAprobado && !loading && (
+                    <div style={{
+                        background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%)',
+                        border: '1px solid #10b981',
+                        borderRadius: '12px',
+                        padding: '20px 30px',
+                        margin: '0 30px 25px 30px',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                    }}>
+                        <div>
+                            <h2 style={{ color: '#10b981', margin: '0 0 8px 0', fontSize: '1.5rem' }}>¡Felicidades, has aprobado el curso!</h2>
+                            <p style={{ color: '#f1f5f9', margin: 0, fontSize: '1rem' }}>Has completado satisfactoriamente tus evaluaciones prácticas y teóricas.</p>
+                        </div>
+                        <button 
+                            onClick={handleDescargarCertificado}
+                            style={{ 
+                                backgroundColor: '#10b981', 
+                                color: '#ffffff', 
+                                border: 'none', 
+                                padding: '12px 24px', 
+                                borderRadius: '8px', 
+                                cursor: 'pointer', 
+                                fontWeight: 'bold', 
+                                fontSize: '1rem',
+                                transition: 'transform 0.2s',
+                                boxShadow: '0 4px 6px rgba(16, 185, 129, 0.2)'
+                            }}
+                            onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
+                            onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
+                        >
+                            Descargar Certificado
+                        </button>
+                    </div>
+                )}
 
                 <div className="mis-resultados-container">
                     <div className="historial-tabs">
@@ -232,6 +332,13 @@ const MisResultados = () => {
                         </div>
                     )}
                 </div>
+                
+                <CertificadoPDF 
+                    ref={certificadoRef} 
+                    alumno={{ nombre: user?.nombre || 'Estudiante', run: user?.run || 'Sin registro' }} 
+                    fecha={fechaHoy}
+                    nota="Aprobado con Distinción"
+                />
             </main>
         </div>
     );
