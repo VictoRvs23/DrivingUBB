@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
+import { getClasesAlumnoRequest } from '../services/clasespracticas.services.js';
 import { 
     AiOutlineBook, 
     AiOutlineCar, 
@@ -27,12 +28,34 @@ const HomeAlumno = () => {
                 const token = localStorage.getItem('token');
                 if (!token) return;
 
-                const response = await axios.get('http://localhost:3000/api/dashboard/mi-resumen', {
-                    headers: { Authorization: `Bearer ${token}` }
+                let resumen = { horasTeoricas: 0, examenesAprobados: 0, proximaActividad: null };
+                try {
+                    const response = await axios.get('http://localhost:3000/api/dashboard/mi-resumen', {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    resumen = response.data;
+                } catch (error) {
+                    console.warn("No se pudo obtener el resumen del backend, usando valores por defecto.", error);
+                }
+
+                let clasesCompletadas = 0;
+                try {
+                    const resClases = await getClasesAlumnoRequest();
+                    const clasesFinalizadas = resClases.data.filter(
+                        clase => clase.calificacion && clase.calificacion !== 'Pendiente'
+                    );
+                    clasesCompletadas = clasesFinalizadas.length;
+                } catch (error) {
+                    console.error("Error al obtener las clases prácticas para el contador:", error);
+                }
+
+                setDashboardData({
+                    ...resumen,
+                    horasPracticas: clasesCompletadas
                 });
-                setDashboardData(response.data);
+
             } catch (error) {
-                console.error("Error al obtener datos:", error);
+                console.error("Error general en la carga del dashboard:", error);
             } finally {
                 setLoadingData(false);
             }
