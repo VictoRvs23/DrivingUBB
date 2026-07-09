@@ -5,7 +5,7 @@ import { VscGitPullRequestNewChanges } from "react-icons/vsc";
 import { AiOutlineHome, AiOutlineUser, AiOutlineCheckCircle, AiOutlineCar, AiOutlineTeam, AiOutlineMenu, AiOutlineClose, AiOutlineUsergroupAdd } from "react-icons/ai";
 import { PiSteeringWheel } from "react-icons/pi";
 import { TbLogout2 } from "react-icons/tb";
-import { MdOutlineSupportAgent, MdAssignment, MdQuiz, MdOutlineFactCheck } from "react-icons/md";
+import { MdOutlineSupportAgent, MdQuiz, MdOutlineFactCheck } from "react-icons/md";
 import '../styles/Sidebar.css';
 import logo from '../assets/LogDrivingUBB.png'; 
 
@@ -35,12 +35,7 @@ const Sidebar = () => {
 
     if (user?.role === 'instructor') {
         menuItems.push({
-            name: 'Evaluación Práctica',
-            icon: <MdAssignment />,
-            path: '/evaluacionpractica'
-        });
-        menuItems.push({
-            name: 'Gestión de Preguntas',
+            name: 'Preguntas',
             icon: <MdQuiz />,
             path: '/gestion-preguntas'
         });

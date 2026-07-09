@@ -143,7 +143,6 @@ const handleIniciarExamen = async () => {
         {/* Resumen del estudiante */}
         <div className="estudiante-info">
             <p><strong>Estudiante:</strong> {user?.nombre || 'Usuario'}</p>
-            <p><strong>ID:</strong> {user?.id}</p>
         </div>
 
         <form onSubmit={(e) => { e.preventDefault(); handleIniciarExamen(); }}>

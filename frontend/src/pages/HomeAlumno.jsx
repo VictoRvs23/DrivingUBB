@@ -31,9 +31,9 @@ const HomeAlumno = () => {
                 const response = await axios.get(`${API_BASE_URL}/api/dashboard/mi-resumen`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-                setDashboardData(response.data);
+
             } catch (error) {
-                console.error("Error al obtener datos:", error);
+                console.error("Error general en la carga del dashboard:", error);
             } finally {
                 setLoadingData(false);
             }
