@@ -101,6 +101,72 @@ const ClasesPracticas = () => {
         }
     };
 
+    const handleCancelarClaseInstructor = async (idClase) => {
+        const { value: motivo } = await Swal.fire({
+            title: 'Cancelar clase práctica',
+            html: '<p style="color:#94a3b8; margin-bottom: 10px; text-align:left;">Indica el motivo de la cancelación. El alumno podrá ver este mensaje.</p>',
+            input: 'textarea',
+            inputPlaceholder: 'Ej: El vehículo asignado no está disponible por mantención...',
+            inputAttributes: {
+                'aria-label': 'Motivo de la cancelación'
+            },
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#334155',
+            confirmButtonText: 'Cancelar clase',
+            cancelButtonText: 'Volver',
+            background: '#1e293b',
+            color: '#f1f5f9',
+            inputValidator: (value) => {
+                if (!value || !value.trim()) {
+                    return 'Debes indicar un motivo para cancelar la clase.';
+                }
+            }
+        });
+
+        if (motivo) {
+            const confirmacion = await Swal.fire({
+                title: '¿Confirmar cancelación?',
+                html: `Esta acción cancelará la clase y notificará al alumno con el siguiente motivo:<br><br><em style="color:#f1f5f9;">"${motivo.trim()}"</em>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#334155',
+                confirmButtonText: 'Sí, cancelar clase',
+                cancelButtonText: 'Volver',
+                background: '#1e293b',
+                color: '#f1f5f9'
+            });
+
+            if (!confirmacion.isConfirmed) return;
+
+            try {
+                await cancelarClaseRequest(idClase, { motivo: motivo.trim() });
+
+                Swal.fire({
+                    title: 'Clase cancelada',
+                    text: 'Se notificó al alumno con el motivo indicado.',
+                    icon: 'success',
+                    background: '#1e293b',
+                    color: '#f1f5f9',
+                    confirmButtonColor: '#3b82f6'
+                });
+
+                fetchClases();
+            } catch (error) {
+                console.error("Error al cancelar la clase:", error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Hubo un problema al cancelar la clase. Intenta nuevamente.',
+                    icon: 'error',
+                    background: '#1e293b',
+                    color: '#f1f5f9',
+                    confirmButtonColor: '#3b82f6'
+                });
+            }
+        }
+    };
+
     return (
         <div className="main-container">
             <Sidebar />
@@ -159,6 +225,16 @@ const ClasesPracticas = () => {
                                                     onClick={() => console.log(`Abriendo modal para calificar clase ${clase.id}`)}
                                                 >
                                                     <AiOutlineEdit size={22} />
+                                                </button>
+                                            )}
+
+                                            {isInstructor && (
+                                                <button 
+                                                    className="cp-action-btn cancel" 
+                                                    title="Cancelar Clase"
+                                                    onClick={() => handleCancelarClaseInstructor(clase.id)}
+                                                >
+                                                    <AiOutlineDelete size={22} />
                                                 </button>
                                             )}
 
