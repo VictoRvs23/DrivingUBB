@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { PiSteeringWheel } from "react-icons/pi"; 
 import { FaCarSide } from "react-icons/fa";
 import { AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
@@ -10,6 +11,7 @@ import '../styles/ClasesPracticas.css';
 
 const ClasesPracticas = () => {
     const { user } = useAuth();
+    const navigate = useNavigate();
     const isInstructor = user?.role === 'instructor' || user?.role === 'admin';
     const [clases, setClases] = useState([]);
 
@@ -210,18 +212,44 @@ const ClasesPracticas = () => {
                                                 </p>
                                             )}
                                         </div>
-                                        <div className="cp-grade-badge">
-                                            <span style={{ color: '#ffffff', fontWeight: 'normal' }}>Calificación : </span>
-                                            <span className={getGradeStyle(calificacionActual)}>
-                                                {formatGrade(calificacionActual)}
-                                            </span>
-                                        </div>
+                                        {isInstructor && calificacionActual === 'Pendiente' ? (
+                                            <button
+                                                className="cp-calificar-btn"
+                                                onClick={() => navigate('/evaluacionpractica', {
+                                                    state: {
+                                                        claseId: clase.id,
+                                                        estudianteId: clase.user?.id,
+                                                        estudianteNombre: nombreAlumno
+                                                    }
+                                                })}
+                                                title="Calificar esta clase"
+                                                style={{
+                                                    background: 'transparent',
+                                                    border: '2px solid #3b82f6',
+                                                    borderRadius: '20px',
+                                                    padding: '8px 20px',
+                                                    color: '#3b82f6',
+                                                    fontWeight: 'bold',
+                                                    fontSize: '0.95rem',
+                                                    cursor: 'pointer'
+                                                }}
+                                            >
+                                                Calificar
+                                            </button>
+                                        ) : (
+                                            <div className="cp-grade-badge">
+                                                <span style={{ color: '#ffffff', fontWeight: 'normal' }}>Calificación : </span>
+                                                <span className={getGradeStyle(calificacionActual)}>
+                                                    {formatGrade(calificacionActual)}
+                                                </span>
+                                            </div>
+                                        )}
                                         
                                         <div className="cp-actions-container" style={{ display: 'flex', gap: '8px' }}>
-                                            {isInstructor && nombreProfesor !== 'Pendiente' && (
+                                            {isInstructor && nombreProfesor !== 'Pendiente' && calificacionActual !== 'Pendiente' && (
                                                 <button 
                                                     className="cp-action-btn edit" 
-                                                    title="Calificar Alumno"
+                                                    title="Editar Calificación"
                                                     onClick={() => console.log(`Abriendo modal para calificar clase ${clase.id}`)}
                                                 >
                                                     <AiOutlineEdit size={22} />
