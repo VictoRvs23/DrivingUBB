@@ -67,9 +67,6 @@ const Vehiculos = () => {
         }
     };
 
-    // El estado que se muestra en la tabla viene calculado desde el backend
-    // en "estadoCalculado" (considera documentos faltantes/vencidos).
-    // El campo "estado" original se preserva intacto para la edición.
     const getEstadoVisual = (vehiculo) => vehiculo.estadoCalculado ?? vehiculo.estado;
 
     const handleDelete = async (id, patente) => {
