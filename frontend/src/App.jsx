@@ -119,11 +119,11 @@ function App() {
           }
         />
 
-        {/* Evaluacion Practica: solo Instructor la administra */}
+        {/* Evaluacion Practica: Instructor y Admin la administran */}
         <Route
           path="/evaluacionpractica"
           element={
-            user?.role === 'instructor'
+            user && (user.role === 'instructor' || user.role === 'admin')
               ? <EvaluacionPractica />
               : <Navigate to="/home" replace />
           }
