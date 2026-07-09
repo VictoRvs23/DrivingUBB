@@ -1,0 +1,206 @@
+/* ── Variables del modo claro (base) ── */
+:root {
+    --bg-body:        #f8fafc;
+    --bg-sidebar:     #1a2639;
+    --bg-card:        #ffffff;
+    --bg-card-dark:   #1e293b;   /* tablas, modales oscuros */
+    --bg-hover:       #25334d;
+    --bg-input:       #ffffff;
+    --bg-input-dark:  #0f172a;
+
+    --text-primary:   #1a2639;
+    --text-secondary: #4a5568;
+    --text-muted:     #94a3b8;
+    --text-white:     #f1f5f9;
+
+    --border-light:   #e2e8f0;
+    --border-dark:    #334155;
+
+    --accent-green:   #478049;
+    --accent-error:   #ef4444;
+
+    /* Sidebar siempre oscuro, no cambia con el modo */
+    --sidebar-bg:         #1a2639;
+    --sidebar-text:       #a0a8b3;
+    --sidebar-text-hover: #ffffff;
+    --sidebar-hover-bg:   #25334d;
+}
+
+/* ── Overrides para modo oscuro ── */
+body.dark-mode {
+    --bg-body:       #0f172a;
+    --bg-card:       #1e293b;
+    --bg-input:      #0f172a;
+
+    --text-primary:  #f1f5f9;
+    --text-secondary:#cbd5e1;
+    --text-muted:    #94a3b8;
+
+    --border-light:  #334155;
+}
+
+/* ── Aplicación de variables al body y elementos base ── */
+body {
+    background-color: var(--bg-body);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ── Páginas con fondo blanco (#f8fafc) → se oscurecen ── */
+body.dark-mode .main-container {
+    background-color: var(--bg-body);
+}
+
+body.dark-mode .vehiculos-page,
+body.dark-mode .soporte-page {
+    background-color: var(--bg-body);
+}
+
+/* ── Cards blancas (soporte, ajustes, reservas) ── */
+body.dark-mode .soporte-main-card,
+body.dark-mode .ajustes-card,
+body.dark-mode .reservas-container,
+body.dark-mode .cp-white-container {
+    background-color: var(--bg-card);
+    border-color: var(--border-dark);
+    color: var(--text-primary);
+}
+
+/* ── Textos de títulos y labels en cards blancas ── */
+body.dark-mode .soporte-pregunta,
+body.dark-mode .soporte-cat-label,
+body.dark-mode .soporte-cat-btn,
+body.dark-mode .ajustes-seccion-titulo,
+body.dark-mode .ajustes-field-label,
+body.dark-mode .ajustes-preferencia-label {
+    color: var(--text-primary);
+}
+
+body.dark-mode .ajustes-preferencia-desc {
+    color: var(--text-muted);
+}
+
+/* ── Botones de categoría soporte ── */
+body.dark-mode .soporte-cat-btn {
+    background-color: #1e293b;
+    border-color: var(--border-dark);
+    color: var(--text-white);
+}
+
+body.dark-mode .soporte-cat-btn:hover {
+    background-color: var(--bg-hover);
+}
+
+/* ── Inputs de ajustes ── */
+body.dark-mode .ajustes-input {
+    color: var(--text-white);
+    border-bottom-color: var(--border-dark);
+}
+
+body.dark-mode .ajustes-input:focus {
+    border-bottom-color: #94a3b8;
+}
+
+/* ── FAQs vista usuario ── */
+body.dark-mode .faq-item {
+    background-color: var(--bg-card);
+    border-color: var(--border-dark);
+}
+
+body.dark-mode .faq-item--abierto {
+    border-color: #94a3b8;
+}
+
+body.dark-mode .faq-item-header:hover,
+body.dark-mode .faq-item--abierto .faq-item-header {
+    background-color: #25334d;
+}
+
+body.dark-mode .faq-numero,
+body.dark-mode .faq-pregunta-texto {
+    color: var(--text-white);
+}
+
+body.dark-mode .faq-respuesta-texto {
+    color: var(--text-secondary);
+}
+
+body.dark-mode .faq-item-body {
+    background-color: var(--bg-card);
+}
+
+body.dark-mode .faq-vacio {
+    background-color: var(--bg-card);
+    border-color: var(--border-dark);
+    color: var(--text-muted);
+}
+
+/* ── Divisor de ajustes ── */
+body.dark-mode .ajustes-divisor {
+    background-color: var(--border-dark);
+}
+
+body.dark-mode .ajustes-preferencia-row {
+    border-bottom-color: var(--border-dark);
+}
+
+/* ── Botones de acción principal ── */
+body.dark-mode .ajustes-btn-primary {
+    background-color: #25334d;
+}
+
+body.dark-mode .ajustes-btn-primary:hover:not(:disabled) {
+    background-color: #334155;
+}
+
+/* ── Header de páginas ── */
+body.dark-mode .vehiculos-header h1 {
+    color: var(--text-primary);
+}
+
+/* ── Aviso de cooldown ── */
+body.dark-mode .ajustes-cooldown-aviso {
+    background-color: rgba(245, 158, 11, 0.08);
+    color: #f59e0b;
+}
+
+/* ── Toast de ajustes ── */
+body.dark-mode .ajustes-toast--success {
+    background-color: rgba(71, 128, 73, 0.2);
+    color: #4ade80;
+}
+
+body.dark-mode .ajustes-toast--error {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+}
+
+/* ── Mis Solicitudes y tabla admin ── */
+/* Estas ya usan colores oscuros de base, solo ajustamos el fondo de página */
+body.dark-mode .solicitudes-back-btn {
+    border-color: var(--border-dark);
+    color: var(--text-muted);
+}
+
+body.dark-mode .solicitudes-back-btn:hover {
+    background-color: var(--bg-hover);
+    color: var(--text-white);
+}
+
+/* ── Scrollbar en modo oscuro ── */
+body.dark-mode ::-webkit-scrollbar {
+    width: 6px;
+}
+
+body.dark-mode ::-webkit-scrollbar-track {
+    background: #0f172a;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 3px;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}

@@ -81,7 +81,7 @@ const Soporte = () => {
                         className="soporte-accion-btn"
                         onClick={() => setVerSolicitudes(true)}
                     >
-                        <AiOutlineFileText style={{ fontSize: '1.2rem' }} />
+                        <AiOutlineFileText style={{ fontSize: '1.5rem' }} />
                         Mis Solicitudes
                     </button>
                     
@@ -89,7 +89,7 @@ const Soporte = () => {
                         className="soporte-accion-btn soporte-accion-btn--secondary"
                         onClick={() => setVerFAQs(true)}
                     >
-                        <AiOutlineQuestionCircle style={{ fontSize: '1.2rem' }} />
+                        <AiOutlineQuestionCircle style={{ fontSize: '1.5rem' }} />
                         Preguntas Frecuentes
                     </button>
                 </div>

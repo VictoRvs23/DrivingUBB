@@ -1,29 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { MdOutlineSettings } from 'react-icons/md';
 import Sidebar from '../components/Sidebar';
 import { changePasswordRequest, toggleEmailsRequest } from '../services/configuracion.services';
-import { useAuth } from '../context/AuthContext';
+import { useDarkMode } from '../context/DarkModeContext';
 import '../styles/Ajustes.css';
 
-/* ─── Clave para el cooldown de 24h en localStorage ─── */
-const PW_CHANGED_KEY = 'pw_last_changed';
-
-const getCooldownRestante = () => {
-    const ultimo = localStorage.getItem(PW_CHANGED_KEY);
-    if (!ultimo) return 0;
-    const diff = Date.now() - parseInt(ultimo, 10);
-    const msRestantes = 24 * 60 * 60 * 1000 - diff;
-    return msRestantes > 0 ? msRestantes : 0;
-};
-
-const formatCooldown = (ms) => {
-    const h = Math.floor(ms / 3600000);
-    const m = Math.floor((ms % 3600000) / 60000);
-    return `${h}h ${m}m`;
-};
-
-/* ─── Toggle Switch reutilizable ─── */
 const Toggle = ({ checked, onChange, disabled = false, id }) => (
     <label className={`toggle-switch ${disabled ? 'toggle-switch--disabled' : ''}`} htmlFor={id}>
         <input
@@ -39,8 +21,7 @@ const Toggle = ({ checked, onChange, disabled = false, id }) => (
     </label>
 );
 
-/* ─── Campo de contraseña con ojo ─── */
-const PasswordInput = ({ id, label, value, onChange, placeholder }) => {
+const PasswordInput = ({ id, label, value, onChange }) => {
     const [visible, setVisible] = useState(false);
     return (
         <div className="ajustes-field">
@@ -51,7 +32,6 @@ const PasswordInput = ({ id, label, value, onChange, placeholder }) => {
                     type={visible ? 'text' : 'password'}
                     value={value}
                     onChange={onChange}
-                    placeholder={placeholder || ''}
                     className="ajustes-input"
                     autoComplete="off"
                 />
@@ -69,35 +49,44 @@ const PasswordInput = ({ id, label, value, onChange, placeholder }) => {
     );
 };
 
-/* ═══════════════════════════════════════════════════
-   Componente principal
-═══════════════════════════════════════════════════ */
-const Ajustes = () => {
-    const { user } = useAuth();
+const getStrength = (pw) => {
+    let score = 0;
+    if (pw.length >= 8)           score++;
+    if (/[A-Z]/.test(pw))         score++;
+    if (/[0-9]/.test(pw))         score++;
+    if (/[^A-Za-z0-9]/.test(pw))  score++;
+    return score;
+};
+const STRENGTH_LABELS = ['Muy débil', 'Débil', 'Regular', 'Fuerte', 'Muy fuerte'];
+const STRENGTH_COLORS = ['#ef4444', '#f97316', '#f59e0b', '#478049', '#22c55e'];
 
-    /* ── Estado: cambio de contraseña ── */
+const PasswordStrength = ({ password }) => {
+    const score = getStrength(password);
+    return (
+        <div className="pw-strength">
+            <div className="pw-strength-bars">
+                {[0, 1, 2, 3].map((i) => (
+                    <div key={i} className="pw-strength-bar"
+                        style={{ background: i < score ? STRENGTH_COLORS[score] : '#334155', transition: 'background 0.3s ease' }}
+                    />
+                ))}
+            </div>
+            <span className="pw-strength-label" style={{ color: STRENGTH_COLORS[score] }}>
+                {STRENGTH_LABELS[score]}
+            </span>
+        </div>
+    );
+};
+
+const Ajustes = () => {
+    const { darkMode, toggleDarkMode } = useDarkMode();
     const [oldPassword, setOldPassword]         = useState('');
     const [newPassword, setNewPassword]         = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [pwError, setPwError]                 = useState('');
     const [pwLoading, setPwLoading]             = useState(false);
     const [pwToast, setPwToast]                 = useState(null);
-
-    /* ── Estado: cooldown 24h (frontend) ── */
-    const [cooldownMs, setCooldownMs] = useState(getCooldownRestante);
-
-    useEffect(() => {
-        if (cooldownMs <= 0) return;
-        const interval = setInterval(() => {
-            const restante = getCooldownRestante();
-            setCooldownMs(restante);
-            if (restante <= 0) clearInterval(interval);
-        }, 60000); // actualiza cada minuto
-        return () => clearInterval(interval);
-    }, [cooldownMs]);
-
-    /* ── Estado: preferencias ── */
-    // Inicializa desde localStorage para no perder el estado al recargar
+    const [cooldownMsg, setCooldownMsg]         = useState('');
     const [recibirCorreos, setRecibirCorreos] = useState(() => {
         const saved = localStorage.getItem('recibir_correos');
         return saved !== null ? saved === 'true' : true;
@@ -105,13 +94,11 @@ const Ajustes = () => {
     const [correoLoading, setCorreoLoading] = useState(false);
     const [correoToast, setCorreoToast]     = useState(null);
 
-    /* ── Toast helper ── */
     const showToast = (setter, tipo, msg) => {
         setter({ tipo, msg });
         setTimeout(() => setter(null), 3500);
     };
 
-    /* ── Validación frontend de contraseña ── */
     const validatePassword = () => {
         if (!oldPassword || !newPassword || !confirmPassword)
             return 'Todos los campos son obligatorios.';
@@ -124,16 +111,9 @@ const Ajustes = () => {
         return null;
     };
 
-    /* ── Enviar cambio de contraseña ── */
     const handleChangePassword = async () => {
         setPwError('');
-
-        // Validación de cooldown 24h (frontend)
-        const restante = getCooldownRestante();
-        if (restante > 0) {
-            setPwError(`Debes esperar ${formatCooldown(restante)} antes de volver a cambiar tu contraseña.`);
-            return;
-        }
+        setCooldownMsg('');
 
         const validationError = validatePassword();
         if (validationError) { setPwError(validationError); return; }
@@ -141,21 +121,21 @@ const Ajustes = () => {
         setPwLoading(true);
         try {
             await changePasswordRequest({ oldPassword, newPassword, confirmPassword });
-            // Guardar timestamp del cambio para el cooldown
-            localStorage.setItem(PW_CHANGED_KEY, Date.now().toString());
-            setCooldownMs(24 * 60 * 60 * 1000);
             setOldPassword('');
             setNewPassword('');
             setConfirmPassword('');
             showToast(setPwToast, 'success', 'Contraseña actualizada exitosamente.');
         } catch (err) {
-            setPwError(err.message || 'Error al cambiar la contraseña.');
+            if (err.status === 429 || err.message?.includes('esperar')) {
+                setCooldownMsg(err.message);
+            } else {
+                setPwError(err.message || 'Error al cambiar la contraseña.');
+            }
         } finally {
             setPwLoading(false);
         }
     };
 
-    /* ── Toggle correos ── */
     const handleToggleCorreos = async (nuevoValor) => {
         setCorreoLoading(true);
         try {
@@ -171,7 +151,9 @@ const Ajustes = () => {
         }
     };
 
-    const enCooldown = cooldownMs > 0;
+    const handleToggleDarkMode = (nuevoValor) => {
+        toggleDarkMode(nuevoValor);
+    };
 
     return (
         <div className="main-container">
@@ -194,11 +176,10 @@ const Ajustes = () => {
                     <div className="ajustes-seccion">
                         <h2 className="ajustes-seccion-titulo">Seguridad</h2>
 
-                        {/* Aviso de cooldown */}
-                        {enCooldown && (
+                        {/* Aviso de cooldown que viene del backend */}
+                        {cooldownMsg && (
                             <div className="ajustes-cooldown-aviso">
-                                🕐 Podrás cambiar tu contraseña nuevamente en{' '}
-                                <strong>{formatCooldown(cooldownMs)}</strong>.
+                                🕐 {cooldownMsg}
                             </div>
                         )}
 
@@ -221,7 +202,6 @@ const Ajustes = () => {
                             onChange={(e) => { setConfirmPassword(e.target.value); setPwError(''); }}
                         />
 
-                        {/* Fuerza de contraseña */}
                         {newPassword.length > 0 && (
                             <PasswordStrength password={newPassword} />
                         )}
@@ -231,7 +211,7 @@ const Ajustes = () => {
                         <button
                             className="ajustes-btn-primary"
                             onClick={handleChangePassword}
-                            disabled={pwLoading || enCooldown}
+                            disabled={pwLoading}
                         >
                             {pwLoading
                                 ? <><span className="soporte-spinner" /> Actualizando...</>
@@ -274,63 +254,26 @@ const Ajustes = () => {
                             </div>
                         )}
 
-                        {/* Modo oscuro (sin implementar) */}
-                        <div className="ajustes-preferencia-row ajustes-preferencia-row--disabled">
+                        {/* Modo oscuro — ahora funcional */}
+                        <div className="ajustes-preferencia-row">
                             <div className="ajustes-preferencia-info">
                                 <span className="ajustes-preferencia-label">
                                     Modo oscuro
-                                    <span className="ajustes-badge-beta">Beta</span>
                                 </span>
                                 <span className="ajustes-preferencia-desc">
-                                    Próximamente disponible.
+                                    Cambia la apariencia de la aplicación a tonos oscuros.
                                 </span>
                             </div>
                             <Toggle
                                 id="toggle-dark"
-                                checked={false}
-                                onChange={() => {}}
-                                disabled={true}
+                                checked={darkMode}
+                                onChange={handleToggleDarkMode}
+                                disabled={false}
                             />
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    );
-};
-
-/* ─── Indicador de fuerza de contraseña ─── */
-const getStrength = (pw) => {
-    let score = 0;
-    if (pw.length >= 8)              score++;
-    if (/[A-Z]/.test(pw))           score++;
-    if (/[0-9]/.test(pw))           score++;
-    if (/[^A-Za-z0-9]/.test(pw))    score++;
-    return score; // 0–4
-};
-
-const STRENGTH_LABELS = ['Muy débil', 'Débil', 'Regular', 'Fuerte', 'Muy fuerte'];
-const STRENGTH_COLORS = ['#ef4444', '#f97316', '#f59e0b', '#478049', '#22c55e'];
-
-const PasswordStrength = ({ password }) => {
-    const score = getStrength(password);
-    return (
-        <div className="pw-strength">
-            <div className="pw-strength-bars">
-                {[0, 1, 2, 3].map((i) => (
-                    <div
-                        key={i}
-                        className="pw-strength-bar"
-                        style={{
-                            background: i < score ? STRENGTH_COLORS[score] : '#334155',
-                            transition: 'background 0.3s ease'
-                        }}
-                    />
-                ))}
-            </div>
-            <span className="pw-strength-label" style={{ color: STRENGTH_COLORS[score] }}>
-                {STRENGTH_LABELS[score]}
-            </span>
         </div>
     );
 };

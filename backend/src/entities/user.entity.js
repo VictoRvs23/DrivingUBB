@@ -76,6 +76,11 @@ export const User = new EntitySchema({
       default: true, 
       nullable: false
     },
+    password_changed_at: {
+      type: "timestamp",
+      nullable: true,
+      default: null,
+    },
   },
   relations: {
     reservas: {
