@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
-import { API_BASE_URL } from '../config/api.js';
 import { 
     AiOutlineTeam, 
     AiOutlineClockCircle, 
@@ -10,6 +9,7 @@ import {
     AiOutlineTool,
     AiOutlineBulb
 } from "react-icons/ai";
+import { API_BASE_URL } from '../config/api.js';
 
 const HomeSecreAdmin = () => {
     const { user } = useAuth();

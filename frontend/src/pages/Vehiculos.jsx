@@ -4,7 +4,7 @@ import { FiSliders } from "react-icons/fi";
 import Swal from 'sweetalert2'; 
 import { getVehiculosRequest, deleteVehiculoRequest, updateVehiculoRequest, createVehiculoRequest } from '../services/vehiculo.services';
 import Sidebar from '../components/Sidebar';
-import '../styles/Vehiculos.css'; 
+import '../styles/Vehiculos.css';
 import { API_BASE_URL } from '../config/api.js';
 
 
@@ -114,7 +114,7 @@ const Vehiculos = () => {
 
     const handleVerDocumento = (archivo) => {
         if (archivo && archivo.toLowerCase().includes('.pdf')) {
-           window.open(`${API_BASE_URL}/uploads/${archivo}`, '_blank');
+           window.open(`${API_BASE_URL}/api/uploads/${archivo}`, '_blank');
         } else if (archivo && !archivo.toLowerCase().includes('.pdf')) {
             Swal.fire({
                 title: "Formato Incorrecto",

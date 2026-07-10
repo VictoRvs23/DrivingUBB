@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { API_BASE_URL } from "../config/api.js";
+import { API_BASE_URL } from '../config/api.js';
+
 const API_URL = `${API_BASE_URL}/api/clases-practicas`;
 
 const getConfig = () => {

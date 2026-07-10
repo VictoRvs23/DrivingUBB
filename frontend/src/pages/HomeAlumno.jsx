@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
-import { API_BASE_URL } from '../config/api.js';
 import { 
     AiOutlineBook, 
     AiOutlineCar, 
@@ -10,6 +9,7 @@ import {
     AiOutlineVideoCamera, 
     AiOutlineLaptop 
 } from "react-icons/ai";
+import { API_BASE_URL } from '../config/api.js';
 
 const HomeAlumno = () => {
     const { user } = useAuth();
