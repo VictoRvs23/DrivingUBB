@@ -45,7 +45,18 @@ const ClasesTeoricas = () => {
         return `${diaSemana} ${diaNum}, ${mes} - ${hora}:${minutos} hrs`;
     };
 
-    const esClasePasada = (fechaDb) => new Date(fechaDb).getTime() < Date.now();
+    const esClasePasada = (fechaDb) => {
+        const inicio = new Date(fechaDb).getTime();
+        const finDeClase = inicio + (60 * 60 * 1000); 
+        return Date.now() > finDeClase;
+    };
+
+    const MINUTOS_ANTICIPACION = 30;
+    const puedeIngresar = (fechaDb) => {
+        const inicio = new Date(fechaDb).getTime();
+        const ventanaApertura = inicio - MINUTOS_ANTICIPACION * 60 * 1000;
+        return Date.now() >= ventanaApertura && !esClasePasada(fechaDb);
+    };
 
     const fetchClases = async () => {
         try {
@@ -225,14 +236,27 @@ const ClasesTeoricas = () => {
                                                 </button>
                                             </div>
                                         ) : (
-                                            <a
-                                                href={clase.enlace_videollamada}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className={`ct-ingresar-btn ${pasada ? 'ct-ingresar-btn-pasada' : ''}`}
-                                            >
-                                                Ingresar
-                                            </a>
+                                            (() => {
+                                                const disponible = puedeIngresar(clase.fecha_hora);
+                                                return (
+                                                    <a
+                                                        href={disponible ? clase.enlace_videollamada : undefined}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        onClick={(e) => { if (!disponible) e.preventDefault(); }}
+                                                        className={`ct-ingresar-btn ${!disponible ? 'ct-ingresar-btn-pasada' : ''}`}
+                                                        title={
+                                                            pasada
+                                                                ? 'Esta clase ya finalizó'
+                                                                : !disponible
+                                                                    ? `Disponible ${MINUTOS_ANTICIPACION} minutos antes de la clase`
+                                                                    : ''
+                                                        }
+                                                    >
+                                                        Ingresar
+                                                    </a>
+                                                );
+                                            })()
                                         )}
                                     </div>
                                 </div>

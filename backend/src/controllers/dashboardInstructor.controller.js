@@ -26,7 +26,7 @@ export const getDashboardInstructor = async (req, res) => {
 
         const proximasClases = misClases
             .filter(clase => new Date(clase.fecha_hora) >= hoy)
-            .slice(0, 5)
+            .slice(0, 1)
             .map(clase => ({
                 id: clase.id,
                 titulo: `Clase n°${clase.numero_clase}: ${clase.tema}`,

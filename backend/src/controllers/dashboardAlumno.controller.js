@@ -59,7 +59,8 @@ export const getDashboardAlumno = async (req, res) => {
             candidatos.push({
                 tipo: `Clase n°${proximaClasePractica.numero_clase}: ${proximaClasePractica.tema}`,
                 fecha: proximaClasePractica.fecha_hora,
-                instructor: proximaClasePractica.instructor ? proximaClasePractica.instructor.nombre : "Por asignar"
+                instructor: proximaClasePractica.instructor ? proximaClasePractica.instructor.nombre : "Por asignar",
+                isTeorica: false
             });
         }
 
@@ -67,7 +68,9 @@ export const getDashboardAlumno = async (req, res) => {
             candidatos.push({
                 tipo: `Clase Teórica: ${proximaClaseTeorica.titulo_clase}`,
                 fecha: proximaClaseTeorica.fecha_hora,
-                instructor: proximaClaseTeorica.profesor ? proximaClaseTeorica.profesor.nombre : "Por asignar"
+                instructor: proximaClaseTeorica.profesor ? proximaClaseTeorica.profesor.nombre : "Por asignar",
+                enlace_videollamada: proximaClaseTeorica.enlace_videollamada,
+                isTeorica: true
             });
         }
 

@@ -114,6 +114,7 @@ export const asignarInstructorYVehiculo = async (req, res) => {
 export const cancelarClase = async (req, res) => {
     try {
         const { id } = req.params;
+        const { motivo } = req.body;
         const claseRepository = AppDataSource.getRepository(ClasePractica);
         const reservaRepository = AppDataSource.getRepository(Reserva);
         const clase = await claseRepository.findOne({ where: { id: parseInt(id) } });
@@ -131,7 +132,11 @@ export const cancelarClase = async (req, res) => {
             await reservaRepository.remove(reserva);
         }
 
-        await claseRepository.remove(clase);
+        clase.estado = "Cancelada";
+        clase.motivo_cancelacion = motivo ? motivo.trim() : null;
+        clase.cancelado_por = req.user.role === "alumno" ? "alumno" : "instructor";
+
+        await claseRepository.save(clase);
 
         return res.status(200).json({ mensaje: "Clase cancelada exitosamente" });
     } catch (error) {
