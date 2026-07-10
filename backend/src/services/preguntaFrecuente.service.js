@@ -9,7 +9,6 @@ export const getFAQsService = async () => {
 };
 
 export const createFAQService = async (data) => {
-    // Verificar el límite de 4 preguntas
     const count = await faqRepository.count();
     if (count >= 4) {
         throw { status: 400, message: "Límite alcanzado: Solo puede haber un máximo de 4 preguntas frecuentes activas." };

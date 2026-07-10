@@ -9,7 +9,6 @@ import {
 } from 'react-icons/ai';
 import { createSoporteRequest } from '../../services/soporte.services';
 
-/* ── Configuración por tipo ─────────────────────── */
 const TIPO_CONFIG = {
     Duda: {
         label: 'Dudas / Consultas',
@@ -43,22 +42,18 @@ const formatBytes = (bytes) => {
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
 };
 
-/* ── Componente ──────────────────────────────────── */
 const SoporteFormModal = ({ tipo, onClose }) => {
     const cfg = TIPO_CONFIG[tipo] || TIPO_CONFIG.Duda;
     const { Icon } = cfg;
-
     const [titulo, setTitulo]           = useState('');
     const [descripcion, setDescripcion] = useState('');
     const [imagen, setImagen]           = useState(null);
     const [preview, setPreview]         = useState(null);
     const [errors, setErrors]           = useState({});
     const [loading, setLoading]         = useState(false);
-    const [toast, setToast]             = useState(null); // { tipo: 'success'|'error', msg }
-
+    const [toast, setToast]             = useState(null); 
     const fileRef = useRef(null);
 
-    /* ── Handlers ── */
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (!file) return;

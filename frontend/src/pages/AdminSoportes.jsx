@@ -9,12 +9,12 @@ import {
     AiOutlineMessage,
 } from 'react-icons/ai';
 import { MdOutlineSupportAgent } from 'react-icons/md';
+import Swal from 'sweetalert2';
 import Sidebar from '../components/Sidebar';
 import FiltroTipo from '../components/soporte/FiltroTipo';
 import { getAllSoportesRequest, responderSoporteRequest, deleteSoporteRequest } from '../services/soporte.services';
 import '../styles/Soporte.css';
 
-/* ── Configuración por tipo ─────────────────────── */
 const TIPO_CONFIG = {
     Duda:       { label: 'Duda / Consulta',  Icon: AiOutlineQuestionCircle },
     Error:      { label: 'Reporte de Error', Icon: AiOutlineWarning },
@@ -35,16 +35,13 @@ const formatFecha = (iso) => {
     });
 };
 
-/* ── Modal de detalle + respuesta ───────────────── */
 const DetalleAdminModal = ({ soporte, onCerrar, onResponder }) => {
     const cfg    = TIPO_CONFIG[soporte.tipo]    || { label: soporte.tipo,    Icon: AiOutlineFileText };
     const estado = ESTADO_CONFIG[soporte.estado] || { label: soporte.estado, clase: '' };
     const { Icon } = cfg;
-
     const [respuesta, setRespuesta]   = useState(soporte.respuesta_admin || '');
     const [loading, setLoading]       = useState(false);
     const [errMsg, setErrMsg]         = useState('');
-
     const yaEliminado = soporte.estado === 'eliminado';
 
     const handleResponder = async () => {
@@ -93,7 +90,7 @@ const DetalleAdminModal = ({ soporte, onCerrar, onResponder }) => {
                     </span>
                     {soporte.usuario && (
                         <span className="soporte-tipo-badge" style={{ background: '#0f172a' }}>
-                            👤 {soporte.usuario.nombre} — {soporte.usuario.email}
+                            {soporte.usuario.nombre} — {soporte.usuario.email}
                         </span>
                     )}
                 </div>
@@ -162,16 +159,14 @@ const DetalleAdminModal = ({ soporte, onCerrar, onResponder }) => {
     );
 };
 
-/* ── Componente principal ────────────────────────── */
 const AdminSoportes = () => {
     const [soportes, setSoportes]     = useState([]);
     const [loading, setLoading]       = useState(true);
     const [error, setError]           = useState(null);
     const [filtroTipo, setFiltroTipo] = useState(null);
     const [detalle, setDetalle]       = useState(null);
-    const [toast, setToast]           = useState(null); // { tipo: 'success'|'error', msg }
+    const [toast, setToast]           = useState(null);
 
-    /* ── Fetch con filtro ── */
     const cargar = useCallback(async () => {
         setLoading(true);
         setError(null);
@@ -187,25 +182,33 @@ const AdminSoportes = () => {
 
     useEffect(() => { cargar(); }, [cargar]);
 
-    /* ── Toast helper ── */
     const showToast = (tipo, msg) => {
         setToast({ tipo, msg });
         setTimeout(() => setToast(null), 3200);
     };
 
-    /* ── Responder ── */
     const handleResponder = async (id, respuesta_admin) => {
         await responderSoporteRequest(id, respuesta_admin);
         showToast('success', 'Respuesta enviada con éxito.');
-        cargar(); // Recarga la tabla para actualizar estado
+        cargar(); 
     };
 
-    /* ── Eliminar (soft-delete) ── */
     const handleEliminar = async (soporte) => {
-        const confirmar = window.confirm(
-            `¿Estás seguro de marcar como eliminada la solicitud "${soporte.titulo}"?\nEsta acción cambia su estado a "Eliminado".`
-        );
-        if (!confirmar) return;
+        const result = await Swal.fire({
+            title: '¿Estás seguro?',
+            text: `Vas a marcar como eliminada la solicitud "${soporte.titulo}". Esta acción cambia su estado a "Eliminado".`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#334155',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+            background: '#1e293b',
+            color: '#f1f5f9'
+        });
+
+        if (!result.isConfirmed) return;
+
         try {
             await deleteSoporteRequest(soporte.id);
             showToast('success', 'Solicitud marcada como eliminada.');
@@ -215,7 +218,6 @@ const AdminSoportes = () => {
         }
     };
 
-    /* ── Contadores por estado (para el resumen) ── */
     const totalPendientes  = soportes.filter(s => s.estado === 'sin respuesta').length;
     const totalRespondidos = soportes.filter(s => s.estado === 'respondido').length;
     const totalEliminados  = soportes.filter(s => s.estado === 'eliminado').length;

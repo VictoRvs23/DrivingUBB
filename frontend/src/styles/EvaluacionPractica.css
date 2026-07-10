@@ -1,18 +1,9 @@
-.ct-page-wrapper {
-    display: flex;
-    flex-direction: column;
-}
-
-.ct-white-container {
-    background-color: #1e293b !important;
-    border-radius: 12px;
-    padding: 40px 50px;
+.evaluacion-practica-container {
     width: 100%;
-    box-sizing: border-box; 
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0;
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .ct-add-btn {
@@ -52,9 +43,27 @@
     transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
-.ct-card:hover {
-    transform: translateY(-2px);
-    border-color: #3b82f6 !important;
+.evaluacion-form,
+.evaluacion-faltas,
+.evaluacion-resultados {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.4s ease-in;
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.evaluacion-form,
+.evaluacion-faltas,
+.evaluacion-resultados {
+    background-color: #1e293b;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid #334155;
+    color: #f1f5f9;
+    animation: fadeIn 0.3s ease-in;
 }
 
 .ct-card-pasada {
@@ -125,9 +134,20 @@
     cursor: pointer;
 }
 
-.ct-ingresar-btn:hover {
-    background-color: rgba(59, 130, 246, 0.1);
-    transform: translateY(-2px);
+.form-group input::placeholder {
+    color: #95a5a6;
+}
+
+button {
+    background-color: #3b82f6;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .ct-ingresar-btn-pasada {
@@ -189,11 +209,74 @@
     color: #f1f5f9;
 }
 
-.ct-modal-header {
+.faltas-list li:hover {
+    background-color: #fff5f5;
+    transform: translateX(5px);
+}
+
+.evaluacion-resultados {
+    text-align: center;
+}
+
+.evaluacion-resultados p {
+    color: #34495e;
+    font-size: 1.1rem;
+    margin: 15px 0;
+    font-weight: 500;
+}
+
+.evaluacion-resultados button {
+    background-color: #9b59b6;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.evaluacion-resultados button:hover {
+    background-color: #8e44ad;
+    box-shadow: 0 6px 15px rgba(155, 89, 182, 0.3);
+}
+
+.resultado-header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    margin-bottom: 20px;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #ecf0f1;
+}
+
+.evaluacion-id {
+    font-size: 1.3rem;
+    color: #2c3e50;
+    font-weight: 600;
+    margin: 0;
+}
+
+.estado {
+    font-size: 1.5rem;
+    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin: 0;
+}
+
+.estado.aprobado {
+    background-color: #d4edda;
+    color: #155724;
+    border: 2px solid #27ae60;
+}
+
+.estado.reprobado {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 2px solid #e74c3c;
+}
+
+.resultado-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
 }
 
 .ct-modal-header h2 {
@@ -217,12 +300,16 @@
     margin-bottom: 16px;
 }
 
-.ct-form-group label {
-    display: block;
-    color: #94a3b8;
-    margin-bottom: 6px;
-    font-size: 0.9rem;
-    font-weight: bold;
+.stat-value.red {
+    color: #e74c3c;
+}
+
+.faltas-detalle {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #0f172a;
+    border-radius: 8px;
+    border: 1px solid #334155;
 }
 
 .ct-form-group input {
@@ -243,9 +330,84 @@
 
 .ct-modal-footer {
     display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 24px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    background-color: white;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    color: #34495e;
+}
+
+.faltas-detalle li.critica {
+    border-left: 4px solid #e74c3c;
+    background-color: #fff5f5;
+}
+
+.faltas-detalle li.critica:hover {
+    background-color: #ffe8e8;
+    transform: translateX(5px);
+}
+
+.faltas-detalle li.normal {
+    border-left: 4px solid #27ae60;
+    background-color: #f0fdf4;
+}
+
+.faltas-detalle li.normal:hover {
+    background-color: #dffce7;
+    transform: translateX(5px);
+}
+
+.falta-nombre {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.falta-tipo {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #7f8c8d;
+}
+
+.no-faltas {
+    color: #95a5a6;
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+}
+
+.observaciones-box {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f0f8ff 0%, #e8f4f8 100%);
+    border-radius: 8px;
+    border-left: 4px solid #3498db;
+}
+
+.observaciones-box h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.observaciones-box p {
+    color: #34495e;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.btn-nueva-evaluacion {
+    background-color: #9b59b6;
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 10px;
+    background-color: #1e293b;
+    border-radius: 6px;
+    border: 1px solid #334155;
 }
 
 .ct-btn-cancel {
@@ -257,14 +419,26 @@
     cursor: pointer;
 }
 
-.ct-btn-confirm {
-    background-color: #3b82f6;
-    border: none;
-    color: #ffffff;
-    font-weight: bold;
-    padding: 10px 18px;
-    border-radius: 8px;
-    cursor: pointer;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .ct-btn-confirm:hover {
@@ -294,12 +468,52 @@
         gap: 15px;
     }
 
-    .ct-actions-container {
-        justify-content: center;
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+    .evaluacion-practica-container {
+        padding: 20px 15px;
     }
 
-    .ct-ingresar-btn {
-        width: 100%;
-        box-sizing: border-box;
+    .evaluacion-practica-container h1 {
+        font-size: 1.5rem;
+    }
+
+    .evaluacion-form,
+    .evaluacion-faltas,
+    .evaluacion-resultados {
+        padding: 20px;
+    }
+
+    .resultado-stats {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+    }
+
+    .stat-value {
+        font-size: 1.8rem;
+    }
+
+    .faltas-detalle li {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .score-badge-eval {
+        padding: 20px 25px;
+        max-width: 100%;
+    }
+
+    .score-value-eval {
+        font-size: 2.5rem;
+    }
+
+    .btn-nueva-evaluacion,
+    .btn-finalizar {
+        padding: 14px;
     }
 }

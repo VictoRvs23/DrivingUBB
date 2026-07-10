@@ -14,7 +14,6 @@ import FiltroTipo from './FiltroTipo';
 import { getMisSoportesRequest } from '../../services/soporte.services';
 import '../../styles/Soporte.css';
 
-/* ── Configuración por tipo ─────────────────────── */
 const TIPO_CONFIG = {
     Duda:       { label: 'Duda / Consulta',  Icon: AiOutlineQuestionCircle },
     Error:      { label: 'Reporte de Error', Icon: AiOutlineWarning },
@@ -35,11 +34,23 @@ const formatFecha = (iso) => {
     });
 };
 
-/* ── Modal de detalle (solo lectura) ─────────────── */
+const normalizarUrlImagen = (url) => {
+    if (!url) return null;
+
+    const nombreArchivo = url.split('/').pop();
+    try {
+        const parsed = new URL(url);
+        return `${parsed.protocol}//${parsed.host}/uploads/${nombreArchivo}`;
+    } catch {
+        return url;
+    }
+};
+
 const DetalleModal = ({ soporte, onCerrar }) => {
     const cfg    = TIPO_CONFIG[soporte.tipo]    || { label: soporte.tipo,    Icon: AiOutlineFileText };
     const estado = ESTADO_CONFIG[soporte.estado] || { label: soporte.estado, clase: '' };
     const { Icon } = cfg;
+    const urlImagen = normalizarUrlImagen(soporte.imagen_adjunta);
 
     return (
         <div className="soporte-modal-overlay" onClick={(e) => e.target === e.currentTarget && onCerrar()}>
@@ -70,11 +81,19 @@ const DetalleModal = ({ soporte, onCerrar }) => {
                     <p className="detalle-texto">{soporte.descripcion}</p>
                 </div>
 
-                {soporte.imagen_adjunta && (
+                {/* Imagen adjunta con URL corregida */}
+                {urlImagen && (
                     <div className="detalle-seccion">
                         <p className="detalle-seccion-title">Imagen adjunta</p>
-                        <a href={soporte.imagen_adjunta} target="_blank" rel="noreferrer">
-                            <img src={soporte.imagen_adjunta} alt="Adjunto" className="detalle-imagen" />
+                        <a href={urlImagen} target="_blank" rel="noreferrer">
+                            <img
+                                src={urlImagen}
+                                alt="Adjunto"
+                                className="detalle-imagen"
+                                onError={(e) => {
+                                    e.currentTarget.parentElement.parentElement.style.display = 'none';
+                                }}
+                            />
                         </a>
                     </div>
                 )}
@@ -95,13 +114,12 @@ const DetalleModal = ({ soporte, onCerrar }) => {
     );
 };
 
-/* ── Componente principal ────────────────────────── */
 const MisSolicitudes = ({ onVolver }) => {
     const [soportes, setSoportes] = useState([]);
     const [loading, setLoading]   = useState(true);
     const [error, setError]       = useState(null);
     const [detalle, setDetalle]   = useState(null);
-    const [filtroTipo, setFiltroTipo] = useState(null); // null = todos
+    const [filtroTipo, setFiltroTipo] = useState(null);
 
     const cargar = useCallback(async () => {
         setLoading(true);
@@ -118,17 +136,12 @@ const MisSolicitudes = ({ onVolver }) => {
 
     useEffect(() => { cargar(); }, [cargar]);
 
-    const handleFiltro = (nuevoTipo) => {
-        setFiltroTipo(nuevoTipo);
-    };
-
     return (
         <div className="main-container">
             <Sidebar />
 
             <div className="vehiculos-page">
 
-                {/* Header */}
                 <div className="vehiculos-header">
                     <h1>
                         <MdOutlineSupportAgent className="title-icon" style={{ fontSize: '2.2rem' }} />
@@ -136,16 +149,13 @@ const MisSolicitudes = ({ onVolver }) => {
                     </h1>
                 </div>
 
-                {/* Botón volver */}
                 <button className="solicitudes-back-btn" onClick={onVolver}>
                     <AiOutlineLeft />
                     Volver a Soporte
                 </button>
 
-                {/* Filtro por tipo */}
-                <FiltroTipo tipoActivo={filtroTipo} onChange={handleFiltro} />
+                <FiltroTipo tipoActivo={filtroTipo} onChange={setFiltroTipo} />
 
-                {/* Estados */}
                 {loading && <div className="solicitudes-loading">Cargando tus solicitudes...</div>}
 
                 {!loading && error && (

@@ -12,9 +12,11 @@ import ClasesPracticas from './pages/ClasesPracticas.jsx';
 import ClasesTeoricas from './pages/ClasesTeoricas.jsx';
 import Soporte from './pages/Soporte.jsx';
 import AdminSoportes from './pages/AdminSoportes.jsx';
+import AdminFAQ from './pages/AdminFAQ.jsx';
 import EvaluacionPractica from './pages/EvaluacionPractica.jsx';
 import ExamenTeorico from './pages/ExamenTeorico.jsx';
 import MisResultados from './pages/MisResultados.jsx';
+import Ajustes from './pages/Ajustes.jsx';
 import GestionPreguntas from './pages/GestionPreguntas.jsx';
 import AsignacionPage from './pages/AsignacionPage.jsx';
 
@@ -52,6 +54,11 @@ function App() {
           path="/reservas" 
           element={user ? <Reservas /> : <Navigate to="/login" replace />} 
         />
+        
+        {/* Ajustes */}
+        <Route path="/ajustes"
+        element={user ? <Ajustes /> : <Navigate to="/login" replace />} 
+        />
 
         {/* Soporte: Alumno e Instructor */}
         <Route
@@ -69,6 +76,16 @@ function App() {
           element={
             user && (user.role === 'admin' || user.role === 'secretaria')
               ? <AdminSoportes />
+              : <Navigate to="/home" replace />
+          }
+        />
+
+        {/* Gestión de FAQs — solo admin */}
+        <Route
+          path="/admin/faq"
+          element={
+            user && (user.role === 'admin' || user.role === 'secretaria')
+              ? <AdminFAQ />
               : <Navigate to="/home" replace />
           }
         />

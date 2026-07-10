@@ -5,9 +5,9 @@ import { VscGitPullRequestNewChanges } from "react-icons/vsc";
 import { AiOutlineHome, AiOutlineUser, AiOutlineCheckCircle, AiOutlineCar, AiOutlineTeam, AiOutlineMenu, AiOutlineClose, AiOutlineUsergroupAdd } from "react-icons/ai";
 import { PiSteeringWheel } from "react-icons/pi";
 import { TbLogout2 } from "react-icons/tb";
-import { MdOutlineSupportAgent, MdQuiz, MdOutlineFactCheck, MdOndemandVideo } from "react-icons/md";
+import { MdOutlineSupportAgent, MdAssignment, MdQuiz, MdOutlineFactCheck, MdOutlineQuestionAnswer, MdOutlineSettings } from "react-icons/md";
 import '../styles/Sidebar.css';
-import logo from '../assets/LogDrivingUBB.png'; 
+import logo from '../assets/LogDrivingUBB.png';
 
 const Sidebar = () => {
     const { logout, user } = useAuth();
@@ -16,8 +16,8 @@ const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     const menuItems = [
-        { name: 'Inicio', icon: <AiOutlineHome />, path: '/home' },
-        { name: 'Perfil', icon: <AiOutlineUser />, path: '/profile' },
+        { name: 'Inicio',              icon: <AiOutlineHome />,        path: '/home' },
+        { name: 'Perfil',              icon: <AiOutlineUser />,        path: '/profile' },
     ];
 
     if (user?.role === 'alumno') {
@@ -80,6 +80,11 @@ const Sidebar = () => {
             path: '/admin/soportes'
         });
         menuItems.push({
+            name: 'G. PFs',
+            icon: <MdOutlineQuestionAnswer />,
+            path: '/admin/faq'
+        });
+        menuItems.push({
             name: 'Vehículos',
             icon: <AiOutlineCar />,
             path: '/vehiculos'
@@ -90,6 +95,12 @@ const Sidebar = () => {
             path: '/users'
         });
     }
+
+    menuItems.push({
+        name: 'Ajustes',
+        icon: <MdOutlineSettings />,
+        path: '/ajustes'
+    });
 
     const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -107,7 +118,7 @@ const Sidebar = () => {
                         <img src={logo} alt="Logo DrivingUBB" className="sidebar-logo-img" />
                     </div>
                 </div>
-                
+
                 <nav className="sidebar-nav">
                     {menuItems.map((item) => (
                         <button

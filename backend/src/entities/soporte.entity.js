@@ -13,7 +13,7 @@ export const Soporte = new EntitySchema({
     tipo: {
       type: "varchar",
       length: 50,
-      nullable: false, // Solo aceptará: 'Duda', 'Error', 'Reclamo', 'Sugerencia'
+      nullable: false, 
     },
     titulo: {
       type: "varchar",
@@ -36,7 +36,7 @@ export const Soporte = new EntitySchema({
     estado: {
       type: "varchar",
       length: 50,
-      default: "sin respuesta", // Estados: sin respuesta, respondido, eliminado
+      default: "sin respuesta", 
     },
     created_at: {
       type: "timestamp",

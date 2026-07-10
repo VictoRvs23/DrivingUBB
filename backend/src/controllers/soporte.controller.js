@@ -14,7 +14,7 @@ export const createSoporte = async (req, res) => {
         let imagen_adjunta = null;
 
         if (req.file) {
-            const baseUrl = `http://${HOST}:${PORT}/api/src/upload/`;
+            const baseUrl = `http://${HOST}:${PORT}/uploads/`;
             imagen_adjunta = baseUrl + path.basename(req.file.path);
         }
 
@@ -28,7 +28,7 @@ export const createSoporte = async (req, res) => {
 };
 
 export const getMisSoportes = async (req, res) => {
-    const { tipo } = req.query; // Capturamos "?tipo=Duda" si existe
+    const { tipo } = req.query; 
     
     const [soportes, error] = await getMisSoportesService(req.user.id, tipo);
     if (error) return res.status(500).json({ message: error });
@@ -36,7 +36,7 @@ export const getMisSoportes = async (req, res) => {
 };
 
 export const getAllSoportes = async (req, res) => {
-    const { tipo } = req.query; // Capturamos "?tipo=Reclamo" si existe
+    const { tipo } = req.query; 
     
     const [soportes, error] = await getAllSoportesService(tipo);
     if (error) return res.status(500).json({ message: error });
