@@ -270,3 +270,36 @@
 .ct-btn-confirm:hover {
     background-color: #2563eb;
 }
+
+@media (max-width: 768px) {
+    .ct-white-container {
+        padding: 20px;
+    }
+
+    .ct-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 20px;
+        text-align: center;
+    }
+
+    .ct-card-left {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .ct-card-right {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .ct-actions-container {
+        justify-content: center;
+    }
+
+    .ct-ingresar-btn {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
