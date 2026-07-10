@@ -9,6 +9,7 @@ import {
     AiOutlineTool,
     AiOutlineBulb
 } from "react-icons/ai";
+import { API_BASE_URL } from '../config/api.js';
 
 const HomeSecreAdmin = () => {
     const { user } = useAuth();
@@ -28,7 +29,7 @@ const HomeSecreAdmin = () => {
                 const token = localStorage.getItem('token');
                 if (!token) return;
 
-                const response = await axios.get(`http://localhost:3000/api/dashboard/admin-resumen`, {
+                const response = await axios.get(`${API_BASE_URL}/api/dashboard/admin-resumen`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 

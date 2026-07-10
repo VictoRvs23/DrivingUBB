@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Sidebar from '../components/Sidebar';
 import '../styles/PendingUsers.css';
+import { API_BASE_URL } from '../config/api.js';
 
 const PendingUsers = () => {
     const [pendingUsers, setPendingUsers] = useState([]);
@@ -14,7 +15,7 @@ const PendingUsers = () => {
 
     const fetchPendingUsers = async () => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/api/users/pending`, {
+            const response = await axios.get(`${API_BASE_URL}/api/api/users/pending`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setPendingUsers(response.data);
@@ -27,7 +28,7 @@ const PendingUsers = () => {
 
     const handleApprove = async (userId) => {
         try {
-            await axios.patch(`http://localhost:3000/api/users/approve/${userId}`, {}, {
+            await axios.patch(`${API_BASE_URL}/api/users/approve/${userId}`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             alert('Usuario aprobado exitosamente');

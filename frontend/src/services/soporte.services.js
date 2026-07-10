@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { API_BASE_URL } from '../config/api.js';
 
 const API = axios.create({
-    baseURL: `http://localhost:3000/api`
+    baseURL: `${API_BASE_URL}/api`
 });
 
 // Adjunta el token en cada request, igual que el resto de services del proyecto

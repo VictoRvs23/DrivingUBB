@@ -9,6 +9,7 @@ import {
     AiOutlineVideoCamera, 
     AiOutlineLaptop 
 } from "react-icons/ai";
+import { API_BASE_URL } from '../config/api.js';
 
 const HomeAlumno = () => {
     const { user } = useAuth();
@@ -27,7 +28,7 @@ const HomeAlumno = () => {
                 const token = localStorage.getItem('token');
                 if (!token) return;
 
-                const response = await axios.get(`http://localhost:3000/api/dashboard/mi-resumen`, {
+                const response = await axios.get(`${API_BASE_URL}/api/dashboard/mi-resumen`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
