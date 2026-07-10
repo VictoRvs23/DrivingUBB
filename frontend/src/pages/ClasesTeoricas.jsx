@@ -239,10 +239,10 @@ const ClasesTeoricas = () => {
                             );
                         })
                     ) : (
-                        <div className="ct-empty-state">
+                        
+                        <div className="ct-empty-state" style={{textAlign: 'center', padding: '40px 0'}}>
                             <MdOndemandVideo size={60} color="#94a3b8" />
-                            <h2>{isInstructor ? 'Aún no has creado clases teóricas' : 'No hay clases teóricas programadas'}</h2>
-                            <p>{isInstructor ? 'Usa el botón "+" para crear tu primera clase.' : 'Vuelve más tarde para ver nuevas clases.'}</p>
+                            <h2 style={{color: '#f1f5f9', marginTop: '20px'}}>No tienes clases teoricas programadas</h2>
                         </div>
                     )}
                 </div>
