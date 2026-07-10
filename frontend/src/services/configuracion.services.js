@@ -13,8 +13,7 @@ API.interceptors.request.use((config) => {
 });
 
 /**
- * Cambia la contraseña del usuario autenticado.
- * PUT /configuracion/cambiar-password
+ *
  * @param {{ oldPassword: string, newPassword: string, confirmPassword: string }} data
  */
 export const changePasswordRequest = async (data) => {
@@ -28,8 +27,7 @@ export const changePasswordRequest = async (data) => {
 };
 
 /**
- * Activa o desactiva la recepción de correos del usuario autenticado.
- * PUT /configuracion/correos
+ * 
  * @param {boolean} recibir_correos
  */
 export const toggleEmailsRequest = async (recibir_correos) => {

@@ -24,15 +24,26 @@ const HomeAlumno = () => {
     useEffect(() => {
         const fetchDashboardData = async () => {
             try {
-                const token = localStorage.getItem('token');
-                if (!token) return;
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+                if (!token) {
+                    setLoadingData(false);
+                    return;
+                }
 
-                const response = await axios.get('http://localhost:3000/api/dashboard/mi-resumen', {
+                const response = await axios.get(`${API_BASE_URL}/api/dashboard/mi-resumen`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-                setDashboardData(response.data);
+
+                const data = response.data?.data || response.data || {};
+
+                setDashboardData({
+                    horasPracticas: data.horasPracticas ?? 0,
+                    horasTeoricas: data.horasTeoricas ?? 0,
+                    examenesAprobados: data.examenesAprobados ?? 0,
+                    proximaActividad: data.proximaActividad ?? null
+                });
             } catch (error) {
-                console.error("Error al obtener datos:", error);
+                console.error("Error general en la carga del dashboard:", error);
             } finally {
                 setLoadingData(false);
             }
@@ -102,7 +113,36 @@ const HomeAlumno = () => {
                                 <div className="activity-instructor">
                                     <p>Prof. {dashboardData.proximaActividad.instructor}</p>
                                 </div>
-                                <button className="btn-action-primary">Unirse a Clase</button>
+                                
+                                {dashboardData.proximaActividad.isTeorica && (
+                                    (() => {
+                                        const inicio = new Date(dashboardData.proximaActividad.fecha).getTime();
+                                        const ventanaApertura = inicio - 30 * 60 * 1000; 
+                                        const finDeClase = inicio + 60 * 60 * 1000;
+                                        const ahora = Date.now();
+                                        const disponible = ahora >= ventanaApertura && ahora <= finDeClase;
+                                        const pasada = ahora > finDeClase;
+
+                                        return (
+                                            <a
+                                                href={disponible ? dashboardData.proximaActividad.enlace_videollamada : undefined}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                onClick={(e) => { if (!disponible) e.preventDefault(); }}
+                                                className={`btn-outline-blue ${!disponible ? 'disabled' : ''}`}
+                                                title={
+                                                    pasada
+                                                        ? 'Esta clase ya finalizó'
+                                                        : !disponible
+                                                            ? 'Disponible 30 minutos antes de la clase'
+                                                            : 'Ingresar a la videollamada'
+                                                }
+                                            >
+                                                Ingresar
+                                            </a>
+                                        );
+                                    })()
+                                )}
                             </div>
                         ) : (
                             <div className="activity-card" style={{justifyContent: 'center'}}>

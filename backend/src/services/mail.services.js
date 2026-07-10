@@ -18,11 +18,6 @@ export const sendApprovalEmail = async (email, nombre, tempPassword) => {
     const userRepository = AppDataSource.getRepository(User);
     const user = await userRepository.findOneBy({ email });
 
-    if (user && user.recibir_correos === false) {
-      console.log(`El usuario ${email} tiene desactivadas las notificaciones. No se envió el correo de bienvenida.`);
-      return;
-    }
-
     const mailOptions = {
       from: `"Escuela de Manejo DrivingUBB" <${EMAIL_USER}>`,
       to: email,

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
 import { AiOutlineForm, AiOutlineCar } from "react-icons/ai";
 import { PiSteeringWheel } from "react-icons/pi";
+import { getClasesInstructorRequest } from '../services/clasespracticas.services.js';
 
 const HomeInstructor = () => {
     const { user } = useAuth();
@@ -16,13 +16,62 @@ const HomeInstructor = () => {
     useEffect(() => {
         const fetchInstructorData = async () => {
             try {
-                const token = localStorage.getItem('token');
-                if (!token) return;
-                const response = await axios.get('http://localhost:3000/api/dashboard/instructor-resumen', {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                const response = await getClasesInstructorRequest();
+                const clases = response.data;
                 
-                setInstructorData(response.data);
+                const ahora = new Date();
+                const inicioHoy = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
+                const finHoy = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate(), 23, 59, 59, 999);
+
+                let clasesHoyCount = 0;
+                let evaluacionesCount = 0;
+                let futuras = [];
+
+                clases.forEach(clase => {
+                    if (clase.estado === 'Cancelada') return;
+
+                    const fechaClase = new Date(clase.fecha_hora.replace(' ', 'T'));
+                    const sinCalificar = !clase.calificacion || clase.calificacion === 'Pendiente';
+                    
+                    if (fechaClase >= inicioHoy && fechaClase <= finHoy) {
+                        clasesHoyCount++;
+                    }
+
+                    if (sinCalificar && fechaClase <= ahora) {
+                        evaluacionesCount++;
+                    }
+
+                    if (sinCalificar && fechaClase > ahora) {
+                        futuras.push({
+                            ...clase,
+                            dateObj: fechaClase
+                        });
+                    }
+                });
+
+                futuras.sort((a, b) => a.dateObj - b.dateObj);
+                
+                let proximasFormateadas = [];
+                if (futuras.length > 0) {
+                    const proxima = futuras[0];
+                    
+                    const opciones = { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' };
+                    let fechaFormateada = proxima.dateObj.toLocaleString('es-ES', opciones) + ' hrs.';
+                    
+                    proximasFormateadas.push({
+                        id: proxima.id,
+                        titulo: proxima.tema || `Clase Práctica N°${proxima.numero_clase || 'X'}`,
+                        fecha: fechaFormateada,
+                        alumno: proxima.user ? proxima.user.nombre : 'Por asignar'
+                    });
+                }
+
+                setInstructorData({
+                    clasesHoy: clasesHoyCount,
+                    evaluacionesPendientes: evaluacionesCount,
+                    proximasClases: proximasFormateadas
+                });
+
             } catch (error) {
                 console.error("Error al obtener datos del instructor:", error);
             } finally {
@@ -64,7 +113,7 @@ const HomeInstructor = () => {
                     </div>
 
                     <div className="activities-section">
-                        <h3 className="section-title">Próximas Clases</h3>
+                        <h3 className="section-title">Próxima Clase</h3>
                         <div className="instructor-class-list">
                             {instructorData.proximasClases.length > 0 ? (
                                 instructorData.proximasClases.map((clase) => (

@@ -1,6 +1,7 @@
 import axios from "axios";
+import { API_BASE_URL } from '../config/api.js';
 
-const API_URL = "http://localhost:3000/api/evaluacionpractica";
+const API_URL = `${API_BASE_URL}/api/evaluacionpractica`;
 
 export const crearEvaluacionRequest = async (evaluacionData) => {
     const token = localStorage.getItem('token');
