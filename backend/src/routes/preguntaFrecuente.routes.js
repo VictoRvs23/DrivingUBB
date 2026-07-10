@@ -9,8 +9,8 @@ const router = Router();
 
 router.use(verifyToken);
 router.get("/", getFAQs);
-router.post("/", authorizeRoles("admin"), validateBody(preguntaFrecuenteSchema), createFAQ);
-router.patch("/:id", authorizeRoles("admin"), validateBody(updatePreguntaFrecuenteSchema), updateFAQ);
-router.delete("/:id", authorizeRoles("admin"), deleteFAQ);
+router.post("/", authorizeRoles("secretaria", "admin"), validateBody(preguntaFrecuenteSchema), createFAQ);
+router.patch("/:id", authorizeRoles("secretaria", "admin"), validateBody(updatePreguntaFrecuenteSchema), updateFAQ);
+router.delete("/:id", authorizeRoles("secretaria", "admin"), deleteFAQ);
 
 export default router;

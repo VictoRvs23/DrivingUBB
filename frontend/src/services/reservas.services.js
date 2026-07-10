@@ -1,7 +1,6 @@
 import axios from 'axios';
-import { API_BASE_URL } from '../config/api.js';
 
-const API_URL = `${API_BASE_URL}/api/reservas`;
+const API_URL = `http://localhost:3000/api/reservas`;
 
 export const createReservaRequest = async (reservaData) => {
     const token = localStorage.getItem('token');

@@ -30,7 +30,7 @@ const HomeAlumno = () => {
                     return;
                 }
 
-                const response = await axios.get(`${API_BASE_URL}/api/dashboard/mi-resumen`, {
+                const response = await axios.get(`http://localhost:3000/api/dashboard/mi-resumen`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 

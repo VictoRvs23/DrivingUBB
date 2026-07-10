@@ -5,7 +5,7 @@ import { VscGitPullRequestNewChanges } from "react-icons/vsc";
 import { AiOutlineHome, AiOutlineUser, AiOutlineCheckCircle, AiOutlineCar, AiOutlineTeam, AiOutlineMenu, AiOutlineClose, AiOutlineUsergroupAdd } from "react-icons/ai";
 import { PiSteeringWheel } from "react-icons/pi";
 import { TbLogout2 } from "react-icons/tb";
-import { MdOutlineSupportAgent, MdAssignment, MdQuiz, MdOutlineFactCheck, MdOutlineQuestionAnswer, MdOutlineSettings } from "react-icons/md";
+import { MdOutlineSupportAgent, MdAssignment, MdQuiz, MdOutlineFactCheck, MdOutlineQuestionAnswer, MdOutlineSettings, MdOndemandVideo, } from "react-icons/md";
 import '../styles/Sidebar.css';
 import logo from '../assets/LogDrivingUBB.png';
 
@@ -80,7 +80,7 @@ const Sidebar = () => {
             path: '/admin/soportes'
         });
         menuItems.push({
-            name: 'G. PFs',
+            name: 'G. FAQs',
             icon: <MdOutlineQuestionAnswer />,
             path: '/admin/faq'
         });

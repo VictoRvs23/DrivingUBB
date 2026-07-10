@@ -84,7 +84,7 @@ function App() {
         <Route
           path="/admin/faq"
           element={
-            user && user.role === 'admin'
+            user && (user.role === 'admin' || user.role === 'secretaria')
               ? <AdminFAQ />
               : <Navigate to="/home" replace />
           }
