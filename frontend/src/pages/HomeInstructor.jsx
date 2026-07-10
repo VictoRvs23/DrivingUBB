@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
-import { API_BASE_URL } from '../config/api.js';
 import { AiOutlineForm, AiOutlineCar } from "react-icons/ai";
 import { PiSteeringWheel } from "react-icons/pi";
 
@@ -20,7 +19,7 @@ const HomeInstructor = () => {
             try {
                 const token = localStorage.getItem('token');
                 if (!token) return;
-                const response = await axios.get(`${API_BASE_URL}/api/dashboard/instructor-resumen`, {
+                const response = await axios.get(`http://localhost:3000/api/dashboard/instructor-resumen`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 

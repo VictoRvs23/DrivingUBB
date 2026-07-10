@@ -5,7 +5,7 @@ import { VscGitPullRequestNewChanges } from "react-icons/vsc";
 import { AiOutlineHome, AiOutlineUser, AiOutlineCheckCircle, AiOutlineCar, AiOutlineTeam, AiOutlineMenu, AiOutlineClose, AiOutlineUsergroupAdd } from "react-icons/ai";
 import { PiSteeringWheel } from "react-icons/pi";
 import { TbLogout2 } from "react-icons/tb";
-import { MdOutlineSupportAgent, MdQuiz, MdOutlineFactCheck } from "react-icons/md";
+import { MdOutlineSupportAgent, MdQuiz, MdOutlineFactCheck, MdOndemandVideo } from "react-icons/md";
 import '../styles/Sidebar.css';
 import logo from '../assets/LogDrivingUBB.png'; 
 
@@ -46,6 +46,11 @@ const Sidebar = () => {
             name: 'C. Prácticas',
             icon: <PiSteeringWheel />,
             path: '/clases-practicas'
+        });
+        menuItems.push({
+            name: 'C. Teóricas',
+            icon: <MdOndemandVideo />,
+            path: '/clases-teoricas'
         });
         menuItems.push({
             name: 'Soporte',
