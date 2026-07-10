@@ -266,3 +266,65 @@
     from { opacity: 0; transform: translateY(5px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+@media (max-width: 768px) {
+    .examen-teorico-container {
+        padding: 20px 15px;
+    }
+
+    .examen-teorico-container h1 {
+        font-size: 1.5rem;
+    }
+
+    .examen-inicio,
+    .examen-responder,
+    .examen-resultados {
+        padding: 20px;
+    }
+
+    .examen-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .timer {
+        font-size: 1.2rem;
+        padding: 10px 18px;
+    }
+
+    .pregunta-card {
+        padding: 20px;
+    }
+
+    .pregunta-card h3 {
+        font-size: 1.05rem;
+    }
+
+    .navegacion-preguntas {
+        flex-direction: column;
+    }
+
+    .resultado-stats {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+    }
+
+    .stat-value {
+        font-size: 1.8rem;
+    }
+
+    .score-badge {
+        padding: 20px 25px;
+    }
+
+    .score-value {
+        font-size: 2.5rem;
+    }
+
+    .btn-iniciar, .btn-nuevo-examen {
+        width: 100%;
+        padding: 15px 20px;
+        box-sizing: border-box;
+    }
+}

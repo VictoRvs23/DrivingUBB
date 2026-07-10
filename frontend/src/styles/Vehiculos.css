@@ -91,7 +91,7 @@
     min-height: 650px;
     max-height: 700px;
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: auto;
 }
 
 .table-container::-webkit-scrollbar {
@@ -461,4 +461,37 @@
     background-color: rgba(148, 163, 184, 0.15);
     color: #94a3b8;
     border: 1px solid #94a3b8;
+}
+
+@media (max-width: 768px) {
+    .vehiculos-page {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    .vehiculos-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .vehiculos-header h1 {
+        font-size: 1.6rem;
+    }
+
+    .modal-content {
+        width: 90vw;
+        padding: 20px;
+    }
+
+    .vehiculos-table {
+        min-width: 700px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
 }
