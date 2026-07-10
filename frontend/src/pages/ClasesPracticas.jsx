@@ -31,6 +31,13 @@ const ClasesPracticas = () => {
         return `${diaSemana} ${diaNum}, ${mes} - ${hora}:${minutos} hrs`;
     };
 
+    const esClaseIniciada = (fechaDb) => {
+        if (!fechaDb) return false;
+        const fechaClase = new Date(fechaDb.replace(' ', 'T'));
+        const ahora = new Date();
+        return ahora >= fechaClase;
+    };
+
     const fetchClases = async () => {
         try {
             let response;
@@ -210,6 +217,7 @@ const ClasesPracticas = () => {
                             const nombreAlumno = clase.user ? clase.user.nombre : 'Tú';
                             const calificacionActual = clase.calificacion || 'Pendiente';
                             const cancelada = clase.estado === 'Cancelada';
+                            const iniciada = esClaseIniciada(clase.fecha_hora);
 
                             return (
                                 <div key={clase.id} className={`cp-card ${cancelada ? 'cp-card-cancelada' : ''}`}>
@@ -251,26 +259,32 @@ const ClasesPracticas = () => {
                                                 {isInstructor && calificacionActual === 'Pendiente' ? (
                                                     <button
                                                         className="cp-calificar-btn"
-                                                        onClick={() => navigate('/evaluacionpractica', {
-                                                            state: {
-                                                                claseId: clase.id,
-                                                                estudianteId: clase.user?.id,
-                                                                estudianteNombre: nombreAlumno
+                                                        onClick={() => {
+                                                            if(iniciada) {
+                                                                navigate('/evaluacionpractica', {
+                                                                    state: {
+                                                                        claseId: clase.id,
+                                                                        estudianteId: clase.user?.id,
+                                                                        estudianteNombre: nombreAlumno
+                                                                    }
+                                                                });
                                                             }
-                                                        })}
-                                                        title="Calificar esta clase"
+                                                        }}
+                                                        disabled={!iniciada}
+                                                        title={iniciada ? "Calificar esta clase" : "La clase aún no ha comenzado"}
                                                         style={{
-                                                            background: 'transparent',
-                                                            border: '2px solid #3b82f6',
+                                                            background: iniciada ? 'transparent' : '#1e293b',
+                                                            border: iniciada ? '2px solid #3b82f6' : '2px solid #334155',
                                                             borderRadius: '20px',
                                                             padding: '8px 20px',
-                                                            color: '#3b82f6',
+                                                            color: iniciada ? '#3b82f6' : '#64748b',
                                                             fontWeight: 'bold',
                                                             fontSize: '0.95rem',
-                                                            cursor: 'pointer'
+                                                            cursor: iniciada ? 'pointer' : 'not-allowed',
+                                                            opacity: iniciada ? 1 : 0.6
                                                         }}
                                                     >
-                                                        Calificar
+                                                        {iniciada ? 'Calificar' : 'Calificar'}
                                                     </button>
                                                 ) : (
                                                     <div className="cp-grade-badge">

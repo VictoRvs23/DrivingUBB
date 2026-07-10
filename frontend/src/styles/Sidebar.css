@@ -134,3 +134,9 @@
         z-index: 1900;
     }
 }
+
+@media (max-width: 480px) {
+    .sidebar {
+        width: 240px;
+    }
+}

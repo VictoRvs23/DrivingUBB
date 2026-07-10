@@ -471,14 +471,18 @@ button:disabled {
     color: #ef4444;
 }
 
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 @media (max-width: 768px) {
     .evaluacion-practica-container {
-        padding: 20px 10px;
+        padding: 20px 15px;
     }
 
     .evaluacion-practica-container h1 {
-        font-size: 1.8rem;
-        margin-bottom: 30px;
+        font-size: 1.5rem;
     }
 
     .evaluacion-form,
@@ -487,12 +491,32 @@ button:disabled {
         padding: 20px;
     }
 
-    .form-group {
-        margin-bottom: 15px;
+    .resultado-stats {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
     }
 
-    button {
-        padding: 10px 20px;
-        font-size: 0.95rem;
+    .stat-value {
+        font-size: 1.8rem;
+    }
+
+    .faltas-detalle li {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .score-badge-eval {
+        padding: 20px 25px;
+        max-width: 100%;
+    }
+
+    .score-value-eval {
+        font-size: 2.5rem;
+    }
+
+    .btn-nueva-evaluacion,
+    .btn-finalizar {
+        padding: 14px;
     }
 }

@@ -429,3 +429,36 @@
     background-color: #305731 !important;
     transform: translateY(-1px);
 }
+
+@media (max-width: 768px) {
+    .users-page {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    .users-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .users-header h1 {
+        font-size: 1.6rem;
+    }
+
+    .filter-dropdown {
+        right: 0;
+    }
+
+    .modal-content {
+        width: 90vw;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}

@@ -20,7 +20,6 @@ const router = Router();
 router.use("/users", userRoutes);
 router.use("/auth", authRoutes);
 router.use("/configuracion", configuracionRoutes);
-router.use("/claseteorica", claseteorica);
 router.use("/evaluacionpractica", evaluacionpractica);
 router.use("/examenteorico", examenTeoricoRoutes);
 router.use("/preguntas", preguntaRoutes);
