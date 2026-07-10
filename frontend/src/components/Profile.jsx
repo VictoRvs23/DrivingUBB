@@ -180,7 +180,7 @@ const Profile = () => {
                             </div>
                             
                             <div className="form-group">
-                                <label>Teléfono (Ej: +56912345678):</label>
+                                <label>Teléfono (Ej: 912345678):</label>
                                 <input 
                                     type="text" 
                                     name="numeroTelefonico" 
