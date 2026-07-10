@@ -91,3 +91,17 @@
         align-items: flex-start;
     }
 }
+
+@media (max-width: 768px) {
+    .preguntas-lista {
+        padding: 20px 15px;
+    }
+
+    .pregunta-row-meta {
+        flex-wrap: wrap;
+    }
+
+    .btn-eliminar-pregunta {
+        width: 100%;
+    }
+}
