@@ -9,6 +9,7 @@ import Reservas from './pages/Reservas.jsx';
 import Vehiculos from './pages/Vehiculos.jsx';
 import Users from './pages/User.jsx';
 import ClasesPracticas from './pages/ClasesPracticas.jsx';
+import ClasesTeoricas from './pages/ClasesTeoricas.jsx';
 import Soporte from './pages/Soporte.jsx';
 import AdminSoportes from './pages/AdminSoportes.jsx';
 import EvaluacionPractica from './pages/EvaluacionPractica.jsx';
@@ -98,6 +99,14 @@ function App() {
           element={
             user && (user.role === 'alumno' || user.role === 'instructor')
               ? <ClasesPracticas />
+              : <Navigate to="/home" replace />
+          }
+        />
+        <Route
+          path="/clases-teoricas"
+          element={
+            user && (user.role === 'alumno' || user.role === 'instructor')
+              ? <ClasesTeoricas />
               : <Navigate to="/home" replace />
           }
         />

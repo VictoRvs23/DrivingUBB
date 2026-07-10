@@ -2,7 +2,6 @@
 import { DataSource } from "typeorm";
 import { DATABASE, DB_USERNAME, HOST, DB_PASSWORD, DB_PORT } from "./configEnv.js";
 import { User } from "../entities/user.entity.js";
-import { ClaseTeorica } from "../entities/claseteorica.entity.js";
 import { EvaluacionPractica } from "../entities/evaluacionpractica.entity.js";
 import { Pregunta } from "../entities/pregunta.entity.js";
 import { ExamenTeorico } from "../entities/examenteorico.entity.js";
@@ -13,6 +12,7 @@ import { Instructor } from "../entities/instructor.entity.js";
 import { Reserva } from "../entities/reservas.entity.js";
 import { createUsers } from "./initDb.js";
 import { PreguntaFrecuente } from "../entities/preguntaFrecuente.entity.js";
+import { ClaseTeorica } from "../entities/clasesTeoricas.entity.js";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -23,7 +23,6 @@ export const AppDataSource = new DataSource({
   database: `${DATABASE}`,
   entities: [
     User,
-    ClaseTeorica,
     EvaluacionPractica,
     Pregunta,
     ExamenTeorico,
@@ -33,6 +32,7 @@ export const AppDataSource = new DataSource({
     Reserva,
     Soporte,
     PreguntaFrecuente,
+    ClaseTeorica
   ],
   synchronize: true,
   logging: false,
