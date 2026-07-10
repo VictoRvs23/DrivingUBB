@@ -45,7 +45,18 @@ const ClasesTeoricas = () => {
         return `${diaSemana} ${diaNum}, ${mes} - ${hora}:${minutos} hrs`;
     };
 
-    const esClasePasada = (fechaDb) => new Date(fechaDb).getTime() < Date.now();
+    const esClasePasada = (fechaDb) => {
+        const inicio = new Date(fechaDb).getTime();
+        const finDeClase = inicio + (60 * 60 * 1000); 
+        return Date.now() > finDeClase;
+    };
+
+    const MINUTOS_ANTICIPACION = 30;
+    const puedeIngresar = (fechaDb) => {
+        const inicio = new Date(fechaDb).getTime();
+        const ventanaApertura = inicio - MINUTOS_ANTICIPACION * 60 * 1000;
+        return Date.now() >= ventanaApertura && !esClasePasada(fechaDb);
+    };
 
     const fetchClases = async () => {
         try {
@@ -225,24 +236,37 @@ const ClasesTeoricas = () => {
                                                 </button>
                                             </div>
                                         ) : (
-                                            <a
-                                                href={clase.enlace_videollamada}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className={`ct-ingresar-btn ${pasada ? 'ct-ingresar-btn-pasada' : ''}`}
-                                            >
-                                                Ingresar
-                                            </a>
+                                            (() => {
+                                                const disponible = puedeIngresar(clase.fecha_hora);
+                                                return (
+                                                    <a
+                                                        href={disponible ? clase.enlace_videollamada : undefined}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        onClick={(e) => { if (!disponible) e.preventDefault(); }}
+                                                        className={`ct-ingresar-btn ${!disponible ? 'ct-ingresar-btn-pasada' : ''}`}
+                                                        title={
+                                                            pasada
+                                                                ? 'Esta clase ya finalizó'
+                                                                : !disponible
+                                                                    ? `Disponible ${MINUTOS_ANTICIPACION} minutos antes de la clase`
+                                                                    : ''
+                                                        }
+                                                    >
+                                                        Ingresar
+                                                    </a>
+                                                );
+                                            })()
                                         )}
                                     </div>
                                 </div>
                             );
                         })
                     ) : (
-                        <div className="ct-empty-state">
+                        
+                        <div className="ct-empty-state" style={{textAlign: 'center', padding: '40px 0'}}>
                             <MdOndemandVideo size={60} color="#94a3b8" />
-                            <h2>{isInstructor ? 'Aún no has creado clases teóricas' : 'No hay clases teóricas programadas'}</h2>
-                            <p>{isInstructor ? 'Usa el botón "+" para crear tu primera clase.' : 'Vuelve más tarde para ver nuevas clases.'}</p>
+                            <h2 style={{color: '#f1f5f9', marginTop: '20px'}}>No tienes clases teoricas programadas</h2>
                         </div>
                     )}
                 </div>
