@@ -80,7 +80,7 @@ const Sidebar = () => {
             path: '/admin/soportes'
         });
         menuItems.push({
-            name: 'G. FAQs',
+            name: 'G. PFs',
             icon: <MdOutlineQuestionAnswer />,
             path: '/admin/faq'
         });
