@@ -62,9 +62,33 @@ const ClasesPracticas = () => {
     };
 
     const handleCancelarClase = async (idClase) => {
+        const { value: motivo } = await Swal.fire({
+            title: 'Cancelar clase práctica',
+            html: '<p style="color:#94a3b8; margin-bottom: 10px; text-align:left;">Cuéntale al instructor por qué no podrás asistir. Podrá ver este mensaje.</p>',
+            input: 'textarea',
+            inputPlaceholder: 'Ej: Tengo un imprevisto y no podré asistir a esta clase...',
+            inputAttributes: {
+                'aria-label': 'Motivo de la cancelación'
+            },
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#334155',
+            confirmButtonText: 'Cancelar clase',
+            cancelButtonText: 'Volver',
+            background: '#1e293b',
+            color: '#f1f5f9',
+            inputValidator: (value) => {
+                if (!value || !value.trim()) {
+                    return 'Debes indicar un motivo para cancelar la clase.';
+                }
+            }
+        });
+
+        if (!motivo) return;
+
         const result = await Swal.fire({
             title: '¿Cancelar reserva?',
-            text: "Perderás tu cupo para esta clase práctica.",
+            text: "Perderás tu cupo para esta clase práctica y se notificará al instructor.",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#ef4444',
@@ -77,7 +101,7 @@ const ClasesPracticas = () => {
 
         if (result.isConfirmed) {
             try {
-                await cancelarClaseRequest(idClase);
+                await cancelarClaseRequest(idClase, { motivo: motivo.trim() });
                 
                 Swal.fire({
                     title: '¡Cancelada!',
@@ -185,9 +209,10 @@ const ClasesPracticas = () => {
                             const nombreProfesor = clase.instructor ? clase.instructor.nombre : 'Pendiente';
                             const nombreAlumno = clase.user ? clase.user.nombre : 'Tú';
                             const calificacionActual = clase.calificacion || 'Pendiente';
+                            const cancelada = clase.estado === 'Cancelada';
 
                             return (
-                                <div key={clase.id} className="cp-card">
+                                <div key={clase.id} className={`cp-card ${cancelada ? 'cp-card-cancelada' : ''}`}>
                                     
                                     <div className="cp-card-left">
                                         <div className="cp-icon-container">
@@ -200,82 +225,95 @@ const ClasesPracticas = () => {
                                     </div>
 
                                     <div className="cp-card-right">
-                                        <div className="cp-person-info">
-                                            {isInstructor ? (
-                                                <p><strong>Alumno:</strong> {nombreAlumno}</p>
-                                            ) : (
-                                                <p>
-                                                    <strong>Profesor:</strong>{' '}
-                                                    <span style={{ color: nombreProfesor === 'Pendiente' ? '#f59e0b' : 'inherit', fontWeight: nombreProfesor === 'Pendiente' ? 'bold' : 'normal' }}>
-                                                        {nombreProfesor}
-                                                    </span>
+                                        {cancelada ? (
+                                            <div className="cp-cancelada-aviso">
+                                                <p className="cp-cancelada-titulo">
+                                                    Clase cancelada por {clase.cancelado_por === 'alumno' ? 'el alumno' : 'el instructor'}
                                                 </p>
-                                            )}
-                                        </div>
-                                        {isInstructor && calificacionActual === 'Pendiente' ? (
-                                            <button
-                                                className="cp-calificar-btn"
-                                                onClick={() => navigate('/evaluacionpractica', {
-                                                    state: {
-                                                        claseId: clase.id,
-                                                        estudianteId: clase.user?.id,
-                                                        estudianteNombre: nombreAlumno
-                                                    }
-                                                })}
-                                                title="Calificar esta clase"
-                                                style={{
-                                                    background: 'transparent',
-                                                    border: '2px solid #3b82f6',
-                                                    borderRadius: '20px',
-                                                    padding: '8px 20px',
-                                                    color: '#3b82f6',
-                                                    fontWeight: 'bold',
-                                                    fontSize: '0.95rem',
-                                                    cursor: 'pointer'
-                                                }}
-                                            >
-                                                Calificar
-                                            </button>
-                                        ) : (
-                                            <div className="cp-grade-badge">
-                                                <span style={{ color: '#ffffff', fontWeight: 'normal' }}>Calificación : </span>
-                                                <span className={getGradeStyle(calificacionActual)}>
-                                                    {formatGrade(calificacionActual)}
-                                                </span>
+                                                {clase.motivo_cancelacion && (
+                                                    <p className="cp-cancelada-motivo">"{clase.motivo_cancelacion}"</p>
+                                                )}
                                             </div>
+                                        ) : (
+                                            <>
+                                                <div className="cp-person-info">
+                                                    {isInstructor ? (
+                                                        <p><strong>Alumno:</strong> {nombreAlumno}</p>
+                                                    ) : (
+                                                        <p>
+                                                            <strong>Profesor:</strong>{' '}
+                                                            <span style={{ color: nombreProfesor === 'Pendiente' ? '#f59e0b' : 'inherit', fontWeight: nombreProfesor === 'Pendiente' ? 'bold' : 'normal' }}>
+                                                                {nombreProfesor}
+                                                            </span>
+                                                        </p>
+                                                    )}
+                                                </div>
+                                                {isInstructor && calificacionActual === 'Pendiente' ? (
+                                                    <button
+                                                        className="cp-calificar-btn"
+                                                        onClick={() => navigate('/evaluacionpractica', {
+                                                            state: {
+                                                                claseId: clase.id,
+                                                                estudianteId: clase.user?.id,
+                                                                estudianteNombre: nombreAlumno
+                                                            }
+                                                        })}
+                                                        title="Calificar esta clase"
+                                                        style={{
+                                                            background: 'transparent',
+                                                            border: '2px solid #3b82f6',
+                                                            borderRadius: '20px',
+                                                            padding: '8px 20px',
+                                                            color: '#3b82f6',
+                                                            fontWeight: 'bold',
+                                                            fontSize: '0.95rem',
+                                                            cursor: 'pointer'
+                                                        }}
+                                                    >
+                                                        Calificar
+                                                    </button>
+                                                ) : (
+                                                    <div className="cp-grade-badge">
+                                                        <span style={{ color: '#ffffff', fontWeight: 'normal' }}>Calificación : </span>
+                                                        <span className={getGradeStyle(calificacionActual)}>
+                                                            {formatGrade(calificacionActual)}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                                
+                                                <div className="cp-actions-container" style={{ display: 'flex', gap: '8px' }}>
+                                                    {isInstructor && nombreProfesor !== 'Pendiente' && calificacionActual !== 'Pendiente' && (
+                                                        <button 
+                                                            className="cp-action-btn edit" 
+                                                            title="Editar Calificación"
+                                                            onClick={() => console.log(`Abriendo modal para calificar clase ${clase.id}`)}
+                                                        >
+                                                            <AiOutlineEdit size={22} />
+                                                        </button>
+                                                    )}
+
+                                                    {isInstructor && (
+                                                        <button 
+                                                            className="cp-action-btn cancel" 
+                                                            title="Cancelar Clase"
+                                                            onClick={() => handleCancelarClaseInstructor(clase.id)}
+                                                        >
+                                                            <AiOutlineDelete size={22} />
+                                                        </button>
+                                                    )}
+
+                                                    {user?.role === 'alumno' && (
+                                                        <button 
+                                                            className="cp-action-btn cancel" 
+                                                            title="Cancelar Clase"
+                                                            onClick={() => handleCancelarClase(clase.id)}
+                                                        >
+                                                            <AiOutlineDelete size={22} />
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </>
                                         )}
-                                        
-                                        <div className="cp-actions-container" style={{ display: 'flex', gap: '8px' }}>
-                                            {isInstructor && nombreProfesor !== 'Pendiente' && calificacionActual !== 'Pendiente' && (
-                                                <button 
-                                                    className="cp-action-btn edit" 
-                                                    title="Editar Calificación"
-                                                    onClick={() => console.log(`Abriendo modal para calificar clase ${clase.id}`)}
-                                                >
-                                                    <AiOutlineEdit size={22} />
-                                                </button>
-                                            )}
-
-                                            {isInstructor && (
-                                                <button 
-                                                    className="cp-action-btn cancel" 
-                                                    title="Cancelar Clase"
-                                                    onClick={() => handleCancelarClaseInstructor(clase.id)}
-                                                >
-                                                    <AiOutlineDelete size={22} />
-                                                </button>
-                                            )}
-
-                                            {user?.role === 'alumno' && (
-                                                <button 
-                                                    className="cp-action-btn cancel" 
-                                                    title="Cancelar Clase"
-                                                    onClick={() => handleCancelarClase(clase.id)}
-                                                >
-                                                    <AiOutlineDelete size={22} />
-                                                </button>
-                                            )}
-                                        </div>
                                     </div>
                                 </div>
                             );

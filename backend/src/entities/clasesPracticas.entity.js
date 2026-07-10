@@ -33,6 +33,15 @@ export const ClasePractica = new EntitySchema({
       length: 50,
       default: "Pendiente",
     },
+    motivo_cancelacion: {
+      type: "text",
+      nullable: true,
+    },
+    cancelado_por: {
+      type: "varchar",
+      length: 20,
+      nullable: true,
+    },
     created_at: {
       type: "timestamp",
       createDate: true,

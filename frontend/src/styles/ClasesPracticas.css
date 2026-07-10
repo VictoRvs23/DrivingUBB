@@ -49,6 +49,15 @@
     border-color: #3b82f6 !important;
 }
 
+.cp-card-cancelada {
+    opacity: 0.75;
+    border-color: #ef4444 !important;
+}
+
+.cp-card-cancelada:hover {
+    transform: none;
+}
+
 .cp-card-left {
     display: flex;
     align-items: center;
@@ -145,4 +154,23 @@
     color: #ef4444 !important;
     border-color: #ef4444 !important;
     transform: translateY(-2px);
+}
+
+.cp-cancelada-aviso {
+    text-align: right;
+    max-width: 380px;
+}
+
+.cp-cancelada-titulo {
+    margin: 0;
+    color: #ef4444;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.cp-cancelada-motivo {
+    margin: 6px 0 0 0;
+    color: #94a3b8;
+    font-size: 0.9rem;
+    font-style: italic;
 }
