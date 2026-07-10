@@ -9,6 +9,7 @@ import {
     AiOutlineVideoCamera, 
     AiOutlineLaptop 
 } from "react-icons/ai";
+import { API_BASE_URL } from '../config';
 
 const HomeAlumno = () => {
     const { user } = useAuth();

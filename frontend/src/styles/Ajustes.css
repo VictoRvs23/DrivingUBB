@@ -308,3 +308,22 @@
         align-self: auto;
     }
 }
+
+@media (max-width: 480px) {
+    .ajustes-card {
+        padding: 20px 16px;
+        gap: 24px;
+    }
+
+    .ajustes-btn-primary {
+        width: 100%;
+    }
+
+    .ajustes-preferencia-row {
+        flex-wrap: wrap;
+    }
+
+    .pw-strength {
+        flex-wrap: wrap;
+    }
+}
