@@ -36,7 +36,7 @@ export const AppDataSource = new DataSource({
   ],
   synchronize: true,
   logging: false,
-  dropSchema: true,
+  dropSchema: false,
 });
 
 export async function connectDB() {

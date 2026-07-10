@@ -6,6 +6,7 @@ import {
     AiOutlinePlus,
 } from 'react-icons/ai';
 import { MdOutlineQuestionAnswer } from 'react-icons/md';
+import Swal from 'sweetalert2';
 import Sidebar from '../components/Sidebar';
 import {
     getFAQsRequest,
@@ -17,11 +18,8 @@ import '../styles/Soporte.css';
 import '../styles/FAQ.css';
 
 const LIMITE_FAQS = 4;
-
-/* ── Estado inicial del formulario ─────────────── */
 const FORM_INICIAL = { pregunta: '', respuesta: '' };
 
-/* ── Modal crear / editar ───────────────────────── */
 const FAQModal = ({ faqEditar, onGuardar, onCerrar, totalActual }) => {
     const esEdicion = Boolean(faqEditar);
 
@@ -88,7 +86,7 @@ const FAQModal = ({ faqEditar, onGuardar, onCerrar, totalActual }) => {
                 {!esEdicion && (
                     <div className={`faq-limite-aviso ${totalActual >= LIMITE_FAQS ? 'faq-limite-aviso--lleno' : ''}`}>
                         {totalActual >= LIMITE_FAQS
-                            ? `⚠ Límite alcanzado: ya hay ${LIMITE_FAQS} preguntas activas. Elimina una para poder añadir otra.`
+                            ? `Límite alcanzado: ya hay ${LIMITE_FAQS} preguntas activas. Elimina una para poder añadir otra.`
                             : `${totalActual} / ${LIMITE_FAQS} preguntas frecuentes activas`}
                     </div>
                 )}
@@ -159,15 +157,13 @@ const FAQModal = ({ faqEditar, onGuardar, onCerrar, totalActual }) => {
     );
 };
 
-/* ── Componente principal ────────────────────────── */
 const AdminFAQ = () => {
     const [faqs, setFaqs]         = useState([]);
     const [loading, setLoading]   = useState(true);
     const [error, setError]       = useState(null);
-    const [modal, setModal]       = useState(null); // null | 'crear' | faqObj (editar)
+    const [modal, setModal]       = useState(null); 
     const [toast, setToast]       = useState(null);
 
-    /* ── Fetch ── */
     const cargar = useCallback(async () => {
         setLoading(true);
         setError(null);
@@ -183,13 +179,11 @@ const AdminFAQ = () => {
 
     useEffect(() => { cargar(); }, [cargar]);
 
-    /* ── Toast ── */
     const showToast = (tipo, msg) => {
         setToast({ tipo, msg });
         setTimeout(() => setToast(null), 3000);
     };
 
-    /* ── Guardar (crear o editar) ── */
     const handleGuardar = async (id, data) => {
         if (id) {
             await updateFAQRequest(id, data);
@@ -201,12 +195,22 @@ const AdminFAQ = () => {
         cargar();
     };
 
-    /* ── Eliminar ── */
     const handleEliminar = async (faq) => {
-        const confirmar = window.confirm(
-            `¿Estás seguro de eliminar la pregunta:\n"¿${faq.pregunta}?"\n\nEsta acción no se puede deshacer.`
-        );
-        if (!confirmar) return;
+        const result = await Swal.fire({
+            title: '¿Estás seguro?',
+            text: `Vas a eliminar la pregunta "¿${faq.pregunta}?". Esta acción no se puede deshacer.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#334155',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+            background: '#1e293b',
+            color: '#f1f5f9'
+        });
+
+        if (!result.isConfirmed) return;
+
         try {
             await deleteFAQRequest(faq.id);
             showToast('success', 'Pregunta frecuente eliminada.');

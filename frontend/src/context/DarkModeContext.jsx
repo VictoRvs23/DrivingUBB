@@ -1,11 +1,17 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import { useAuth } from './AuthContext';
 
 const DarkModeContext = createContext();
+const getStorageKey = (userId) => (userId ? `dark_mode_${userId}` : 'dark_mode_guest');
 
 export const DarkModeProvider = ({ children }) => {
-    const [darkMode, setDarkMode] = useState(() => {
-        return localStorage.getItem('dark_mode') === 'true';
-    });
+    const { user } = useAuth();
+    const [darkMode, setDarkMode] = useState(false);
+
+    useEffect(() => {
+        const guardado = localStorage.getItem(getStorageKey(user?.id)) === 'true';
+        setDarkMode(guardado);
+    }, [user?.id]);
 
     useEffect(() => {
         if (darkMode) {
@@ -18,7 +24,7 @@ export const DarkModeProvider = ({ children }) => {
     const toggleDarkMode = (value) => {
         const nuevo = typeof value === 'boolean' ? value : !darkMode;
         setDarkMode(nuevo);
-        localStorage.setItem('dark_mode', String(nuevo));
+        localStorage.setItem(getStorageKey(user?.id), String(nuevo));
     };
 
     return (

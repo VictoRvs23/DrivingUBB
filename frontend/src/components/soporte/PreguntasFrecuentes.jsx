@@ -6,7 +6,6 @@ import { getFAQsRequest } from '../../services/preguntaFrecuente.services';
 import '../../styles/Soporte.css';
 import '../../styles/FAQ.css';
 
-/* ── Item de acordeón ─────────────────────────── */
 const FAQItem = ({ numero, pregunta, respuesta }) => {
     const [abierto, setAbierto] = useState(false);
 
@@ -34,7 +33,6 @@ const FAQItem = ({ numero, pregunta, respuesta }) => {
     );
 };
 
-/* ── Componente principal ──────────────────────── */
 const PreguntasFrecuentes = ({ onVolver }) => {
     const [faqs, setFaqs]       = useState([]);
     const [loading, setLoading] = useState(true);

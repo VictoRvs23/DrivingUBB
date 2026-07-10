@@ -1,110 +1,334 @@
-/* ── Variables del modo claro (base) ── */
-:root {
-    --bg-body:        #f8fafc;
-    --bg-sidebar:     #1a2639;
-    --bg-card:        #ffffff;
-    --bg-card-dark:   #1e293b;   /* tablas, modales oscuros */
-    --bg-hover:       #25334d;
-    --bg-input:       #ffffff;
-    --bg-input-dark:  #0f172a;
-
-    --text-primary:   #1a2639;
-    --text-secondary: #4a5568;
-    --text-muted:     #94a3b8;
-    --text-white:     #f1f5f9;
-
-    --border-light:   #e2e8f0;
-    --border-dark:    #334155;
-
-    --accent-green:   #478049;
-    --accent-error:   #ef4444;
-
-    /* Sidebar siempre oscuro, no cambia con el modo */
-    --sidebar-bg:         #1a2639;
-    --sidebar-text:       #a0a8b3;
-    --sidebar-text-hover: #ffffff;
-    --sidebar-hover-bg:   #25334d;
+body.dark-mode .nav-item {
+    color: #ffffff;
 }
 
-/* ── Overrides para modo oscuro ── */
+body.dark-mode .nav-item:hover,
+body.dark-mode .nav-item.active {
+    color: #ffffff;
+    background-color: #25334d;
+}
+
+body.dark-mode .sidebar-icon,
+body.dark-mode .sidebar-icon svg,
+body.dark-mode .sidebar-icon * {
+    color: #ffffff;
+}
+
+body.dark-mode .sidebar-text {
+    color: #ffffff;
+}
+
+body.dark-mode .sidebar-logo h2 {
+    color: #ffffff;
+}
+
 body.dark-mode {
-    --bg-body:       #0f172a;
-    --bg-card:       #1e293b;
-    --bg-input:      #0f172a;
-
-    --text-primary:  #f1f5f9;
-    --text-secondary:#cbd5e1;
-    --text-muted:    #94a3b8;
-
-    --border-light:  #334155;
+    background-color: #0f172a;
+    color: #f1f5f9;
 }
 
-/* ── Aplicación de variables al body y elementos base ── */
-body {
-    background-color: var(--bg-body);
-    color: var(--text-primary);
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* ── Páginas con fondo blanco (#f8fafc) → se oscurecen ── */
 body.dark-mode .main-container {
-    background-color: var(--bg-body);
+    background-color: #0f172a;
 }
 
 body.dark-mode .vehiculos-page,
-body.dark-mode .soporte-page {
-    background-color: var(--bg-body);
+body.dark-mode .soporte-page,
+body.dark-mode .ajustes-page,
+body.dark-mode .main-content,
+body.dark-mode .dashboard-layout {
+    background-color: #0f172a;
 }
 
-/* ── Cards blancas (soporte, ajustes, reservas) ── */
-body.dark-mode .soporte-main-card,
-body.dark-mode .ajustes-card,
-body.dark-mode .reservas-container,
-body.dark-mode .cp-white-container {
-    background-color: var(--bg-card);
-    border-color: var(--border-dark);
-    color: var(--text-primary);
+body.dark-mode .vehiculos-header h1,
+body.dark-mode .content-header h1 {
+    color: #f1f5f9;
 }
 
-/* ── Textos de títulos y labels en cards blancas ── */
-body.dark-mode .soporte-pregunta,
-body.dark-mode .soporte-cat-label,
-body.dark-mode .soporte-cat-btn,
-body.dark-mode .ajustes-seccion-titulo,
-body.dark-mode .ajustes-field-label,
-body.dark-mode .ajustes-preferencia-label {
-    color: var(--text-primary);
+body.dark-mode .home-header h1,
+body.dark-mode .users-header h1 {
+    color: #f1f5f9;
 }
 
-body.dark-mode .ajustes-preferencia-desc {
-    color: var(--text-muted);
+body.dark-mode .title-icon {
+    color: #f1f5f9;
 }
 
-/* ── Botones de categoría soporte ── */
-body.dark-mode .soporte-cat-btn {
+body.dark-mode .users-page > p {
+    color: #f1f5f9 !important;
+}
+
+body.dark-mode .title-icon {
+    color: #f1f5f9;
+}
+
+body.dark-mode .evaluacion-form,
+body.dark-mode .evaluacion-faltas,
+body.dark-mode .evaluacion-resultados {
     background-color: #1e293b;
-    border-color: var(--border-dark);
-    color: var(--text-white);
+    color: #f1f5f9;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .evaluacion-form h2,
+body.dark-mode .evaluacion-faltas h2,
+body.dark-mode .evaluacion-resultados h2 {
+    color: #f1f5f9;
+    border-bottom-color: #3b82f6;
+}
+
+body.dark-mode .form-group label {
+    color: #cbd5e1;
+}
+
+body.dark-mode .form-group input,
+body.dark-mode .form-group select {
+    background-color: #0f172a;
+    border-color: #334155;
+    color: #f1f5f9;
+}
+
+body.dark-mode .form-group input:focus,
+body.dark-mode .form-group select:focus {
+    border-color: #3b82f6;
+    background-color: #0f172a;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+body.dark-mode .estudiante-info {
+    background-color: #25334d !important;
+    border: 1px solid #334155 !important;
+    color: #cbd5e1 !important;
+}
+
+body.dark-mode .estudiante-info p {
+    color: #cbd5e1 !important;
+}
+
+body.dark-mode .estudiante-info strong {
+    color: #f1f5f9 !important;
+}
+
+body.dark-mode .faltas-list {
+    background-color: #25334d;
+    border-left-color: #ef4444;
+}
+
+body.dark-mode .faltas-list h3 {
+    color: #f1f5f9;
+}
+
+body.dark-mode .faltas-list li {
+    background-color: #1e293b;
+    border-left-color: #ef4444;
+    color: #cbd5e1;
+}
+
+body.dark-mode .faltas-list li:hover {
+    background-color: #334155;
+}
+
+body.dark-mode .faltas-detalle {
+    background-color: #25334d;
+    border-left-color: #3b82f6;
+}
+
+body.dark-mode .faltas-detalle h3 {
+    color: #f1f5f9;
+}
+
+body.dark-mode .faltas-detalle li {
+    background-color: #1e293b;
+    color: #cbd5e1;
+}
+
+body.dark-mode .faltas-detalle li.critica {
+    background-color: rgba(239, 68, 68, 0.1);
+    border-left-color: #ef4444;
+}
+
+body.dark-mode .faltas-detalle li.critica:hover {
+    background-color: rgba(239, 68, 68, 0.18);
+}
+
+body.dark-mode .faltas-detalle li.normal {
+    background-color: rgba(71, 128, 73, 0.12);
+    border-left-color: #478049;
+}
+
+body.dark-mode .faltas-detalle li.normal:hover {
+    background-color: rgba(71, 128, 73, 0.2);
+}
+
+body.dark-mode .falta-nombre {
+    color: #f1f5f9;
+}
+
+body.dark-mode .falta-tipo {
+    color: #94a3b8;
+}
+
+body.dark-mode .no-faltas {
+    color: #94a3b8;
+}
+
+body.dark-mode .stat-box {
+    background: linear-gradient(135deg, #1e293b 0%, #25334d 100%);
+    border-left-color: #3b82f6;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .stat-label {
+    color: #94a3b8;
+}
+
+body.dark-mode .stat-value {
+    color: #f1f5f9;
+}
+
+body.dark-mode .observaciones-box {
+    background: linear-gradient(135deg, #1e293b 0%, #25334d 100%);
+    border-left-color: #3b82f6;
+}
+
+body.dark-mode .observaciones-box h3 {
+    color: #f1f5f9;
+}
+
+body.dark-mode .observaciones-box p {
+    color: #cbd5e1;
+}
+
+body.dark-mode .resultado-header {
+    border-bottom-color: #334155;
+}
+
+body.dark-mode .error-message {
+    background-color: rgba(239, 68, 68, 0.12);
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #f87171;
+}
+
+body.dark-mode .warning-message {
+    background-color: rgba(245, 158, 11, 0.1);
+    border-color: rgba(245, 158, 11, 0.4);
+    color: #f59e0b;
+}
+
+body.dark-mode .cp-page-wrapper {
+    background-color: #0f172a;
+}
+
+body.dark-mode .cp-card {
+    background-color: #0f172a;
+    border-color: #334155;
+}
+
+body.dark-mode .cp-class-info h3 {
+    color: #f1f5f9;
+}
+
+body.dark-mode .cp-class-info p,
+body.dark-mode .cp-person-info p {
+    color: #94a3b8;
+}
+
+body.dark-mode .cp-person-info p strong {
+    color: #f1f5f9;
+}
+
+body.dark-mode .cp-icon-container {
+    color: #94a3b8;
+}
+
+body.dark-mode .cp-grade-badge {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #ffffff;
+}
+
+/* Encabezado de la página */
+body.dark-mode .cp-header,
+body.dark-mode .cp-header h1 {
+    color: #f1f5f9;
+}
+
+body.dark-mode .cp-main-icon {
+    color: #f1f5f9;
+}
+
+body.dark-mode .reservas-container {
+    background-color: #1e293b;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .date-selector label,
+body.dark-mode .reservas-container h3 {
+    color: #f1f5f9;
+}
+
+body.dark-mode .date-selector input {
+    background-color: #0f172a;
+    border-color: #334155;
+    color: #f1f5f9;
+    color-scheme: dark;
+}
+
+body.dark-mode .date-selector input:focus {
+    border-color: #3b82f6;
+}
+
+body.dark-mode .time-block {
+    background-color: #25334d;
+    border-color: #334155;
+    color: #f1f5f9;
+}
+
+body.dark-mode .time-block:hover:not(:disabled) {
+    background-color: #334155;
+    color: #ffffff;
+    border-color: #94a3b8;
+}
+
+body.dark-mode .time-block.selected {
+    background-color: #1a2639;
+    border-color: #ffffff;
+    color: #ffffff;
+}
+
+body.dark-mode .time-block:disabled {
+    background-color: #1e293b;
+    color: #475569;
+    border-color: #1e293b;
+}
+
+body.dark-mode .status-text {
+    color: inherit;
+}
+
+body.dark-mode .soporte-main-card {
+    background-color: #1e293b;
+    border-color: #334155;
+}
+
+body.dark-mode .soporte-pregunta,
+body.dark-mode .soporte-cat-label {
+    color: #f1f5f9;
+}
+
+body.dark-mode .soporte-cat-btn {
+    background-color: #25334d;
+    border-color: #334155;
+    color: #f1f5f9;
 }
 
 body.dark-mode .soporte-cat-btn:hover {
-    background-color: var(--bg-hover);
+    background-color: #334155;
+    border-color: #94a3b8;
 }
 
-/* ── Inputs de ajustes ── */
-body.dark-mode .ajustes-input {
-    color: var(--text-white);
-    border-bottom-color: var(--border-dark);
-}
-
-body.dark-mode .ajustes-input:focus {
-    border-bottom-color: #94a3b8;
-}
-
-/* ── FAQs vista usuario ── */
 body.dark-mode .faq-item {
-    background-color: var(--bg-card);
-    border-color: var(--border-dark);
+    background-color: #1e293b;
+    border-color: #334155;
 }
 
 body.dark-mode .faq-item--abierto {
@@ -118,33 +342,83 @@ body.dark-mode .faq-item--abierto .faq-item-header {
 
 body.dark-mode .faq-numero,
 body.dark-mode .faq-pregunta-texto {
-    color: var(--text-white);
+    color: #f1f5f9;
+}
+
+body.dark-mode .faq-respuesta-label {
+    color: #94a3b8;
 }
 
 body.dark-mode .faq-respuesta-texto {
-    color: var(--text-secondary);
+    color: #cbd5e1;
 }
 
 body.dark-mode .faq-item-body {
-    background-color: var(--bg-card);
+    background-color: #1e293b;
 }
 
 body.dark-mode .faq-vacio {
-    background-color: var(--bg-card);
-    border-color: var(--border-dark);
-    color: var(--text-muted);
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #94a3b8;
 }
 
-/* ── Divisor de ajustes ── */
+body.dark-mode .faq-admin-card {
+    background-color: #1e293b;
+    border-color: #334155;
+    box-shadow: none;
+}
+
+body.dark-mode .faq-admin-card:hover {
+    border-color: #94a3b8;
+    background-color: #25334d;
+}
+
+body.dark-mode .faq-admin-pregunta {
+    color: #f1f5f9;
+}
+
+body.dark-mode .faq-admin-respuesta {
+    color: #94a3b8;
+}
+
+body.dark-mode .ajustes-card {
+    background-color: #1e293b;
+    border-color: #334155;
+}
+
+body.dark-mode .ajustes-seccion-titulo {
+    color: #f1f5f9;
+    border-bottom-color: #334155;
+}
+
+body.dark-mode .ajustes-field-label,
+body.dark-mode .ajustes-preferencia-label {
+    color: #f1f5f9;
+}
+
+body.dark-mode .ajustes-preferencia-desc {
+    color: #94a3b8;
+}
+
+body.dark-mode .ajustes-input {
+    color: #f1f5f9;
+    border-bottom-color: #334155;
+    background: transparent;
+}
+
+body.dark-mode .ajustes-input:focus {
+    border-bottom-color: #94a3b8;
+}
+
 body.dark-mode .ajustes-divisor {
-    background-color: var(--border-dark);
+    background-color: #334155;
 }
 
 body.dark-mode .ajustes-preferencia-row {
-    border-bottom-color: var(--border-dark);
+    border-bottom-color: #334155;
 }
 
-/* ── Botones de acción principal ── */
 body.dark-mode .ajustes-btn-primary {
     background-color: #25334d;
 }
@@ -153,43 +427,72 @@ body.dark-mode .ajustes-btn-primary:hover:not(:disabled) {
     background-color: #334155;
 }
 
-/* ── Header de páginas ── */
-body.dark-mode .vehiculos-header h1 {
-    color: var(--text-primary);
-}
-
-/* ── Aviso de cooldown ── */
 body.dark-mode .ajustes-cooldown-aviso {
     background-color: rgba(245, 158, 11, 0.08);
     color: #f59e0b;
+    border-color: rgba(245, 158, 11, 0.3);
 }
 
-/* ── Toast de ajustes ── */
 body.dark-mode .ajustes-toast--success {
     background-color: rgba(71, 128, 73, 0.2);
     color: #4ade80;
+    border-color: #478049;
 }
 
 body.dark-mode .ajustes-toast--error {
     background-color: rgba(239, 68, 68, 0.15);
     color: #f87171;
+    border-color: rgba(239, 68, 68, 0.4);
 }
 
-/* ── Mis Solicitudes y tabla admin ── */
-/* Estas ya usan colores oscuros de base, solo ajustamos el fondo de página */
-body.dark-mode .solicitudes-back-btn {
-    border-color: var(--border-dark);
-    color: var(--text-muted);
+body.dark-mode .profile-container,
+body.dark-mode .profile-card {
+    background-color: #1e293b;
+    color: #f1f5f9;
 }
 
-body.dark-mode .solicitudes-back-btn:hover {
-    background-color: var(--bg-hover);
-    color: var(--text-white);
+body.dark-mode .profile-header h1 {
+    color: #f1f5f9;
 }
 
-/* ── Scrollbar en modo oscuro ── */
+body.dark-mode .profile-name,
+body.dark-mode .profile-title,
+body.dark-mode .profile-label {
+    color: #f1f5f9;
+}
+
+body.dark-mode .profile-value,
+body.dark-mode .profile-info p {
+    color: #cbd5e1;
+}
+
+body.dark-mode .profile-input {
+    background-color: #0f172a;
+    border-color: #334155;
+    color: #f1f5f9;
+}
+
+body.dark-mode .welcome-card {
+    background-color: #1e293b;
+    color: #f1f5f9;
+}
+
+body.dark-mode .welcome-card h2 {
+    color: #f1f5f9;
+}
+
+body.dark-mode .content-header {
+    background-color: #0f172a;
+    border-bottom-color: #334155;
+}
+
+body.dark-mode .table-container {
+    background-color: #1e293b;
+}
+
 body.dark-mode ::-webkit-scrollbar {
     width: 6px;
+    height: 6px;
 }
 
 body.dark-mode ::-webkit-scrollbar-track {
@@ -203,4 +506,81 @@ body.dark-mode ::-webkit-scrollbar-thumb {
 
 body.dark-mode ::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
+}
+
+body.dark-mode .historial-lista {
+    background: #1e293b;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .historial-item {
+    background-color: #25334d;
+    border-left-color: #3b82f6;
+}
+
+body.dark-mode .historial-item:hover {
+    background-color: #334155;
+}
+
+body.dark-mode .historial-item-fecha {
+    color: #f1f5f9;
+}
+
+body.dark-mode .historial-item-sub {
+    color: #94a3b8;
+}
+
+body.dark-mode .tab-btn {
+    background-color: #25334d;
+    color: #cbd5e1;
+}
+
+body.dark-mode .tab-btn:hover:not(:disabled) {
+    background-color: #334155;
+    color: #f1f5f9;
+}
+
+body.dark-mode .tab-btn.active {
+    background-color: #3b82f6;
+    color: #ffffff;
+}
+
+body.dark-mode .tab-btn.active:hover {
+    background-color: #2563eb;
+}
+
+body.dark-mode .btn-volver {
+    background-color: #25334d;
+    color: #cbd5e1;
+}
+
+body.dark-mode .btn-volver:hover:not(:disabled) {
+    background-color: #334155;
+    color: #f1f5f9;
+}
+
+body.dark-mode .estado-chip.aprobado {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    border: 1px solid #10b981;
+}
+
+body.dark-mode .estado-chip.reprobado {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid #ef4444;
+}
+
+body.dark-mode .estado-chip.en_progreso {
+    background-color: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
+    border: 1px solid #f59e0b;
+}
+
+body.dark-mode .pregunta-incorrecta-item {
+    background-color: rgba(245, 158, 11, 0.1);
+}
+
+body.dark-mode .pregunta-incorrecta-item p {
+    color: #cbd5e1;
 }

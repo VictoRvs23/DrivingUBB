@@ -99,7 +99,6 @@ const Sidebar = () => {
         });
     }
 
-    // Ajustes visible para todos los roles al final
     menuItems.push({
         name: 'Ajustes',
         icon: <MdOutlineSettings />,

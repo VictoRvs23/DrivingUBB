@@ -12,10 +12,6 @@ API.interceptors.request.use((config) => {
     return config;
 });
 
-/**
- * Obtiene todas las preguntas frecuentes. GET /faqs
- * Accesible para todos los usuarios autenticados.
- */
 export const getFAQsRequest = async () => {
     try {
         const res = await API.get('/faqs');
@@ -27,7 +23,7 @@ export const getFAQsRequest = async () => {
 };
 
 /**
- * Crea una nueva pregunta frecuente. POST /faqs  (solo admin)
+ * 
  * @param {{ pregunta: string, respuesta: string }} data
  */
 export const createFAQRequest = async (data) => {
@@ -41,7 +37,7 @@ export const createFAQRequest = async (data) => {
 };
 
 /**
- * Actualiza una pregunta frecuente. PATCH /faqs/:id  (solo admin)
+ * 
  * @param {number|string} id
  * @param {{ pregunta?: string, respuesta?: string }} data
  */
@@ -56,7 +52,7 @@ export const updateFAQRequest = async (id, data) => {
 };
 
 /**
- * Elimina una pregunta frecuente. DELETE /faqs/:id  (solo admin)
+ * 
  * @param {number|string} id
  */
 export const deleteFAQRequest = async (id) => {

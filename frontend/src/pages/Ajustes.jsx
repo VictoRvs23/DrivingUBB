@@ -179,7 +179,7 @@ const Ajustes = () => {
                         {/* Aviso de cooldown que viene del backend */}
                         {cooldownMsg && (
                             <div className="ajustes-cooldown-aviso">
-                                🕐 {cooldownMsg}
+                                {cooldownMsg}
                             </div>
                         )}
 

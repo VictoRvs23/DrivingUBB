@@ -4,7 +4,6 @@ const API = axios.create({
     baseURL: 'http://localhost:3000/api'
 });
 
-// Adjunta el token en cada request, igual que el resto de services del proyecto
 API.interceptors.request.use((config) => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -14,9 +13,8 @@ API.interceptors.request.use((config) => {
 });
 
 /**
- * Crea un nuevo ticket de soporte (con imagen opcional).
- * Envía multipart/form-data para soportar el uploadImage middleware del backend.
- * @param {FormData} formData - campos: tipo, titulo, descripcion, imagen_adjunta (opcional)
+ * 
+ * @param {FormData} formData 
  */
 export const createSoporteRequest = async (formData) => {
     try {
@@ -30,9 +28,10 @@ export const createSoporteRequest = async (formData) => {
 };
 
 /**
- * Obtiene los tickets del usuario autenticado.
- * @param {string|null} tipo - Filtro opcional: 'Duda' | 'Error' | 'Reclamo' | 'Sugerencia' | null
+ * 
+ * @param {string|null} tipo 
  */
+
 export const getMisSoportesRequest = async (tipo = null) => {
     try {
         const params = tipo ? { tipo } : {};
@@ -44,8 +43,8 @@ export const getMisSoportesRequest = async (tipo = null) => {
 };
 
 /**
- * Obtiene todos los tickets (solo admin/secretaria).
- * @param {string|null} tipo - Filtro opcional: 'Duda' | 'Error' | 'Reclamo' | 'Sugerencia' | null
+ * 
+ * @param {string|null} tipo 
  */
 export const getAllSoportesRequest = async (tipo = null) => {
     try {
@@ -58,7 +57,7 @@ export const getAllSoportesRequest = async (tipo = null) => {
 };
 
 /**
- * Envía una respuesta de admin a un ticket. PATCH /soporte/:id/responder
+ * 
  * @param {number|string} id
  * @param {string} respuesta_admin
  */
@@ -72,7 +71,7 @@ export const responderSoporteRequest = async (id, respuesta_admin) => {
 };
 
 /**
- * Soft-delete de un ticket (cambia estado a "eliminado"). DELETE /soporte/:id
+ * 
  * @param {number|string} id
  */
 export const deleteSoporteRequest = async (id) => {

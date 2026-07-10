@@ -1,8 +1,6 @@
 "use strict";
 import { Router } from "express";
-import { 
-    createSoporte, getMisSoportes, getAllSoportes, responderSoporte, deleteSoporte 
-} from "../controllers/soporte.controller.js";
+import { createSoporte, getMisSoportes, getAllSoportes, responderSoporte, deleteSoporte } from "../controllers/soporte.controller.js";
 import { verifyToken, isAdmin } from "../middleware/auth.middleware.js";
 import { validateBody } from "../middleware/validateBody.js";
 import { soporteValidation, respuestaValidation } from "../validations/soporte.validation.js";
