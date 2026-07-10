@@ -1,4 +1,3 @@
-
 .soporte-page {
     display: flex;
     flex-direction: column;
@@ -719,3 +718,56 @@
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
+@media (max-width: 480px) {
+    .soporte-main-card {
+        padding: 28px 18px;
+        gap: 30px;
+    }
+
+    .soporte-pregunta {
+        font-size: 1.25rem;
+    }
+
+    .soporte-categorias {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .soporte-cat-icon {
+        font-size: 2.8rem;
+    }
+
+    .soporte-accion-btn {
+        width: 100%;
+        padding: 14px 20px;
+        font-size: 1rem;
+        box-sizing: border-box;
+    }
+
+    .soporte-modal-content {
+        padding: 18px;
+    }
+
+    .soporte-modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .soporte-modal-actions button {
+        width: 100%;
+    }
+
+    .solicitud-card {
+        flex-wrap: wrap;
+    }
+
+    .solicitud-right {
+        margin-left: auto;
+    }
+
+    .soporte-toast {
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+        max-width: none;
+    }
+}

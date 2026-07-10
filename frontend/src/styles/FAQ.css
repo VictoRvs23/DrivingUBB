@@ -239,3 +239,19 @@
         padding-top: 0;
     }
 }
+
+@media (max-width: 380px) {
+    .faq-item-header {
+        padding: 14px 16px;
+        gap: 8px;
+    }
+
+    .faq-numero {
+        min-width: 22px;
+        font-size: 0.9rem;
+    }
+
+    .faq-pregunta-texto {
+        font-size: 0.9rem;
+    }
+}
